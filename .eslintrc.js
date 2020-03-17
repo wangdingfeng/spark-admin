@@ -1,6 +1,11 @@
 module.exports = {
-  root: true,
-  parserOptions: {
+  root: false,
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 7,
+    "sourceType": "module"
+  }
+  /*parserOptions: {
     parser: 'babel-eslint',
     sourceType: 'module'
   },
@@ -194,5 +199,5 @@ module.exports = {
       objectsInObjects: false
     }],
     'array-bracket-spacing': [2, 'never']
-  }
+  }*/
 }
