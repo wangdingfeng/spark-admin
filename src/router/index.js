@@ -21,79 +21,51 @@ import Layout from '@/layout'
     icon: 'svg-name'             the icon show in the sidebar,
   }
 **/
-//静态网页
+
 export const constantRouterMap = [{
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: '/redirect/:path*',
-      component: () => import('@/views/redirect/index')
-    }]
-  },
-  {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: Layout,
-    hidden: true,
-    children: [{
-      path: "",
-      component: () => import('@/views/404')
-    }]
-  },
-  {
+  path: '/redirect',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: '/redirect/:path*',
+    component: () => import('@/views/redirect/index')
+  }]
+},
+{
+  path: '/login',
+  component: () => import('@/views/login/index'),
+  hidden: true
+},
+{
+  path: '/404',
+  component: Layout,
+  hidden: true,
+  children: [{
+    path: '',
+    component: () => import('@/views/404')
+  }]
+},
+{
+  path: '/',
+  component: Layout,
+  children: [{
     path: '/',
-    component: Layout,
-    children: [{
-      path: '',
-      name: 'homepage',
-      hidden: true,
-      component: () => import('@/views/homepage/index'),
-      meta: {
-        title: "主页",
-        icon: "user",
-        affix: true
-      }
-    }]
-  },
-  {
-    path: '/example',
-    component: Layout,
-    name: 'Example',
+    name: 'homepage',
+    hidden: false,
+    component: () => import('@/views/homepage/index'),
     meta: {
-      title: '系统管理',
-      icon: 'example'
-    },
-    children: [{
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: {
-          title: '用户管理',
-          icon: 'table',
-        }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/table/index'),
-        meta: {
-          title: '角色管理',
-          icon: 'tree',
-        }
-      }
-    ]
-  }
+      title: '首页',
+      icon: 'dashboard',
+      affix: true
+    }
+  }]
+}
 ]
 export const notFoundRouter = [{
   path: '*',
   redirect: '/404',
   hidden: true
-}, ]
+}]
 export default new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({

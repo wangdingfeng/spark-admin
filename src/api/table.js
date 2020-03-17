@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
-export function getList(params) {
+export function listData(params) {
   return request({
-    url: '/table/list',
-    method: 'get',
+    url: '/admin/user/page',
+    method: 'post',
     params
   })
 }

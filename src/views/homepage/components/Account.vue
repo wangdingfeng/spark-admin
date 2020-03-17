@@ -4,7 +4,7 @@
       <el-input v-model.trim="user.name" />
     </el-form-item>
     <el-form-item label="Password">
-      <el-input v-model.trim="user.password" type="password"/>
+      <el-input v-model.trim="user.password" type="password" />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submit">更新</el-button>
