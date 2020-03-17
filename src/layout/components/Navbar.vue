@@ -8,10 +8,10 @@
 
     <breadcrumb class="breadcrumb-container" />
     <div class="right-menu">
-      <span class="right-menu-item">{{hoursTips}},{{name}}</span>
+      <span class="right-menu-item">{{ hoursTips }},{{ name }}</span>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar" />
+          <img :src="avatar" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -31,9 +31,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import Breadcrumb from "@/components/Breadcrumb";
-import Hamburger from "@/components/Hamburger";
+import { mapGetters } from 'vuex'
+import Breadcrumb from '@/components/Breadcrumb'
+import Hamburger from '@/components/Hamburger'
 
 export default {
   components: {
@@ -41,28 +41,28 @@ export default {
     Hamburger
   },
   computed: {
-    ...mapGetters(["sidebar", "avatar", "name"]),
-    hoursTips(){
-      let date = new Date();
+    ...mapGetters(['sidebar', 'avatar', 'name']),
+    hoursTips() {
+      const date = new Date()
       if (date.getHours() >= 0 && date.getHours() < 12) {
-        return "上午好";
+        return '上午好'
       } else if (date.getHours() < 18) {
-        return "下午好";
+        return '下午好'
       } else {
-        return "晚上好";
+        return '晚上好'
       }
     }
   },
   methods: {
     toggleSideBar() {
-      this.$store.dispatch("app/toggleSideBar");
+      this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch("LogOut");
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      await this.$store.dispatch('LogOut')
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

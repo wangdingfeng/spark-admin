@@ -5,7 +5,6 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
-
 const port = process.env.port || process.env.npm_config_port || 9528 // dev port
 
 // https://cli.vuejs.org/config/
@@ -13,7 +12,7 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
-  lintOnSave: process.env.NODE_ENV === 'development',//process.env.NODE_ENV === 'development'
+  lintOnSave: process.env.NODE_ENV === 'development', // process.env.NODE_ENV === 'development'
   productionSourceMap: false,
   devServer: {
     port: port,
@@ -24,7 +23,7 @@ module.exports = {
     }
   },
   configureWebpack: {
-    name: "Spark 火花平台",
+    name: 'Spark 火花平台',
     resolve: {
       alias: {
         '@': resolve('src')

@@ -12,7 +12,7 @@ import routerFormat from '@/utils/router'
 import {
   constantRouterMap,
   notFoundRouter
-} from '@/router';
+} from '@/router'
 const user = {
   state: {
     token: getToken(),
@@ -37,16 +37,16 @@ const user = {
       state.roles = roles
     },
     SET_ROUTERS: (state, routers) => {
-      state.addRouters = routers; //路由访问
-      state.routers = constantRouterMap.concat(routers).concat(notFoundRouter); //菜单显示,404最后加入
+      state.addRouters = routers // 路由访问
+      state.routers = constantRouterMap.concat(routers).concat(notFoundRouter) // 菜单显示,404最后加入
     },
     LOGOUT: (state) => {
-      state.addRouters = [];
-      state.routers = [];
-      state.name = '';
-      state.roles = [];
-      state.token = '';
-    },
+      state.addRouters = []
+      state.routers = []
+      state.name = ''
+      state.roles = []
+      state.token = ''
+    }
   },
 
   actions: {

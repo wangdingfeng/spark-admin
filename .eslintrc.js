@@ -4,8 +4,8 @@ module.exports = {
   "parserOptions": {
     "ecmaVersion": 7,
     "sourceType": "module"
-  }
-  /*parserOptions: {
+  },
+  parserOptions: {
     parser: 'babel-eslint',
     sourceType: 'module'
   },
@@ -199,5 +199,5 @@ module.exports = {
       objectsInObjects: false
     }],
     'array-bracket-spacing': [2, 'never']
-  }*/
+  }
 }
