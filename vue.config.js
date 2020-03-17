@@ -13,7 +13,7 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
-  lintOnSave: false,//process.env.NODE_ENV === 'development'
+  lintOnSave: process.env.NODE_ENV === 'development',//process.env.NODE_ENV === 'development'
   productionSourceMap: false,
   devServer: {
     port: port,
@@ -21,17 +21,10 @@ module.exports = {
     overlay: {
       warnings: false,
       errors: false
-    },
-    proxy: {
-      '/': {
-        ws:false,
-        target: 'http://localhost:8654',
-        changeOrigin: true,
-      }
-    },
+    }
   },
   configureWebpack: {
-    name: "后台模板",
+    name: "Spark 火花平台",
     resolve: {
       alias: {
         '@': resolve('src')
