@@ -14,11 +14,11 @@ router.beforeEach((to, from, next) => {
     } else {
       if (store.getters.name.length === 0) {
         store.dispatch('GetInfo').then(() => { // 拉取用户信息
-          router.addRoutes(store.getters.routers)//添加后台路由表
+          router.addRoutes(store.getters.routers)// 添加后台路由表
           next({ ...to, replace: true })
         }).catch(e => {
           store.dispatch('FedLogOut').then(() => {
-            Message.error('验证失败,请重新登录'+e.message)
+            Message.error('验证失败，请重新登录' + e.message)
             next({ path: '/login' })
           })
         })
