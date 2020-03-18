@@ -8,6 +8,11 @@
 
     <breadcrumb class="breadcrumb-container" />
     <div class="right-menu">
+      <template>
+        <el-tooltip content="Global Size" effect="dark" placement="bottom">
+          <size-select id="size-select" class="right-menu-item hover-effect" />
+        </el-tooltip>
+      </template>
       <span class="right-menu-item">{{ hoursTips }},{{ name }}</span>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
@@ -34,14 +39,16 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import SizeSelect from '@/components/SizeSelect'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    SizeSelect
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar', 'name']),
+    ...mapGetters(['sidebar', 'avatar', 'name', 'device']),
     hoursTips() {
       const date = new Date()
       if (date.getHours() >= 0 && date.getHours() < 12) {

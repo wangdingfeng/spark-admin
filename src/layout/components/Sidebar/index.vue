@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-scrollbar wrap-class="scrollbar-wrapper">
+      <logo :collapse="isCollapse" />
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
@@ -20,16 +21,17 @@
 <script>
 import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
+import Logo from './Logo'
 import variables from '@/styles/variables.scss'
 
 export default {
-  components: { SidebarItem },
+  components: { SidebarItem, Logo },
   computed: {
     ...mapGetters([
       'sidebar'
     ]),
     routes() {
-      return this.$store.getters.routers//大坑。。
+      return this.$store.getters.routers// 添加到路由
     },
     activeMenu() {
       const route = this.$route

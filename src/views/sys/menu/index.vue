@@ -1,5 +1,22 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-input v-model="listQuery.name" placeholder="菜单名称" style="width: 200px;" class="filter-item" />
+      <el-button
+        v-waves
+        class="filter-item"
+        type="primary"
+        icon="el-icon-search"
+        @click="getList"
+      >查询</el-button>
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="success"
+        icon="el-icon-edit"
+        @click="handleCreate"
+      >新增</el-button>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="tableData"
@@ -13,7 +30,7 @@
       <el-table-column prop="name" label="菜单名称" width="180" />
       <el-table-column prop="icon" label="图标">
         <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon" class-name="custom-class" />
+          <svg-icon :icon-class="scope.row.icon ? scope.row.icon : ''" />
         </template>
       </el-table-column>
       <el-table-column prop="type" label="菜单类型" />
@@ -63,6 +80,9 @@ export default {
         this.tableData = response.data
         this.listLoading = false
       })
+    },
+    handleCreate() {
+      console.info('111')
     },
     handleUpdate(row) {
 

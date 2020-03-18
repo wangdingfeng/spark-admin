@@ -7,12 +7,12 @@
     <div class="user-profile">
       <div class="box-center">
         <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
-          <img width="60px" height="60px"  src="@/assets/swy.jpg"/>
+          <img width="60px" height="60px" src="@/assets/swy.jpg">
         </pan-thumb>
       </div>
       <div class="box-center">
         <div class="user-name text-center">{{ user.name }}</div>
-        <div class="user-role text-center text-muted">{{ user.role}}</div>
+        <div class="user-role text-center text-muted">{{ user.role }}</div>
       </div>
     </div>
   </el-card>
