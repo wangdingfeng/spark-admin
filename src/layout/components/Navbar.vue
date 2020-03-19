@@ -9,7 +9,7 @@
     <breadcrumb class="breadcrumb-container" />
     <div class="right-menu">
       <template>
-        <el-tooltip content="Global Size" effect="dark" placement="bottom">
+        <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
       </template>

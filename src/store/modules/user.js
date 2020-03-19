@@ -77,7 +77,7 @@ const user = {
           const data = response.data
           commit('SET_NAME', data.sysUser.username)
           commit('SET_ROLES', data.roles)
-          commit('SET_AVATAR', data.sysUser.headImage)
+          commit('SET_AVATAR', data.sysUser.avatar)
           commit('SET_ROUTERS', routerFormat(data.menus))
           resolve(response)
         }).catch(error => {

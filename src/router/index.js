@@ -48,9 +48,10 @@ export const constantRouterMap = [{
 {
   path: '/',
   component: Layout,
+  redirect: '/homepage',
   children: [{
-    path: '/',
-    name: 'homepage',
+    path: '/homepage',
+    name: 'Homepage',
     hidden: false,
     component: () => import('@/views/homepage/index'),
     meta: {

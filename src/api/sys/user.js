@@ -7,3 +7,11 @@ export function listData(params) {
     params
   })
 }
+
+export function createUser(params) {
+  return request({
+    url: '/admin/user/save',
+    method: 'post',
+    params
+  })
+}

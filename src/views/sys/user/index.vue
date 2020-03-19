@@ -62,7 +62,7 @@
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center">
-        <template slot-scope="scope">{{ scope.row.createTime }}</template>
+        <template slot-scope="scope">{{ scope.row.createDate }}</template>
       </el-table-column>
       <el-table-column class-name="status-col" label="状态" align="center">
         <template slot-scope="scope">
@@ -92,7 +92,7 @@
       @pagination="getList"
     />
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
         <el-form-item label="账号" prop="username">
           <el-input v-model="temp.username" />
         </el-form-item>
@@ -101,6 +101,9 @@
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="temp.email" />
+        </el-form-item>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="temp.phone" />
         </el-form-item>
         <el-form-item label="性别" prop="sex">
           <el-select v-model="temp.sex" class="filter-item" placeholder="Please select">
@@ -112,11 +115,8 @@
             <el-option v-for="item in statusOptions" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Date" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
-        </el-form-item>
-        <el-form-item label="Remark">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+        <el-form-item label="备注" prop="remarks">
+          <el-input v-model="temp.remarks" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -134,7 +134,7 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { listData } from '@/api/sys/user.js'
+import { listData, createUser } from '@/api/sys/user.js'
 
 const statusOptions = [
   { key: 0, display_name: '禁用' },
@@ -199,7 +199,8 @@ export default {
         username: '',
         nickname: '',
         email: '',
-        status: '',
+        status: 1,
+        remarks: '',
         sex: 1
       },
       textMap: {
@@ -207,8 +208,10 @@ export default {
         create: '创建'
       },
       rules: {
-        username: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }]
+        username: [{ required: true, message: '请输入用户名', trigger: 'change' }],
+        nickname: [{ required: true, message: '请输入真实姓名', trigger: 'change' }],
+        status: [{ required: true, message: '请选择类型', trigger: 'change' }],
+        email: [{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]
       }
     }
   },
@@ -232,7 +235,8 @@ export default {
         username: '',
         nickname: '',
         email: '',
-        status: '',
+        phone: '',
+        status: 1,
         sex: 1
       }
     },
@@ -259,6 +263,23 @@ export default {
     },
     handleModifyStatus(row, status) {
       console.info('Create')
+    },
+    createData() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          this.temp.author = 'vue-element-admin'
+          createUser(this.temp).then(() => {
+            this.list.unshift(this.temp)
+            this.dialogFormVisible = false
+            this.$notify({
+              title: 'Success',
+              message: 'Created Successfully',
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
+      })
     }
   }
 }
