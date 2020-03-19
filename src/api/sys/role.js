@@ -2,31 +2,31 @@ import request from '@/utils/request'
 
 export function listData(params) {
   return request({
-    url: '/admin/user/page',
+    url: '/admin/role/page',
     method: 'post',
     params
   })
 }
 
-export function createUser(params) {
+export function createRole(params) {
   return request({
-    url: '/admin/user/save',
+    url: '/admin/role/save',
     method: 'post',
     data: params
   })
 }
 
-export function updateUser(params) {
+export function updateRole(params) {
   return request({
-    url: '/admin/user/update',
+    url: '/admin/role/update',
     method: 'post',
     data: params
   })
 }
 
-export function deleteUser(id) {
+export function deleteRole(id) {
   return request({
-    url: `/admin/user/delete/${id}`,
+    url: `/admin/role/delete/${id}`,
     method: 'delete'
   })
 }
