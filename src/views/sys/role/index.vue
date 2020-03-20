@@ -17,49 +17,86 @@
         @click="handleCreate"
       >新增</el-button>
     </div>
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-    >
-      <el-table-column align="center" label="ID">
-        <template slot-scope="scope">{{ scope.$index }}</template>
-      </el-table-column>
-      <el-table-column label="角色名称" align="center">
-        <template slot-scope="scope">{{ scope.row.roleName }}</template>
-      </el-table-column>
-      <el-table-column label="角色编号" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.roleCode }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="角色描述" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.description }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="部门" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.deptId }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center">
-        <template slot-scope="scope">{{ scope.row.createDate }}</template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            编辑
-          </el-button>
-          <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-row :gutter="15">
+      <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="17" style="margin-bottom: 10px">
+        <el-card class="box-card" shadow="never">
+          <div slot="header" class="clearfix">
+            <span class="role-span">角色列表</span>
+          </div>
+          <el-table
+            v-loading="listLoading"
+            :data="list"
+            element-loading-text="Loading"
+            border
+            fit
+            highlight-current-row
+            @row-click="rowClick"
+          >
+            <el-table-column align="center" label="ID">
+              <template slot-scope="scope">{{ scope.$index }}</template>
+            </el-table-column>
+            <el-table-column label="角色名称" align="center">
+              <template slot-scope="scope">{{ scope.row.roleName }}</template>
+            </el-table-column>
+            <el-table-column label="角色编号" align="center">
+              <template slot-scope="scope">
+                <span>{{ scope.row.roleCode }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="角色描述" align="center">
+              <template slot-scope="scope">
+                <span>{{ scope.row.description }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="部门" align="center">
+              <template slot-scope="scope">
+                <span>{{ scope.row.deptId }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="创建时间" align="center">
+              <template slot-scope="scope">{{ scope.row.createDate }}</template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+              <template slot-scope="{row,$index}">
+                <el-button type="primary" size="mini" @click="handleUpdate(row)">
+                  编辑
+                </el-button>
+                <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" @click="handleDelete(row,$index)">
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-card>
+      </el-col>
+      <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="7">
+        <el-card class="box-card" shadow="never">
+          <div slot="header" class="clearfix">
+            <el-tooltip class="item" effect="dark" content="选择指定角色分配菜单" placement="top">
+              <span class="role-span">菜单分配</span>
+            </el-tooltip>
+            <el-button
+              :loading="menuLoading"
+              icon="el-icon-check"
+              size="mini"
+              style="float: right; padding: 6px 9px"
+              type="primary"
+              @click="saveAuth"
+            >保存</el-button>
+          </div>
+          <el-tree
+            ref="menu"
+            :data="treeData"
+            :default-checked-keys="menuIds"
+            :props="defaultProps"
+            check-strictly
+            accordion
+            show-checkbox
+            node-key="id"
+          />
+        </el-card>
+      </el-col>
+    </el-row>
 
     <pagination
       v-show="total>0"
@@ -98,7 +135,8 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { listData, createRole, updateRole, deleteRole } from '@/api/sys/role.js'
+import { listRole, createRole, updateRole, deleteRole, getRoleAuth, saveRoleAuth } from '@/api/sys/role.js'
+import { getMenuTree } from '@/api/sys/menu.js'
 
 export default {
   name: 'Role',
@@ -109,6 +147,9 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      menuLoading: false,
+      currentId: undefined,
+      defaultProps: { children: 'children', label: 'label' },
       listQuery: {
         pages: 1,
         size: 20,
@@ -116,6 +157,8 @@ export default {
       },
       dialogFormVisible: false,
       dialogStatus: '',
+      treeData: null,
+      menuIds: [],
       temp: {
         id: undefined,
         roleName: '',
@@ -135,16 +178,22 @@ export default {
   },
   created() {
     this.getList()
+    this.getTree()
   },
   methods: {
     getList() {
       this.listLoading = true
-      listData(this.listQuery).then(response => {
+      listRole(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listQuery.pages = response.data.pages
         this.listQuery.size = response.data.size
         this.listLoading = false
+      })
+    },
+    getTree() {
+      getMenuTree().then(response => {
+        this.treeData = response.data
       })
     },
     resetTemp() {
@@ -155,6 +204,13 @@ export default {
         deptId: '',
         description: ''
       }
+    },
+    rowClick(row) {
+      this.currentId = row.id
+      this.$refs.menu.setCheckedKeys([])
+      getRoleAuth(this.currentId).then(response => {
+        this.menuIds = response.data
+      })
     },
     handleFilter() {
       this.listQuery.pages = 1
@@ -229,6 +285,31 @@ export default {
           })
         }
       })
+    },
+    saveAuth() {
+      this.menuLoading = true
+      this.temp.id = this.currentId
+      const role = { id: this.currentId, menuIds: [] }
+      // 得到半选的父节点数据，保存起来
+      this.$refs.menu.getHalfCheckedNodes().forEach(function(data, index) {
+        role.menuIds.push(data.id)
+      })
+      // 得到已选中的 key 值
+      this.$refs.menu.getCheckedKeys().forEach(function(data, index) {
+        role.menuIds.push(data)
+      })
+      saveRoleAuth(role).then(response => {
+        this.$notify({
+          title: '成功',
+          message: '修改成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(err => {
+        this.menuLoading = false
+        console.log(err.response.data.message)
+      })
+      this.menuLoading = false
     }
   }
 }

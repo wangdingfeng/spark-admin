@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function listData(params) {
+export function listRole(params) {
   return request({
     url: '/admin/role/page',
     method: 'post',
@@ -30,3 +30,22 @@ export function deleteRole(id) {
     method: 'delete'
   })
 }
+
+export function getRoleAuth(id) {
+  return request({
+    url: '/admin/role/getRoleAuth',
+    method: 'get',
+    params: {
+      id: id
+    }
+  })
+}
+
+export function saveRoleAuth(params) {
+  return request({
+    url: '/admin/role/saveRoleAuth',
+    method: 'post',
+    data: params
+  })
+}
+

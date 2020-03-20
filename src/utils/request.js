@@ -32,7 +32,7 @@ service.interceptors.response.use(
      * code为非401权限不足，非20001 表示登录错误,50000以上全是错误代码
      */
     const res = response.data
-    if (response.status === 401 || res.code === 20002 || res.code === 400 || res.code > 500) {
+    if (response.status === 401 || res.code === 500 || res.code === 400 || res.code > 500) {
       Message({
         message: res.msg,
         type: 'error',

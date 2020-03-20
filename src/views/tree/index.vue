@@ -11,12 +11,20 @@
       default-expand-all
     />
 
+    <div id="app">
+      <treeselect v-filterText="filterText" :multiple="true" :options="data2" />
+    </div>
+
   </div>
 </template>
 
 <script>
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+
 export default {
-  name:"Tree",
+  name: 'Tree',
+  components: { Treeselect },
   data() {
     return {
       filterText: '',

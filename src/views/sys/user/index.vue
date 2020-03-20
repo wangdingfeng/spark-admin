@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.username" placeholder="账户" style="width: 200px;" class="filter-item" />
-      <el-input placeholder="用户真实名" style="width: 200px;" class="filter-item" />
+      <el-input v-model="listQuery.nickname" placeholder="用户真实名" style="width: 200px;" class="filter-item" />
       <el-select
         v-model="status"
         placeholder="用户状态"
@@ -187,7 +187,8 @@ export default {
       listQuery: {
         pages: 1,
         size: 20,
-        username: ''
+        username: '',
+        nickname: ''
       },
       statusOptions,
       sexOptions,
