@@ -16,6 +16,7 @@
         icon="el-icon-edit"
         @click="handleCreate"
       >新增</el-button>
+      <el-button type="text" style="float:right" class="filter-item" @click="unfold">{{ expandText }}<i class="el-icon-edit" /></el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -109,6 +110,8 @@ export default {
         fullName: ''
       },
       tableData: null,
+      expandText: '展开',
+      isShowTable: false,
       dialogFormVisible: false,
       dialogStatus: '',
       temp: {
@@ -155,6 +158,21 @@ export default {
         simpleName: '',
         deptType: 0,
         sort: 10
+      }
+    },
+    unfold() {
+      // 展开
+      this.$nextTick(function() {
+        this.isShowTable = !this.isShowTable
+        this.isShowTable ? this.expandText = '关闭' : this.expandText = '展开'
+        this.expandAll()
+      })
+    },
+    expandAll() {
+      // 获取点击的箭头元素
+      const els = document.getElementsByClassName('el-table__expand-icon')
+      for (let i = 0; i < els.length; i++) {
+        els[i].click()
       }
     },
     handleCreate() {

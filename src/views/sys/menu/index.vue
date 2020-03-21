@@ -16,6 +16,7 @@
         icon="el-icon-edit"
         @click="handleCreate"
       >新增</el-button>
+      <el-button type="text" style="float:right" class="filter-item" @click="unfold">{{ expandText }}<i class="el-icon-edit" /></el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -27,7 +28,6 @@
       default-expand-all
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column type="selection" width="55" />
       <el-table-column prop="name" label="菜单名称" width="180" />
       <el-table-column prop="icon" label="图标">
         <template slot-scope="scope">
@@ -47,7 +47,7 @@
           <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column prop="path" label="路径" />
+      <el-table-column prop="path" label="路径" :show-overflow-tooltip="true" width="150" />
       <el-table-column prop="component" label="组件路径" />
       <el-table-column prop="permission" label="权限" />
       <el-table-column prop="hidden" label="是否隐藏">
@@ -156,6 +156,8 @@ export default {
         name: ''
       },
       tableData: null,
+      expandText: '展开全部',
+      isShowTable: false,
       dialogFormVisible: false,
       dialogStatus: '',
       temp: {
@@ -166,7 +168,7 @@ export default {
         type: '0',
         iFrame: false,
         path: '',
-        component: '',
+        component: null,
         permission: '',
         hidden: false,
         sort: 10
@@ -192,12 +194,28 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
+      this.expandText = '展开全部'
       listData(this.listQuery).then(response => {
         this.tableData = response.data
         // 树节点添加根目录
         this.treeData[0].children = response.data
         this.listLoading = false
       })
+    },
+    unfold() {
+      // 展开
+      this.$nextTick(function() {
+        this.isShowTable = !this.isShowTable
+        this.isShowTable ? this.expandText = '关闭全部' : this.expandText = '展开全部'
+        this.expandAll()
+      })
+    },
+    expandAll() {
+      // 获取点击的箭头元素
+      const els = document.getElementsByClassName('el-table__expand-icon')
+      for (let i = 0; i < els.length; i++) {
+        els[i].click()
+      }
     },
     resetTemp() {
       this.temp = {
@@ -207,7 +225,7 @@ export default {
         icon: '',
         type: '0',
         iFrame: false,
-        component: '',
+        component: null,
         path: '',
         permission: '',
         hidden: false,
@@ -251,6 +269,8 @@ export default {
       // 新增
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          if (this.temp.iFrame) this.temp.component = null
+          if (this.temp.type === 0) this.temp.component = 'Layout'
           saveMenu(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
@@ -267,6 +287,8 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          if (this.temp.iFrame) this.temp.component = null
+          if (this.temp.type === 0) this.temp.component = 'Layout'
           updateMenu(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false

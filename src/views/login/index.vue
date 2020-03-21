@@ -9,7 +9,7 @@
       label-width="0px"
       class="card-box login-form"
     >
-      <h3 class="title">Spark火花平台</h3>
+      <h3 class="title"><svg-icon icon-class="sparkler" /> Spark平台</h3>
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
@@ -98,7 +98,7 @@ export default {
     position: fixed;
     height: 100%;
     width:100%;
-    background-color: $bg;
+    background: url("../../assets/1.jpg");
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
       -webkit-text-fill-color: #fff !important;
