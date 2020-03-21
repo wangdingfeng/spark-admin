@@ -75,7 +75,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
           const data = response.data
-          commit('SET_NAME', data.sysUser.username)
+          commit('SET_NAME', data.sysUser.nickname)
           commit('SET_ROLES', data.roles)
           commit('SET_AVATAR', data.sysUser.avatar)
           commit('SET_ROUTERS', routerFormat(data.menus))

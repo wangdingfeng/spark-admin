@@ -30,3 +30,17 @@ export function deleteUser(id) {
     method: 'delete'
   })
 }
+
+export function getRolIds(id) {
+  return request({
+    url: `/admin/user/getRolIdsByUserId/${id}`,
+    method: 'get'
+  })
+}
+
+export function restPassword(id) {
+  return request({
+    url: `/admin/user/restPassword/${id}`,
+    method: 'get'
+  })
+}

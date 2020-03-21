@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.name" placeholder="菜单名称" style="width: 200px;" class="filter-item" />
+      <el-input v-model="listQuery.fullName" placeholder="部门名称" style="width: 200px;" class="filter-item" />
       <el-button
         v-waves
         class="filter-item"
@@ -27,33 +27,12 @@
       default-expand-all
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column type="selection" width="55" />
-      <el-table-column prop="name" label="菜单名称" width="180" />
-      <el-table-column prop="icon" label="图标">
+      <el-table-column prop="fullName" label="全称" width="180" />
+      <el-table-column prop="simpleName" label="简称" />
+      <el-table-column prop="deptType" label="部门类型">
         <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon ? scope.row.icon : ''" />
-        </template>
-      </el-table-column>
-      <el-table-column prop="type" label="菜单类型">
-        <template slot-scope="scope">
-          <span v-if="scope.row.type === '0'">目录</span>
-          <span v-else-if="scope.row.type === '1'">菜单</span>
-          <span v-else>按钮</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="iFrame" label="是否外链">
-        <template slot-scope="scope">
-          <span v-if="scope.row.iframe">是</span>
-          <span v-else>否</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="path" label="路径" />
-      <el-table-column prop="component" label="组件路径" />
-      <el-table-column prop="permission" label="权限" />
-      <el-table-column prop="hidden" label="是否隐藏">
-        <template slot-scope="scope">
-          <span v-if="scope.row.iframe">是</span>
-          <span v-else>否</span>
+          <span v-if="scope.row.deptType === 0">公司</span>
+          <span v-else>部门</span>
         </template>
       </el-table-column>
       <el-table-column prop="sort" label="排序" />
@@ -71,62 +50,36 @@
     </el-table>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="100px" style="width: 600px; margin-left:50px;">
-        <el-form-item label="菜单类型" prop="type">
-          <el-radio-group v-model="temp.type" size="mini">
-            <el-radio-button v-for="(type, index) in menuTypeList" :key="index" :label="index">{{ type }}</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="全称" prop="fullName">
+              <el-input v-model="temp.fullName" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="简称" prop="simpleName">
+              <el-input v-model="temp.simpleName" />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="上级菜单" prop="pid">
           <treeselect v-model="temp.pid" :normalizer="normalizer" :multiple="false" :options="treeData" clear-value-text="清除" placeholder=" " style="width:100%" />
         </el-form-item>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="菜单名称" prop="name">
-              <el-input v-model="temp.name" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item v-show="temp.type.toString() !== '2'" label="图标" prop="icon">
-              <el-input v-model="temp.icon" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item v-show="temp.type.toString() !== '2'" label="是否外链" prop="iFrame">
-              <el-radio-group v-model="temp.iFrame" size="mini">
-                <el-radio-button label="true">是</el-radio-button>
-                <el-radio-button label="false">否</el-radio-button>
+            <el-form-item label="部门类型" prop="deptType">
+              <el-radio-group v-model="temp.deptType" size="mini">
+                <el-radio-button label="0">公司</el-radio-button>
+                <el-radio-button label="1">部门</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="是否隐藏" prop="hidden">
-              <el-radio-group v-model="temp.hidden" size="mini">
-                <el-radio-button label="true">是</el-radio-button>
-                <el-radio-button label="false">否</el-radio-button>
-              </el-radio-group>
+            <el-form-item label="排序" prop="sort">
+              <el-input-number v-model="temp.sort" :min="1" label="排序" />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item v-show="temp.type.toString() !== '2'" label="路由地址" prop="path">
-              <el-input v-model="temp.path" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item v-show="!temp.iFrame && temp.type.toString() === '1'" label="组件路径" prop="component">
-              <el-input v-model="temp.component" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-form-item v-show="temp.type.toString() !== '0'" label="权限" prop="permission">
-          <el-input v-model="temp.permission" />
-        </el-form-item>
-        <el-form-item label="排序" prop="sort">
-          <el-input-number v-model="temp.sort" :min="1" label="排序" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -141,19 +94,19 @@
 </template>
 <script>
 import waves from '@/directive/waves' // waves directive
-import { listData, saveMenu, updateMenu, deleteMenu } from '@/api/sys/menu.js'
+import { listDept, saveDept, updateDept, deleteDept } from '@/api/sys/dept.js'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
-  name: 'Menu',
+  name: 'Dept',
   directives: { waves },
   components: { Treeselect },
   data() {
     return {
       listLoading: false,
       listQuery: {
-        name: ''
+        fullName: ''
       },
       tableData: null,
       dialogFormVisible: false,
@@ -161,28 +114,23 @@ export default {
       temp: {
         id: undefined,
         pid: '',
-        name: '',
-        icon: '',
-        type: '0',
-        iFrame: false,
-        path: '',
-        component: '',
-        permission: '',
-        hidden: false,
+        fullName: '',
+        simpleName: '',
+        deptType: null,
         sort: 10
       },
       treeData: [{
         id: 0,
-        name: '根目录',
+        simpleName: '根目录',
         children: []
       }],
       textMap: {
         update: '编辑',
         create: '创建'
       },
-      menuTypeList: ['目录', '菜单', '按钮'],
       rules: {
-        name: [{ required: true, message: '请输入菜单名', trigger: 'change' }]
+        fullName: [{ required: true, message: '请输入全称', trigger: 'change' }],
+        simpleName: [{ required: true, message: '请输入简称', trigger: 'change' }]
       }
     }
   },
@@ -192,7 +140,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      listData(this.listQuery).then(response => {
+      listDept(this.listQuery).then(response => {
         this.tableData = response.data
         // 树节点添加根目录
         this.treeData[0].children = response.data
@@ -202,15 +150,10 @@ export default {
     resetTemp() {
       this.temp = {
         id: undefined,
-        pid: null,
-        name: '',
-        icon: '',
-        type: '0',
-        iFrame: false,
-        component: '',
-        path: '',
-        permission: '',
-        hidden: false,
+        pid: 0,
+        fullName: '',
+        simpleName: '',
+        deptType: 0,
         sort: 10
       }
     },
@@ -236,7 +179,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteMenu(row.id).then(response => {
+        deleteDept(row.id).then(response => {
           this.getList()
           this.$notify({
             title: '成功',
@@ -251,7 +194,7 @@ export default {
       // 新增
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          saveMenu(this.temp).then(() => {
+          saveDept(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -267,7 +210,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          updateMenu(this.temp).then(() => {
+          updateDept(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -287,7 +230,7 @@ export default {
       }
       return {
         id: node.id,
-        label: node.name,
+        label: node.simpleName,
         children: node.children
       }
     }

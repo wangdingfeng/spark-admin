@@ -26,15 +26,12 @@
           <el-table
             v-loading="listLoading"
             :data="list"
-            element-loading-text="Loading"
+            element-loading-text="加载中"
             border
             fit
             highlight-current-row
             @row-click="rowClick"
           >
-            <el-table-column align="center" label="ID">
-              <template slot-scope="scope">{{ scope.$index }}</template>
-            </el-table-column>
             <el-table-column label="角色名称" align="center">
               <template slot-scope="scope">{{ scope.row.roleName }}</template>
             </el-table-column>
@@ -50,7 +47,7 @@
             </el-table-column>
             <el-table-column label="部门" align="center">
               <template slot-scope="scope">
-                <span>{{ scope.row.deptId }}</span>
+                <span>{{ scope.row.deptName }}</span>
               </template>
             </el-table-column>
             <el-table-column label="创建时间" align="center">
@@ -113,8 +110,8 @@
         <el-form-item label="角色编号" prop="roleCode">
           <el-input v-model="temp.roleCode" />
         </el-form-item>
-        <el-form-item label="部门" prop="email">
-          <el-input v-model="temp.deptId" />
+        <el-form-item label="部门" prop="deptId">
+          <treeselect v-model="temp.deptId" :multiple="false" :options="treeDeptData" clear-value-text="清除" placeholder=" " style="width:100%" @select="selectDepart" />
         </el-form-item>
         <el-form-item label="角色描述" prop="description">
           <el-input v-model="temp.description" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
@@ -135,12 +132,15 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { listRole, createRole, updateRole, deleteRole, getRoleAuth, saveRoleAuth } from '@/api/sys/role.js'
 import { getMenuTree } from '@/api/sys/menu.js'
+import { getDeptTree } from '@/api/sys/dept.js'
 
 export default {
   name: 'Role',
-  components: { Pagination },
+  components: { Pagination, Treeselect },
   directives: { waves },
   data() {
     return {
@@ -158,12 +158,14 @@ export default {
       dialogFormVisible: false,
       dialogStatus: '',
       treeData: null,
+      treeDeptData: null,
       menuIds: [],
       temp: {
         id: undefined,
         roleName: '',
         roleCode: '',
         deptId: '',
+        deptName: '',
         description: ''
       },
       textMap: {
@@ -178,7 +180,8 @@ export default {
   },
   created() {
     this.getList()
-    this.getTree()
+    this.getAuthTree()
+    this.getDeptTree()
   },
   methods: {
     getList() {
@@ -191,9 +194,14 @@ export default {
         this.listLoading = false
       })
     },
-    getTree() {
+    getAuthTree() {
       getMenuTree().then(response => {
         this.treeData = response.data
+      })
+    },
+    getDeptTree() {
+      getDeptTree(true).then(response => {
+        this.treeDeptData = response.data
       })
     },
     resetTemp() {
@@ -201,7 +209,8 @@ export default {
         id: undefined,
         roleName: '',
         roleCode: '',
-        deptId: '',
+        deptId: 0,
+        deptName: '',
         description: ''
       }
     },
@@ -211,6 +220,9 @@ export default {
       getRoleAuth(this.currentId).then(response => {
         this.menuIds = response.data
       })
+    },
+    selectDepart(val) {
+      this.temp.deptName = val.label
     },
     handleFilter() {
       this.listQuery.pages = 1

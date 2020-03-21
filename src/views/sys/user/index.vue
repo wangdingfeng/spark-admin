@@ -35,14 +35,11 @@
     <el-table
       v-loading="listLoading"
       :data="list"
-      element-loading-text="Loading"
+      element-loading-text="加载中"
       border
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="ID">
-        <template slot-scope="scope">{{ scope.$index }}</template>
-      </el-table-column>
       <el-table-column label="昵称" align="center">
         <template slot-scope="scope">{{ scope.row.nickname }}</template>
       </el-table-column>
@@ -61,6 +58,11 @@
           <span>{{ scope.row.sex | sexFilter }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="部门" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.deptName }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center">
         <template slot-scope="scope">{{ scope.row.createDate }}</template>
       </el-table-column>
@@ -74,8 +76,8 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="row.status=='1'" size="mini" type="warning" @click="handleModifyStatus(row,'deleted')">
-            锁定
+          <el-button size="mini" type="warning" @click="restPassd(row)">
+            重置
           </el-button>
           <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" @click="handleModifyStatus(row,$index)">
             删除
@@ -92,31 +94,62 @@
       @pagination="getList"
     />
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="账号" prop="username">
-          <el-input v-model="temp.username" />
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="100px" style="width: 600px; margin-left:50px;">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="账号" prop="username">
+              <el-input v-model="temp.username" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="真实姓名" prop="nickname">
+              <el-input v-model="temp.nickname" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="temp.email" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="电话" prop="phone">
+              <el-input v-model="temp.phone" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="性别" prop="sex">
+              <el-radio-group v-model="temp.sex" size="mini">
+                <el-radio-button v-for="item in sexOptions" :key="item.key" :label="item.key">{{ item.display_name }}</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" prop="status">
+              <el-select v-model="temp.status" class="filter-item" placeholder="选择状态">
+                <el-option v-for="item in statusOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="部门" prop="deptId">
+          <treeselect v-model="temp.deptId" :multiple="false" :options="treeDeptData" clear-value-text="清除" placeholder=" " style="width:100%" @select="selectDepart" />
         </el-form-item>
-        <el-form-item label="真实姓名" prop="nickname">
-          <el-input v-model="temp.nickname" />
-        </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="temp.email" />
-        </el-form-item>
-        <el-form-item label="电话" prop="phone">
-          <el-input v-model="temp.phone" />
-        </el-form-item>
-        <el-form-item label="性别" prop="sex">
-          <el-select v-model="temp.sex" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in sexOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in statusOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+        <el-form-item label="角色" prop="roles">
+          <el-select v-model="roles" multiple placeholder="请选择" style="width:100%">
+            <el-option
+              v-for="item in roleSelData"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            />
           </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remarks">
-          <el-input v-model="temp.remarks" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
+          <el-input v-model="temp.remarks" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请填写备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -134,7 +167,11 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { listData, createUser, updateUser, deleteUser } from '@/api/sys/user.js'
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import { listData, createUser, updateUser, deleteUser, getRolIds, restPassword } from '@/api/sys/user.js'
+import { getDeptTree } from '@/api/sys/dept.js'
+import { getRoleAll } from '@/api/sys/role.js'
 
 const statusOptions = [
   { key: 0, display_name: '禁用' },
@@ -160,7 +197,7 @@ const sexKeyValue = sexOptions.reduce((acc, cur) => {
 
 export default {
   name: 'User',
-  components: { Pagination },
+  components: { Pagination, Treeselect },
   directives: { waves },
   filters: {
     typeFilter(status) {
@@ -193,17 +230,23 @@ export default {
       statusOptions,
       sexOptions,
       status: '',
+      treeDeptData: null,
+      roleSelData: null,
       dialogFormVisible: false,
       dialogStatus: '',
+      roles: [],
       temp: {
         id: undefined,
         username: '',
         nickname: '',
         email: '',
         phone: '',
+        deptId: 0,
+        deptName: '',
         status: 1,
         remarks: '',
-        sex: 1
+        sex: 1,
+        roles: []
       },
       textMap: {
         update: '编辑',
@@ -219,6 +262,8 @@ export default {
   },
   created() {
     this.getList()
+    this.getDeptTree()
+    this.getRoleData()
   },
   methods: {
     getList() {
@@ -231,16 +276,33 @@ export default {
         this.listLoading = false
       })
     },
+    getDeptTree() {
+      getDeptTree(true).then(response => {
+        this.treeDeptData = response.data
+      })
+    },
+    getRoleData() {
+      getRoleAll().then(response => {
+        this.roleSelData = response.data
+      })
+    },
     resetTemp() {
       this.temp = {
         id: undefined,
         username: '',
         nickname: '',
+        deptId: 0,
+        deptName: '',
         email: '',
         phone: '',
         status: 1,
-        sex: 1
+        sex: 1,
+        roles: []
       }
+      this.roles = []
+    },
+    selectDepart(val) {
+      this.temp.deptName = val.label
     },
     handleFilter() {
       this.listQuery.pages = 1
@@ -255,11 +317,15 @@ export default {
       })
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+      this.temp = Object.assign({}, row)
+      // 获取用户角色
+      getRolIds(this.temp.id).then(response => {
+        this.roles = response.data
+        this.dialogStatus = 'update'
+        this.dialogFormVisible = true
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate()
+        })
       })
     },
     handleModifyStatus(row, index) {
@@ -283,6 +349,7 @@ export default {
       // 新增
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          this.temp.roles = this.roles
           createUser(this.temp).then(() => {
             this.temp.createDate = new Date()
             this.list.unshift(this.temp)
@@ -301,6 +368,7 @@ export default {
       // 修改
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          this.temp.roles = this.roles
           const tempData = Object.assign({}, this.temp)
           updateUser(tempData).then(() => {
             const index = this.list.findIndex(v => v.id === this.temp.id)
@@ -314,6 +382,16 @@ export default {
             })
           })
         }
+      })
+    },
+    restPassd(row) {
+      restPassword(row.id).then(response => {
+        this.$notify({
+          title: '成功',
+          message: '重置成功',
+          type: 'success',
+          duration: 2000
+        })
       })
     }
   }

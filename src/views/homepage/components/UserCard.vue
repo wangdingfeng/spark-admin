@@ -6,8 +6,8 @@
 
     <div class="user-profile">
       <div class="box-center">
-        <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false">
-          <img width="60px" height="60px" src="@/assets/swy.jpg">
+        <pan-thumb :image="user.avatar?user.avatar:''" :height="'100px'" :width="'100px'" :hoverable="false">
+          <img width="60px" height="60px" src="@/assets/avatar.jpg">
         </pan-thumb>
       </div>
       <div class="box-center">
