@@ -1,21 +1,34 @@
 <template>
   <div class="login-container">
-    <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
-      class="card-box login-form">
+    <el-form
+      ref="loginForm"
+      auto-complete="on"
+      :model="loginForm"
+      :rules="loginRules"
+      label-position="left"
+      label-width="0px"
+      class="card-box login-form"
+    >
       <h3 class="title">Spark火花平台</h3>
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="off" placeholder="username" />
+        <el-input v-model="loginForm.username" name="username" type="text" auto-complete="off" placeholder="username" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password"></svg-icon>
+          <svg-icon icon-class="password" />
         </span>
-        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="off"
-          placeholder="password"></el-input>
-          <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
+        <el-input
+          v-model="loginForm.password"
+          name="password"
+          :type="pwdType"
+          placeholder="password"
+          auto-complete="off"
+          @keyup.enter.native="handleLogin"
+        />
+        <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
@@ -29,7 +42,7 @@
 <script>
 
 export default {
-  name: 'login',
+  name: 'Login',
   data() {
     return {
       loginForm: {
@@ -37,8 +50,8 @@ export default {
         password: '123456'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', message:"请填写用户名" }],
-        password: [{ required: true, trigger: 'blur', message:"密码不能为空" }]
+        username: [{ required: true, trigger: 'blur', message: '请填写用户名' }],
+        password: [{ required: true, trigger: 'blur', message: '密码不能为空' }]
       },
       loading: false,
       pwdType: 'password'

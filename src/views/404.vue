@@ -1,18 +1,18 @@
 <template>
   <div class="container">
-    <img class="bg" src="@/assets/404_images/404.png" />
+    <img class="bg" src="@/assets/404_images/404.png">
     <div class="btn">
       <a href="/" class="goindex">返回首页</a>
-      <a @click="goback" class="lx" >返回上页</a>
-      <div style="clear:both;"></div>
+      <a class="lx" @click="goback">返回上页</a>
+      <div style="clear:both;" />
     </div>
   </div>
 </template>
 <script>
 export default {
   methods: {
-    goback(){
-      this.$router.back();
+    goback() {
+      this.$router.back()
     }
   }
 }
