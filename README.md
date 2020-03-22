@@ -1,4 +1,4 @@
-# Spark 火花平台
+# Spark 平台 前端页面
 
 > 根据[vue-admin-template](https://github.com/PanJiaChen/vue-admin-template/blob/master/README-zh.md)改变而来。
 
