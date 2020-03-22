@@ -48,18 +48,32 @@ export const constantRouterMap = [{
 {
   path: '/',
   component: Layout,
-  redirect: '/homepage',
+  redirect: '/dashboard',
   children: [{
-    path: '/homepage',
-    name: 'Homepage',
+    path: '/dashboard',
+    name: 'Dashboard',
     hidden: false,
-    component: () => import('@/views/homepage/index'),
+    component: () => import('@/views/dashboard/index'),
     meta: {
       title: '首页',
       icon: 'dashboard',
       affix: true
     }
   }]
+},
+{
+  path: '/profile',
+  component: Layout,
+  redirect: '/profile/index',
+  hidden: true,
+  children: [
+    {
+      path: 'index',
+      component: () => import('@/views/profile/index'),
+      name: '个人中心',
+      meta: { title: '个人中心', icon: 'user', noCache: true }
+    }
+  ]
 }
 ]
 export const notFoundRouter = [{

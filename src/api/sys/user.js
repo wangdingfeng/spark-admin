@@ -44,3 +44,11 @@ export function restPassword(id) {
     method: 'get'
   })
 }
+
+export function updatetPassword(password) {
+  return request({
+    url: `/admin/user/updatePassword`,
+    method: 'post',
+    data: { password: password }
+  })
+}

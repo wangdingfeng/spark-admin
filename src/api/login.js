@@ -3,8 +3,8 @@ import request from '@/utils/request'
 export function login(username, password) {
   return request({
     url: '/admin/api/login',
-    method: 'post',
-    data: {
+    method: 'get',
+    params: {
       username,
       password
     }

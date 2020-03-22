@@ -1,7 +1,7 @@
 <template>
   <el-card style="margin-bottom:20px;">
     <div slot="header" class="clearfix">
-      <span>About me</span>
+      <span>关于我</span>
     </div>
 
     <div class="user-profile">
@@ -11,8 +11,40 @@
         </pan-thumb>
       </div>
       <div class="box-center">
-        <div class="user-name text-center">{{ user.name }}</div>
+        <div class="user-name text-center">{{ user.name }}({{ user.account }})</div>
         <div class="user-role text-center text-muted">{{ user.role }}</div>
+      </div>
+    </div>
+    <div class="user-bio">
+      <div class="user-education user-bio-section">
+        <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>介绍(Author:Spark)</span></div>
+        <div class="user-bio-section-body">
+          <div class="text-muted">
+            Spark 是一款使用Spring Cloud Hoxton.RELEASE、Spring Cloud OAuth2 构建的权限管理系统，前端采用 vue-element-admin。
+          </div>
+        </div>
+      </div>
+
+      <div class="user-skills user-bio-section">
+        <div class="user-bio-section-header"><svg-icon icon-class="skill" /><span>技能</span></div>
+        <div class="user-bio-section-body">
+          <div class="progress-item">
+            <span>Vue</span>
+            <el-progress :percentage="50" />
+          </div>
+          <div class="progress-item">
+            <span>JavaScript</span>
+            <el-progress :percentage="90" />
+          </div>
+          <div class="progress-item">
+            <span>Spring Cloud</span>
+            <el-progress :percentage="70" />
+          </div>
+          <div class="progress-item">
+            <span>JAVA</span>
+            <el-progress :percentage="100" status="success" />
+          </div>
+        </div>
       </div>
     </div>
   </el-card>
@@ -29,6 +61,7 @@ export default {
       default: () => {
         return {
           name: '',
+          account: '',
           email: '',
           avatar: '',
           roles: ''

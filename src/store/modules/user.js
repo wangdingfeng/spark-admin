@@ -17,6 +17,7 @@ const user = {
   state: {
     token: getToken(),
     name: '',
+    account: '',
     avatar: '',
     roles: [],
     routers: constantRouterMap,
@@ -35,6 +36,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_ACCOUNT: (state, account) => {
+      state.account = account
     },
     SET_ROUTERS: (state, routers) => {
       state.addRouters = routers // 路由访问
@@ -76,6 +80,7 @@ const user = {
         getInfo(state.token).then(response => {
           const data = response.data
           commit('SET_NAME', data.sysUser.nickname)
+          commit('SET_ACCOUNT', data.sysUser.username)
           commit('SET_ROLES', data.roles)
           commit('SET_AVATAR', data.sysUser.avatar)
           commit('SET_ROUTERS', routerFormat(data.menus))

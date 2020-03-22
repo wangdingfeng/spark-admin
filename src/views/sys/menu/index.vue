@@ -116,7 +116,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-show="!temp.iFrame && temp.type.toString() === '1'" label="组件路径" prop="component">
+            <el-form-item v-show="temp.iFrame.toString() === 'false' && temp.type.toString() === '1'" label="组件路径" prop="component">
               <el-input v-model="temp.component" />
             </el-form-item>
           </el-col>

@@ -8,7 +8,7 @@
 
     <breadcrumb class="breadcrumb-container" />
     <div class="right-menu">
-      <template>
+      <template v-if="device!=='mobile'">
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -20,10 +20,10 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>主页</el-dropdown-item>
+          <router-link to="/profile">
+            <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
-          <a target="_blank" href="https://github.com/unclezs">
+          <a target="_blank" href="https://github.com/wangdingfeng/spark-platform">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
           <el-dropdown-item divided>
