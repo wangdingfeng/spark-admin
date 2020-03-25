@@ -65,14 +65,14 @@
           <span>{{ scope.row.status }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="耗时" align="center">
+      <el-table-column label="耗时(mm)" align="center">
         <template slot-scope="scope">
           <el-tag type="success"> {{ scope.row.times }} </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="访问时间" align="center">
         <template slot-scope="scope">
-          <el-tag type="success"> {{ scope.row.createTime }} </el-tag>
+          <span> {{ scope.row.createTime }} </span>
         </template>
       </el-table-column>
     </el-table>
