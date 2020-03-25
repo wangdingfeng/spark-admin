@@ -70,6 +70,11 @@
           <el-tag type="success"> {{ scope.row.times }} </el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="访问时间" align="center">
+        <template slot-scope="scope">
+          <el-tag type="success"> {{ scope.row.createTime }} </el-tag>
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
