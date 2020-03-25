@@ -1,9 +1,10 @@
 import request from '@/utils/request'
 
-export function listData(params) {
+export function pageLog(params) {
   return request({
-    url: '/admin/user/page',
+    url: '/admin/log/page',
     method: 'post',
     params
   })
 }
+

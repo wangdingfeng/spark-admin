@@ -1,98 +1,117 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input v-model="listQuery.username" placeholder="账户" style="width: 200px;" class="filter-item" />
-      <el-input v-model="listQuery.nickname" placeholder="用户真实名" style="width: 200px;" class="filter-item" />
-      <el-select
-        v-model="status"
-        placeholder="用户状态"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in statusOptions"
-          :key="item.key"
-          :label="item.display_name+'('+item.key+')'"
-          :value="item.key"
+    <el-row :gutter="15">
+      <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="7">
+        <div class="filter-container">
+          <el-input v-model="filterText" placeholder="输入关键字进行过滤" />
+        </div>
+        <el-tree
+          ref="deptTree"
+          class="filter-tree"
+          :data="treeDeptData"
+          :expand-on-click-node="false"
+          :props="defaultProps"
+          default-expand-all
+          :filter-node-method="filterNode"
+          @node-click="handleNodeClick"
         />
-      </el-select>
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >查询</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >新增</el-button>
-    </div>
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="加载中"
-      border
-      fit
-      highlight-current-row
-    >
-      <el-table-column label="昵称" align="center">
-        <template slot-scope="scope">{{ scope.row.nickname }}</template>
-      </el-table-column>
-      <el-table-column label="账号" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.username }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="邮箱" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.email }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="性别" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.sex | sexFilter }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="部门" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.deptName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center">
-        <template slot-scope="scope">{{ scope.row.createDate }}</template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="状态" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | typeFilter">{{ scope.row.status | statusFilter }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            编辑
-          </el-button>
-          <el-button size="mini" type="warning" @click="restPassd(row)">
-            重置
-          </el-button>
-          <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" @click="handleModifyStatus(row,$index)">
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      </el-col>
+      <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="17">
+        <div class="filter-container">
+          <el-input v-model="listQuery.username" placeholder="账户" style="width: 200px;" class="filter-item" />
+          <el-input v-model="listQuery.nickname" placeholder="用户真实名" style="width: 200px;" class="filter-item" />
+          <el-select
+            v-model="status"
+            placeholder="用户状态"
+            clearable
+            class="filter-item"
+            style="width: 130px"
+          >
+            <el-option
+              v-for="item in statusOptions"
+              :key="item.key"
+              :label="item.display_name+'('+item.key+')'"
+              :value="item.key"
+            />
+          </el-select>
+          <el-button
+            v-waves
+            class="filter-item"
+            type="primary"
+            icon="el-icon-search"
+            @click="handleFilter"
+          >查询</el-button>
+          <el-button
+            class="filter-item"
+            style="margin-left: 10px;"
+            type="success"
+            icon="el-icon-edit"
+            @click="handleCreate"
+          >新增</el-button>
+        </div>
+        <el-table
+          v-loading="listLoading"
+          :data="list"
+          element-loading-text="加载中"
+          border
+          fit
+          highlight-current-row
+        >
+          <el-table-column label="昵称" align="center">
+            <template slot-scope="scope">{{ scope.row.nickname }}</template>
+          </el-table-column>
+          <el-table-column label="账号" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.username }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="邮箱" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.email }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="性别" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.sex | sexFilter }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="部门" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.deptName }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="创建时间" align="center">
+            <template slot-scope="scope">{{ scope.row.createDate }}</template>
+          </el-table-column>
+          <el-table-column class-name="status-col" label="状态" align="center">
+            <template slot-scope="scope">
+              <el-tag :type="scope.row.status | typeFilter">{{ scope.row.status | statusFilter }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+            <template slot-scope="{row,$index}">
+              <el-button type="primary" size="mini" @click="handleUpdate(row)">
+                编辑
+              </el-button>
+              <el-button size="mini" type="warning" @click="restPassd(row)">
+                重置
+              </el-button>
+              <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" @click="handleModifyStatus(row,$index)">
+                删除
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="listQuery.pages"
-      :limit.sync="listQuery.size"
-      @pagination="getList"
-    />
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="listQuery.pages"
+          :limit.sync="listQuery.size"
+          @pagination="getList"
+        />
+      </el-col>
+    </el-row>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="100px" style="width: 600px; margin-left:50px;">
         <el-row>
@@ -225,12 +244,16 @@ export default {
         pages: 1,
         size: 20,
         username: '',
-        nickname: ''
+        nickname: '',
+        deptId: null
+
       },
       statusOptions,
       sexOptions,
       status: '',
+      filterText: '',
       treeDeptData: null,
+      defaultProps: { children: 'children', label: 'label' },
       roleSelData: null,
       dialogFormVisible: false,
       dialogStatus: '',
@@ -258,6 +281,12 @@ export default {
         status: [{ required: true, message: '请选择类型', trigger: 'change' }],
         email: [{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]
       }
+    }
+  },
+  watch: {
+    // 树过滤器
+    filterText(val) {
+      this.$refs.deptTree.filter(val)
     }
   },
   created() {
@@ -301,8 +330,21 @@ export default {
       }
       this.roles = []
     },
+    filterNode(value, data) {
+      if (!value) return true
+      return data.label.indexOf(value) !== -1
+    },
     selectDepart(val) {
       this.temp.deptName = val.label
+    },
+    handleNodeClick(data) {
+      // 点击部门树触发事件
+      if (data.id === 0) {
+        this.listQuery.deptId = null
+      } else {
+        this.listQuery.deptId = data.id
+      }
+      this.getList()
     },
     handleFilter() {
       this.listQuery.pages = 1
