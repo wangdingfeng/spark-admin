@@ -60,7 +60,7 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="listQuery.pages"
+      :page.sync="listQuery.current"
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
@@ -187,7 +187,7 @@ export default {
       currentId: undefined,
       defaultProps: { children: 'children', label: 'label' },
       listQuery: {
-        pages: 1,
+        current: 1,
         size: 20,
         name: ''
       },
@@ -236,7 +236,7 @@ export default {
       pageDict(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
-        this.listQuery.pages = response.data.pages
+        this.listQuery.current = response.data.current
         this.listQuery.size = response.data.size
         this.listLoading = false
       })
@@ -267,7 +267,7 @@ export default {
       }
     },
     handleFilter() {
-      this.listQuery.pages = 1
+      this.listQuery.current = 1
       this.getList()
     },
     handleCreate() {

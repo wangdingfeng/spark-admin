@@ -9,13 +9,6 @@
         icon="el-icon-search"
         @click="handleFilter"
       >查询</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >新增</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -80,7 +73,7 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="listQuery.pages"
+      :page.sync="listQuery.current"
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
@@ -102,7 +95,7 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        pages: 1,
+        current: 1,
         size: 20,
         clientId: ''
       }
@@ -117,10 +110,14 @@ export default {
       pageLog(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
-        this.listQuery.pages = response.data.pages
+        this.listQuery.current = response.data.current
         this.listQuery.size = response.data.size
         this.listLoading = false
       })
+    },
+    handleFilter() {
+      this.listQuery.current = 1
+      this.getList()
     }
   }
 }

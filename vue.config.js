@@ -23,7 +23,7 @@ module.exports = {
     }
   },
   configureWebpack: {
-    name: 'Spark 火花平台',
+    name: 'Spark 平台',
     resolve: {
       alias: {
         '@': resolve('src')
