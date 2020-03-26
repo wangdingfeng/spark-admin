@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="15">
-      <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="7">
+      <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="5">
         <div class="filter-container">
           <el-input v-model="filterText" placeholder="输入关键字进行过滤" />
         </div>
@@ -16,7 +16,7 @@
           @node-click="handleNodeClick"
         />
       </el-col>
-      <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="17">
+      <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="18">
         <div class="filter-container">
           <el-input v-model="listQuery.username" placeholder="账户" style="width: 200px;" class="filter-item" />
           <el-input v-model="listQuery.nickname" placeholder="用户真实名" style="width: 200px;" class="filter-item" />
