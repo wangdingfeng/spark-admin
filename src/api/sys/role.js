@@ -51,7 +51,7 @@ export function saveRoleAuth(params) {
 
 export function getRoleAll() {
   return request({
-    url: '/admin/role/getRoleAll',
+    url: '/admin/role/all',
     method: 'get'
   })
 }

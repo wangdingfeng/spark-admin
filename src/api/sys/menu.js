@@ -33,7 +33,7 @@ export function deleteMenu(id) {
 
 export function getMenuTree() {
   return request({
-    url: `/admin/menu/getTree`,
+    url: `/admin/menu/tree`,
     method: 'get'
   })
 }

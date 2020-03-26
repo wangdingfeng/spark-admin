@@ -52,7 +52,7 @@
       <el-table-column prop="permission" label="权限" />
       <el-table-column prop="hidden" label="是否隐藏">
         <template slot-scope="scope">
-          <span v-if="scope.row.iframe">是</span>
+          <span v-if="scope.row.hidden">是</span>
           <span v-else>否</span>
         </template>
       </el-table-column>
