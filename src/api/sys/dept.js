@@ -33,7 +33,7 @@ export function deleteDept(id) {
 
 export function getDeptTree(isRoot) {
   return request({
-    url: `/admin/dept/getTree`,
+    url: `/admin/dept/tree`,
     method: 'get',
     params: {
       isRoot: isRoot

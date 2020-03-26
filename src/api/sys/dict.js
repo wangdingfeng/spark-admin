@@ -1,16 +1,32 @@
 import request from '@/utils/request'
 
-export function listDict(params) {
+export function pageDict(params) {
   return request({
     url: '/admin/dict/page',
-    method: 'get',
+    method: 'post',
     params
   })
 }
 
-export function saveDict(params) {
+export function pageItemDict(params) {
+  return request({
+    url: '/admin/dict/page/item',
+    method: 'post',
+    params
+  })
+}
+
+export function createDict(params) {
   return request({
     url: '/admin/dict/save',
+    method: 'post',
+    data: params
+  })
+}
+
+export function createDictItem(params) {
+  return request({
+    url: '/admin/dict//save/item',
     method: 'post',
     data: params
   })
@@ -24,6 +40,14 @@ export function updateDict(params) {
   })
 }
 
+export function updateDictItem(params) {
+  return request({
+    url: '/admin/dict/update/item',
+    method: 'post',
+    data: params
+  })
+}
+
 export function deleteDict(id) {
   return request({
     url: `/admin/dict/delete/${id}`,
@@ -31,9 +55,9 @@ export function deleteDict(id) {
   })
 }
 
-export function getDictTree() {
+export function deleteDictItem(id) {
   return request({
-    url: `/admin/dict/getTree`,
-    method: 'get'
+    url: `/admin/dict/delete/item/${id}`,
+    method: 'delete'
   })
 }
