@@ -10,6 +10,7 @@
         @click="getList"
       >查询</el-button>
       <el-button
+        v-if="hasPerm('menu:add')"
         class="filter-item"
         style="margin-left: 10px;"
         type="success"
@@ -60,10 +61,10 @@
       <el-table-column prop="createDate" label="创建时间" width="200" />
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button v-if="hasPerm('menu:edit')" type="primary" size="mini" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" @click="handleDelete(row)">
+          <el-button v-if="hasPerm('menu:delete')" size="mini" type="danger" @click="handleDelete(row)">
             删除
           </el-button>
         </template>

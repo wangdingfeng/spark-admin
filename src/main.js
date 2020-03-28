@@ -1,5 +1,7 @@
 import Vue from 'vue'
 
+import Cookies from 'js-cookie'
+
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
@@ -14,11 +16,17 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import { hasBtnPermission } from './utils/permission' // button permission
 
 // set ElementUI lang to 中文
 Vue.use(ElementUI, { locale })
 
+Vue.use(ElementUI, {
+  size: Cookies.get('size') || 'small' // set element-ui default size
+})
+
 Vue.config.productionTip = false
+Vue.prototype.hasPerm = hasBtnPermission
 
 new Vue({
   el: '#app',
