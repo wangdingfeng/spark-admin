@@ -2,9 +2,13 @@ import request from '@/utils/request'
 
 export function login(username, password) {
   return request({
-    url: '/admin/api/login',
+    url: '/auth/oauth/token',
     method: 'get',
     params: {
+      grant_type: 'password',
+      client_id: 'spark-admin',
+      client_secret: 'spark-admin-secret',
+      scope: 'all',
       username,
       password
     }
