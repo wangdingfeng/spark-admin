@@ -10,7 +10,7 @@ export function listDept(params) {
 
 export function saveDept(params) {
   return request({
-    url: '/admin/dept/save',
+    url: '/admin/dept',
     method: 'post',
     data: params
   })
@@ -18,15 +18,15 @@ export function saveDept(params) {
 
 export function updateDept(params) {
   return request({
-    url: '/admin/dept/update',
-    method: 'post',
+    url: '/admin/dept',
+    method: 'put',
     data: params
   })
 }
 
 export function deleteDept(id) {
   return request({
-    url: `/admin/dept/delete/${id}`,
+    url: `/admin/dept/${id}`,
     method: 'delete'
   })
 }

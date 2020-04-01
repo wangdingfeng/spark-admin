@@ -10,7 +10,7 @@ export function listData(params) {
 
 export function saveMenu(params) {
   return request({
-    url: '/admin/menu/save',
+    url: '/admin/menu',
     method: 'post',
     data: params
   })
@@ -18,15 +18,15 @@ export function saveMenu(params) {
 
 export function updateMenu(params) {
   return request({
-    url: '/admin/menu/update',
-    method: 'post',
+    url: '/admin/menu',
+    method: 'put',
     data: params
   })
 }
 
 export function deleteMenu(id) {
   return request({
-    url: `/admin/menu/delete/${id}`,
+    url: `/admin/menu/${id}`,
     method: 'delete'
   })
 }

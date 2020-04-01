@@ -10,7 +10,7 @@ export function page(params) {
 
 export function saveOauth(params) {
   return request({
-    url: '/admin/authority/save',
+    url: '/admin/authority',
     method: 'post',
     data: params
   })
@@ -18,15 +18,15 @@ export function saveOauth(params) {
 
 export function updateOauth(params) {
   return request({
-    url: '/admin/authority/update',
-    method: 'post',
+    url: '/admin/authority',
+    method: 'put',
     data: params
   })
 }
 
 export function deleteOauth(id) {
   return request({
-    url: `/admin/authority/delete/${id}`,
+    url: `/admin/authority/${id}`,
     method: 'delete'
   })
 }

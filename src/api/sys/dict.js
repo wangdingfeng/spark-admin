@@ -18,7 +18,7 @@ export function pageItemDict(params) {
 
 export function createDict(params) {
   return request({
-    url: '/admin/dict/save',
+    url: '/admin/dict',
     method: 'post',
     data: params
   })
@@ -26,7 +26,7 @@ export function createDict(params) {
 
 export function createDictItem(params) {
   return request({
-    url: '/admin/dict//save/item',
+    url: '/admin/dict/item',
     method: 'post',
     data: params
   })
@@ -34,30 +34,30 @@ export function createDictItem(params) {
 
 export function updateDict(params) {
   return request({
-    url: '/admin/dict/update',
-    method: 'post',
+    url: '/admin/dict',
+    method: 'put',
     data: params
   })
 }
 
 export function updateDictItem(params) {
   return request({
-    url: '/admin/dict/update/item',
-    method: 'post',
+    url: '/admin/dict/item',
+    method: 'put',
     data: params
   })
 }
 
 export function deleteDict(id) {
   return request({
-    url: `/admin/dict/delete/${id}`,
+    url: `/admin/dict/${id}`,
     method: 'delete'
   })
 }
 
 export function deleteDictItem(id) {
   return request({
-    url: `/admin/dict/delete/item/${id}`,
+    url: `/admin/dict/item/${id}`,
     method: 'delete'
   })
 }

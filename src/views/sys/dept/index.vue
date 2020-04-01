@@ -86,7 +86,7 @@
         <el-button @click="dialogFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+        <el-button :loading="confirmLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">
           确定
         </el-button>
       </div>
@@ -106,6 +106,7 @@ export default {
   data() {
     return {
       listLoading: false,
+      confirmLoading: false,
       listQuery: {
         fullName: ''
       },
@@ -212,7 +213,9 @@ export default {
       // 新增
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          this.confirmLoading = true
           saveDept(this.temp).then(() => {
+            this.confirmLoading = false
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -223,12 +226,16 @@ export default {
             })
           })
         }
+      }).catch(() => {
+        this.confirmLoading = false
       })
     },
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          this.confirmLoading = true
           updateDept(this.temp).then(() => {
+            this.confirmLoading = false
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -237,6 +244,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.confirmLoading = false
           })
         }
       })

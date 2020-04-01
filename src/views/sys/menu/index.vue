@@ -133,7 +133,7 @@
         <el-button @click="dialogFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+        <el-button :loading="confirmLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">
           确定
         </el-button>
       </div>
@@ -153,6 +153,7 @@ export default {
   data() {
     return {
       listLoading: false,
+      confirmLoading: false,
       listQuery: {
         name: ''
       },
@@ -272,7 +273,9 @@ export default {
         if (valid) {
           if (this.temp.iFrame) this.temp.component = null
           if (this.temp.type === 0) this.temp.component = 'Layout'
+          this.confirmLoading = true
           saveMenu(this.temp).then(() => {
+            this.confirmLoading = false
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -281,6 +284,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.confirmLoading = false
           })
         }
       })
@@ -290,7 +295,9 @@ export default {
         if (valid) {
           if (this.temp.iFrame) this.temp.component = null
           if (this.temp.type === 0) this.temp.component = 'Layout'
+          this.confirmLoading = true
           updateMenu(this.temp).then(() => {
+            this.confirmLoading = false
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -299,6 +306,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.confirmLoading = false
           })
         }
       })
