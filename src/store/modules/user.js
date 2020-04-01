@@ -20,6 +20,7 @@ const user = {
     account: '',
     avatar: '',
     roles: [],
+    buttons: [],
     routers: constantRouterMap,
     addRouters: []
   },
@@ -37,6 +38,9 @@ const user = {
     SET_ROLES: (state, roles) => {
       state.roles = roles
     },
+    SET_BUTTONS: (state, buttons) => {
+      state.buttons = buttons
+    },
     SET_ACCOUNT: (state, account) => {
       state.account = account
     },
@@ -49,6 +53,7 @@ const user = {
       state.routers = []
       state.name = ''
       state.roles = []
+      state.buttons = []
       state.token = ''
     }
   },
@@ -61,9 +66,8 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
-          const data = response.data
-          setToken(data.token)
-          commit('SET_TOKEN', data.token)
+          setToken(response.value)
+          commit('SET_TOKEN', response.value)
           resolve()
         }).catch(error => {
           reject(error)
@@ -82,6 +86,7 @@ const user = {
           commit('SET_NAME', data.sysUser.nickname)
           commit('SET_ACCOUNT', data.sysUser.username)
           commit('SET_ROLES', data.roles)
+          commit('SET_BUTTONS', data.permissions)
           commit('SET_AVATAR', data.sysUser.avatar)
           commit('SET_ROUTERS', routerFormat(data.menus))
           resolve(response)

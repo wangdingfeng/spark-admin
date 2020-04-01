@@ -160,7 +160,7 @@
         <el-button @click="dialogFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createItemData():updateItemData()">
+        <el-button :loading="confirmLoading" type="primary" @click="dialogStatus==='create'?createItemData():updateItemData()">
           确定
         </el-button>
       </div>
@@ -184,6 +184,7 @@ export default {
       total: 0,
       listLoading: true,
       listItemLoading: true,
+      confirmLoading: false,
       currentId: undefined,
       defaultProps: { children: 'children', label: 'label' },
       listQuery: {
@@ -348,7 +349,9 @@ export default {
       // 新增
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          this.confirmLoading = true
           createDict(this.temp).then(() => {
+            this.confirmLoading = false
             this.temp.createDate = new Date()
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
@@ -358,6 +361,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.confirmLoading = false
           })
         }
       })
@@ -366,7 +371,9 @@ export default {
       // 新增
       this.$refs['dataItemForm'].validate((valid) => {
         if (valid) {
+          this.confirmLoading = true
           createDictItem(this.itemForm).then(() => {
+            this.confirmLoading = false
             this.listItem.unshift(this.itemForm)
             this.dialogItemFormVisible = false
             this.$notify({
@@ -375,6 +382,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.confirmLoading = false
           })
         }
       })
@@ -384,7 +393,9 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
+          this.confirmLoading = true
           updateDict(tempData).then(() => {
+            this.confirmLoading = false
             const index = this.list.findIndex(v => v.id === this.temp.id)
             this.list.splice(index, 1, this.temp)
             this.dialogFormVisible = false
@@ -394,6 +405,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.confirmLoading = false
           })
         }
       })
@@ -403,7 +416,9 @@ export default {
       this.$refs['dataItemForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.itemForm)
+          this.confirmLoading = true
           updateDictItem(tempData).then(() => {
+            this.confirmLoading = false
             const index = this.listItem.findIndex(v => v.id === this.itemForm.id)
             this.listItem.splice(index, 1, this.itemForm)
             this.dialogItemFormVisible = false
@@ -415,6 +430,8 @@ export default {
             })
           })
         }
+      }).catch(() => {
+        this.confirmLoading = false
       })
     }
   }

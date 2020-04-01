@@ -43,7 +43,13 @@ service.interceptors.response.use(
       return response.data
     }
   },
-  error => {
+  (error) => {
+    const errorMessage = error.response.data === undefined || error.response.data.msg === undefined ? '系统内部异常，请联系网站管理员' : error.response.data.msg
+    Message({
+      message: errorMessage,
+      type: 'error',
+      duration: 5 * 1000
+    })
     console.log('err' + error) // for debug
     return Promise.reject(error)
   }

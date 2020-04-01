@@ -100,7 +100,7 @@
         <el-button @click="dialogFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+        <el-button :loading="confirmLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">
           确定
         </el-button>
       </div>
@@ -122,6 +122,7 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      confirmLoading: false,
       listQuery: {
         current: 1,
         size: 20,
@@ -216,7 +217,9 @@ export default {
       // 新增
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          this.confirmLoading = true
           saveOauth(this.temp).then(() => {
+            this.confirmLoading = false
             this.temp.createDate = new Date()
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
@@ -226,6 +229,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.confirmLoading = false
           })
         }
       })
@@ -235,7 +240,9 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
+          this.confirmLoading = true
           updateOauth(tempData).then(() => {
+            this.confirmLoading = false
             const index = this.list.findIndex(v => v.id === this.temp.id)
             this.list.splice(index, 1, this.temp)
             this.dialogFormVisible = false
@@ -245,6 +252,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.confirmLoading = false
           })
         }
       })

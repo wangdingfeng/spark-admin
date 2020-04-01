@@ -10,7 +10,7 @@ export function listData(params) {
 
 export function createUser(params) {
   return request({
-    url: '/admin/user/save',
+    url: '/admin/user',
     method: 'post',
     data: params
   })
@@ -18,37 +18,37 @@ export function createUser(params) {
 
 export function updateUser(params) {
   return request({
-    url: '/admin/user/update',
-    method: 'post',
+    url: '/admin/user',
+    method: 'put',
     data: params
   })
 }
 
 export function deleteUser(id) {
   return request({
-    url: `/admin/user/delete/${id}`,
+    url: `/admin/user/${id}`,
     method: 'delete'
   })
 }
 
 export function getRolIds(id) {
   return request({
-    url: `/admin/user/getRolIdsByUserId/${id}`,
+    url: `/admin/user/roles/${id}`,
     method: 'get'
   })
 }
 
 export function restPassword(id) {
   return request({
-    url: `/admin/user/restPassword/${id}`,
+    url: `/admin/user/rest/password/${id}`,
     method: 'get'
   })
 }
 
 export function updatetPassword(password) {
   return request({
-    url: `/admin/user/updatePassword`,
-    method: 'post',
+    url: `/admin/user`,
+    method: 'patch',
     data: { password: password }
   })
 }
