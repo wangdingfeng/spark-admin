@@ -58,7 +58,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="sort" label="排序" />
-      <el-table-column prop="createDate" label="创建时间" width="200" />
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button v-if="hasPerm('menu:edit')" type="primary" size="mini" @click="handleUpdate(row)">

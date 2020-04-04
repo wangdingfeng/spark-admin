@@ -50,9 +50,6 @@
                 <span>{{ scope.row.deptName }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="创建时间" align="center">
-              <template slot-scope="scope">{{ scope.row.createDate }}</template>
-            </el-table-column>
             <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
               <template slot-scope="{row,$index}">
                 <el-button type="primary" size="mini" @click="handleUpdate(row)">
@@ -269,7 +266,6 @@ export default {
           this.confirmLoading = true
           createRole(this.temp).then(() => {
             this.confirmLoading = false
-            this.temp.createDate = new Date()
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({

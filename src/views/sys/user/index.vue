@@ -80,9 +80,6 @@
               <span>{{ scope.row.deptName }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="创建时间" align="center">
-            <template slot-scope="scope">{{ scope.row.createDate }}</template>
-          </el-table-column>
           <el-table-column class-name="status-col" label="状态" align="center">
             <template slot-scope="scope">
               <el-tag :type="scope.row.status | typeFilter">{{ scope.row.status | statusFilter }}</el-tag>
@@ -396,7 +393,6 @@ export default {
           this.confirmLoading = true
           createUser(this.temp).then(() => {
             this.confirmLoading = false
-            this.temp.createDate = new Date()
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({

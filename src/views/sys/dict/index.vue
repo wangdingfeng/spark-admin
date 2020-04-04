@@ -157,7 +157,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
+        <el-button @click="dialogItemFormVisible = false">
           取消
         </el-button>
         <el-button :loading="confirmLoading" type="primary" @click="dialogStatus==='create'?createItemData():updateItemData()">
