@@ -29,11 +29,6 @@
       <el-table-column label="流程ID" align="center">
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
-      <el-table-column label="流程分类" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.category }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="流程名称" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
@@ -44,16 +39,23 @@
           <span>{{ scope.row.key }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="流程部署时间" align="center">
+      <el-table-column label="流程资源名称" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.deploymentTime }}</span>
+          <span>{{ scope.row.resourceName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="部署ID" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.deploymentId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="版本" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.version }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="100" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            编辑
-          </el-button>
           <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" @click="handleModifyStatus(row,$index)">
             删除
           </el-button>
@@ -70,17 +72,11 @@
     />
     <el-dialog title="创建" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="160px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="流程id" prop="id">
-          <el-input v-model="temp.id" :disabled="true" />
-        </el-form-item>
         <el-form-item label="流程名称" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
         <el-form-item label="流程分类" prop="category">
           <el-input v-model="temp.category" />
-        </el-form-item>
-        <el-form-item label="流程key" prop="key">
-          <el-input v-model="temp.key" />
         </el-form-item>
         <el-form-item label="流程文件" prop="file">
           <el-upload
@@ -92,7 +88,7 @@
             :auto-upload="false"
           >
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <div slot="tip" class="el-upload__tip">只能上传bpmn/bpmn20.xml文件</div>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -129,8 +125,8 @@ export default {
       listQuery: {
         current: 1,
         size: 20,
-        deploymentName: '',
-        deploymentKey: ''
+        name: '',
+        key: ''
       },
       dialogFormVisible: false,
       temp: {
@@ -200,7 +196,7 @@ export default {
           this.uploadForm.append('name', this.temp.name)
           this.uploadForm.append('key', this.temp.key)
           this.uploadForm.append('category', this.temp.category)
-          console.info(this.uploadForm)
+          this.confirmLoading = true
           uploadFile(this.uploadForm).then(() => {
             this.confirmLoading = false
             this.dialogFormVisible = false
@@ -210,6 +206,7 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getList()
           }).catch(() => {
             this.confirmLoading = false
           })
