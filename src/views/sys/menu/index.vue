@@ -156,7 +156,7 @@ export default {
       listQuery: {
         name: ''
       },
-      tableData: null,
+      tableData: [],
       expandText: '展开全部',
       isShowTable: false,
       dialogFormVisible: false,

@@ -19,11 +19,9 @@
       <el-button type="text" style="float:right" class="filter-item" @click="unfold">{{ expandText }}<i class="el-icon-edit" /></el-button>
     </div>
     <el-table
-      v-loading="listLoading"
       :data="tableData"
       style="width: 100%;margin-bottom: 20px;"
       row-key="id"
-      element-loading-text="加载中"
       border
       default-expand-all
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
@@ -110,7 +108,7 @@ export default {
       listQuery: {
         fullName: ''
       },
-      tableData: null,
+      tableData: [],
       expandText: '展开',
       isShowTable: false,
       dialogFormVisible: false,

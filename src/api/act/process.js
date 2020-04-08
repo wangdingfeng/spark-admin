@@ -22,3 +22,10 @@ export function uploadFile(params) {
   )
 }
 
+export function deleteProcess(deploymentId) {
+  return request({
+    url: `/flow/runtime/process-definitions/${deploymentId}`,
+    method: 'delete'
+  })
+}
+

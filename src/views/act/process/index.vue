@@ -54,11 +54,10 @@
           <span>{{ scope.row.version }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="100" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" @click="handleModifyStatus(row,$index)">
-            删除
-          </el-button>
+          <el-button size="mini" type="primary" icon="el-icon-share" @click="handleImage(row)" />
+          <el-button size="mini" type="primary" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
         </template>
       </el-table-column>
     </el-table>
@@ -101,13 +100,22 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-dialog title="流程图片" :visible.sync="dialogImageVisible">
+      <div class="block">
+        <el-image :src="src">
+          <div slot="error" class="image-slot">
+            <i class="el-icon-picture-outline" />
+          </div>
+        </el-image>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { processPage, uploadFile } from '@/api/act/process.js'
+import { processPage, uploadFile, deleteProcess } from '@/api/act/process.js'
 
 export default {
   name: 'User',
@@ -129,6 +137,8 @@ export default {
         key: ''
       },
       dialogFormVisible: false,
+      dialogImageVisible: false,
+      src: '',
       temp: {
         id: undefined,
         name: '',
@@ -180,12 +190,26 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
+    handleImage(row) {
+      console.log(row)
+      this.src = 'http://localhost:9001/flow/runtime/process-definitions/resource?resType=image&procDefId=' + row.id
+      this.dialogImageVisible = true
+    },
     handleModifyStatus(row, index) {
       this.$confirm('是否删除数据?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        deleteProcess(row.deploymentId).then(response => {
+          this.$notify({
+            title: '成功',
+            message: '删除成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.list.splice(index, 1)
+        })
       })
     },
     createData() {
