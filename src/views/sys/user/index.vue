@@ -85,17 +85,11 @@
               <el-tag :type="scope.row.status | typeFilter">{{ scope.row.status | statusFilter }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+          <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
             <template slot-scope="{row,$index}">
-              <el-button type="primary" size="mini" @click="handleUpdate(row)">
-                编辑
-              </el-button>
-              <el-button size="mini" type="warning" @click="restPassd(row)">
-                重置
-              </el-button>
-              <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" @click="handleModifyStatus(row,$index)">
-                删除
-              </el-button>
+              <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
+              <el-button size="mini" type="warning" icon="el-icon-refresh-right" @click="restPassd(row)" />
+              <el-button v-if="row.isDeleted!='1'" size="mini" icon="el-icon-delete" type="danger" @click="handleModifyStatus(row,$index)" />
             </template>
           </el-table-column>
         </el-table>

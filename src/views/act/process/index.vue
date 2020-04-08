@@ -56,8 +56,8 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button size="mini" type="primary" icon="el-icon-share" @click="handleImage(row)" />
-          <el-button size="mini" type="primary" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
+          <el-button size="mini" type="primary" title="查看流程图" icon="el-icon-share" @click="handleImage(row)" />
+          <el-button size="mini" type="danger" title="删除" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
         </template>
       </el-table-column>
     </el-table>

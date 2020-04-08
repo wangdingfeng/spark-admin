@@ -45,15 +45,9 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            编辑
-          </el-button>
-          <el-button type="warning" size="mini" @click="handleitemDialog(row)">
-            子项
-          </el-button>
-          <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" @click="handleDelete(row,$index)">
-            删除
-          </el-button>
+          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
+          <el-button type="warning" size="mini" icon="el-icon-goblet-square-full" @click="handleitemDialog(row)" />
+          <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
         </template>
       </el-table-column>
     </el-table>
@@ -131,12 +125,8 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
           <template slot-scope="{row,$index}">
-            <el-button type="primary" size="mini" @click="handleItemUpdate(row)">
-              编辑
-            </el-button>
-            <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" @click="handleItemDelete(row,$index)">
-              删除
-            </el-button>
+            <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleItemUpdate(row)" />
+            <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" icon="el-icon-delete" @click="handleItemUpdate(row,$index)" />
           </template>
         </el-table-column>
       </el-table>

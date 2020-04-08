@@ -58,14 +58,10 @@
         </template>
       </el-table-column>
       <el-table-column prop="sort" label="排序" />
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="170" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button v-if="hasPerm('menu:edit')" type="primary" size="mini" @click="handleUpdate(row)">
-            编辑
-          </el-button>
-          <el-button v-if="hasPerm('menu:delete')" size="mini" type="danger" @click="handleDelete(row)">
-            删除
-          </el-button>
+          <el-button v-if="hasPerm('menu:edit')" type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
+          <el-button v-if="hasPerm('menu:delete')" size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row)" />
         </template>
       </el-table-column>
     </el-table>
