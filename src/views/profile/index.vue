@@ -45,7 +45,7 @@ export default {
       'name',
       'account',
       'avatar',
-      'roles'
+      'roleNames'
     ])
   },
   created() {
@@ -53,10 +53,9 @@ export default {
   },
   methods: {
     getUser() {
-      console.info(this.account)
       this.user = {
         name: this.name,
-        role: this.roles.join(' | '),
+        role: this.roleNames.join(' | '),
         account: this.account,
         email: 'admin@test.com',
         avatar: this.avatar

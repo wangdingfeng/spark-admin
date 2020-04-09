@@ -20,6 +20,7 @@ const user = {
     account: '',
     avatar: '',
     roles: [],
+    roleNames: [],
     buttons: [],
     routers: constantRouterMap,
     addRouters: []
@@ -38,6 +39,9 @@ const user = {
     SET_ROLES: (state, roles) => {
       state.roles = roles
     },
+    SET_ROLE_NAMES: (state, roleNames) => {
+      state.roleNames = roleNames
+    },
     SET_BUTTONS: (state, buttons) => {
       state.buttons = buttons
     },
@@ -53,6 +57,7 @@ const user = {
       state.routers = []
       state.name = ''
       state.roles = []
+      state.roleNames = []
       state.buttons = []
       state.token = ''
     }
@@ -86,6 +91,7 @@ const user = {
           commit('SET_NAME', data.sysUser.nickname)
           commit('SET_ACCOUNT', data.sysUser.username)
           commit('SET_ROLES', data.roles)
+          commit('SET_ROLE_NAMES', data.roleNames)
           commit('SET_BUTTONS', data.permissions)
           commit('SET_AVATAR', data.sysUser.avatar)
           commit('SET_ROUTERS', routerFormat(data.menus))

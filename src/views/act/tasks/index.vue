@@ -1,85 +1,147 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Activity name">
-        <el-input v-model="form.name" />
-      </el-form-item>
-      <el-form-item label="Activity zone">
-        <el-select v-model="form.region" placeholder="please select your zone">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="Activity time">
-        <el-col :span="11">
-          <el-date-picker v-model="form.date1" type="date" placeholder="Pick a date" style="width: 100%;" />
-        </el-col>
-        <el-col :span="2" class="line">-</el-col>
-        <el-col :span="11">
-          <el-time-picker v-model="form.date2" type="fixed-time" placeholder="Pick a time" style="width: 100%;" />
-        </el-col>
-      </el-form-item>
-      <el-form-item label="Instant delivery">
-        <el-switch v-model="form.delivery" />
-      </el-form-item>
-      <el-form-item label="Activity type">
-        <el-checkbox-group v-model="form.type">
-          <el-checkbox label="Online activities" name="type" />
-          <el-checkbox label="Promotion activities" name="type" />
-          <el-checkbox label="Offline activities" name="type" />
-          <el-checkbox label="Simple brand exposure" name="type" />
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="Resources">
-        <el-radio-group v-model="form.resource">
-          <el-radio label="Sponsor" />
-          <el-radio label="Venue" />
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="Activity form">
-        <el-input v-model="form.desc" type="textarea" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit">Create</el-button>
-        <el-button @click="onCancel">Cancel</el-button>
-      </el-form-item>
-    </el-form>
+    <div class="filter-container">
+      <el-input v-model="listQuery.name" placeholder="流程名称" style="width: 200px;" class="filter-item" />
+      <el-button
+        v-waves
+        class="filter-item"
+        type="primary"
+        icon="el-icon-search"
+        @click="handleFilter"
+      >查询</el-button>
+    </div>
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+      element-loading-text="加载中"
+      border
+      fit
+      highlight-current-row
+    >
+      <el-table-column label="任务ID" align="center">
+        <template slot-scope="scope">{{ scope.row.id }}</template>
+      </el-table-column>
+      <el-table-column label="业务ID" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.businessKey }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="业务类型" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.businessType }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="业务名称" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.businessName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="当前节点" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="流程时间" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime | parseDate }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="170" class-name="small-padding fixed-width">
+        <template slot-scope="{row}">
+          <el-button size="mini" type="success" title="处理" icon="el-icon-edit" @click="handleImage(row)" />
+          <el-button size="mini" type="primary" title="查看流程图" icon="el-icon-view" @click="handleImage(row)" />
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.current"
+      :limit.sync="listQuery.size"
+      @pagination="getList"
+    />
+    <el-dialog title="流程跟踪" :visible.sync="dialogImageVisible">
+      <div class="block">
+        <el-image :src="src">
+          <div slot="error" class="image-slot">
+            <i class="el-icon-picture-outline" />
+          </div>
+        </el-image>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import waves from '@/directive/waves'
+import Pagination from '@/components/Pagination'
+import { parseTime } from '@/utils'
+import { taskPage } from '@/api/act/tasks.js'
+
 export default {
+  name: 'User',
+  components: { Pagination },
+  directives: { waves },
+  filters: {
+    parseDate(time) {
+      return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+    }
+  },
   data() {
     return {
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+      list: null,
+      total: 0,
+      listLoading: true,
+      file: null,
+      src: '',
+      confirmLoading: false,
+      dialogImageVisible: false,
+      listQuery: {
+        current: 1,
+        size: 20,
+        userId: '',
+        groupIds: [],
+        name: ''
+      },
+      rules: {
+        name: [{ required: true, message: '请输入实例名称', trigger: 'change' }],
+        category: [{ required: true, message: '请输入分类', trigger: 'change' }]
       }
     }
   },
+  computed: {
+    ...mapGetters([
+      'account',
+      'roles'
+    ])
+  },
+  created() {
+    this.getList()
+  },
   methods: {
-    onSubmit() {
-      this.$message('submit!')
-    },
-    onCancel() {
-      this.$message({
-        message: 'cancel!',
-        type: 'warning'
+    getList() {
+      this.listLoading = true
+      this.listQuery.userId = this.account
+      this.listQuery.groupIds = this.roles
+      this.listQuery.groupIds = ['role_group_leader']
+      taskPage(this.listQuery).then(response => {
+        this.list = response.data.records
+        this.total = response.data.total
+        this.listQuery.current = response.data.current
+        this.listQuery.size = response.data.size
+        this.listLoading = false
       })
+    },
+    handleFilter() {
+      this.listQuery.current = 1
+      this.getList()
+    },
+    handleImage(row) {
+      this.src = 'http://localhost:9001/flow/runtime/image/' + row.processInstanceId
+      this.dialogImageVisible = true
     }
   }
 }
 </script>
-
-<style scoped>
-.line{
-  text-align: center;
-}
-</style>
-
