@@ -1,10 +1,11 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.description" placeholder="描述" style="width: 200px;" class="filter-item" />
+      <el-input v-model="listQuery.description" size="small" placeholder="描述" style="width: 200px;" class="filter-item" />
       <el-button
         v-waves
         class="filter-item"
+        size="small"
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
@@ -65,7 +66,7 @@
       </el-table-column>
       <el-table-column label="访问时间" align="center">
         <template slot-scope="scope">
-          <span> {{ scope.row.createTime }} </span>
+          <span> {{ scope.row.createTime | parseDate }} </span>
         </template>
       </el-table-column>
     </el-table>
@@ -83,12 +84,18 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { parseTime } from '@/utils'
 import { pageLog } from '@/api/sys/log.js'
 
 export default {
   name: 'Log',
   components: { Pagination },
   directives: { waves },
+  filters: {
+    parseDate(time) {
+      return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+    }
+  },
   data() {
     return {
       list: null,

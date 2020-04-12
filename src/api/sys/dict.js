@@ -16,6 +16,13 @@ export function pageItemDict(params) {
   })
 }
 
+export function findDictType(type) {
+  return request({
+    url: `/admin/dict/type/${type}`,
+    method: 'get'
+  })
+}
+
 export function createDict(params) {
   return request({
     url: '/admin/dict',

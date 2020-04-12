@@ -42,6 +42,7 @@
             @click="handleFilter"
           >查询</el-button>
           <el-button
+            v-if="hasPerm('user:add')"
             class="filter-item"
             style="margin-left: 10px;"
             type="success"
@@ -87,9 +88,9 @@
           </el-table-column>
           <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
             <template slot-scope="{row,$index}">
-              <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
-              <el-button size="mini" type="warning" icon="el-icon-refresh-right" @click="restPassd(row)" />
-              <el-button v-if="row.isDeleted!='1'" size="mini" icon="el-icon-delete" type="danger" @click="handleModifyStatus(row,$index)" />
+              <el-button v-if="hasPerm('user:edit')" type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
+              <el-button v-if="hasPerm('user:edit')" size="mini" type="warning" icon="el-icon-refresh-right" @click="restPassd(row)" />
+              <el-button v-if="hasPerm('user:delete')" size="mini" icon="el-icon-delete" type="danger" @click="handleModifyStatus(row,$index)" />
             </template>
           </el-table-column>
         </el-table>

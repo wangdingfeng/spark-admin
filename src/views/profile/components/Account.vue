@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { updatetPassword } from '@/api/sys/user.js'
+import { updatetUserInfo } from '@/api/sys/user.js'
 export default {
   props: {
     user: {
@@ -61,7 +61,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.updateLoading = true
-          updatetPassword(this.temp.repassword).then(response => {
+          updatetUserInfo({ password: this.temp.repassword }).then(response => {
             this.$message({
               message: '更新成功',
               type: 'success',

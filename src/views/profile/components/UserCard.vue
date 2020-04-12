@@ -6,8 +6,8 @@
 
     <div class="user-profile">
       <div class="box-center">
-        <pan-thumb :image="user.avatar?user.avatar:''" :height="'100px'" :width="'100px'" :hoverable="false">
-          <img width="60px" height="60px" src="@/assets/avatar.jpg">
+        <pan-thumb :image="avatar" :height="'100px'" :width="'100px'" :hoverable="false">
+          <el-link type="primary" class="change-avatar" @click="dialogVisible = true">跟换头像</el-link>
         </pan-thumb>
       </div>
       <div class="box-center">
@@ -47,17 +47,24 @@
         </div>
       </div>
     </div>
+    <avatar
+      :dialog-visible="dialogVisible"
+      @close="dialogVisible = false"
+      @success="changeSuccess"
+    />
   </el-card>
 </template>
 
 <script>
 import PanThumb from '@/components/PanThumb'
+import Avatar from './Avatar'
 
 export default {
-  components: { PanThumb },
+  components: { PanThumb, Avatar },
   props: {
     user: {
       type: Object,
+      avatar: '',
       default: () => {
         return {
           name: '',
@@ -67,6 +74,27 @@ export default {
           roles: ''
         }
       }
+    }
+  },
+  data() {
+    return {
+      dialogVisible: false
+    }
+  },
+  computed: {
+    avatar() {
+      return require(`@/assets/avatar/${this.user.avatar}`)
+    }
+  },
+  methods: {
+    changeSuccess(avatar) {
+      this.dialogVisible = false
+      this.$message({
+        message: '更新成功',
+        type: 'success'
+      })
+      this.user.avatar = avatar
+      this.$store.commit('SET_AVATAR', avatar)
     }
   }
 }

@@ -10,6 +10,7 @@
         @click="handleFilter"
       >查询</el-button>
       <el-button
+        v-if="hasPerm('dict:add')"
         class="filter-item"
         style="margin-left: 10px;"
         type="success"
@@ -40,14 +41,14 @@
       </el-table-column>
       <el-table-column label="创建时间" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createDate }}</span>
+          <span>{{ scope.row.createDate | parseDate }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
-          <el-button type="warning" size="mini" icon="el-icon-goblet-square-full" @click="handleitemDialog(row)" />
-          <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
+          <el-button v-if="hasPerm('dict:edit')" type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
+          <el-button v-if="hasPerm('dict:edit')" type="warning" size="mini" icon="el-icon-goblet-square-full" @click="handleitemDialog(row)" />
+          <el-button v-if="hasPerm('dict:delete')" size="mini" type="danger" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
         </template>
       </el-table-column>
     </el-table>
@@ -160,13 +161,19 @@
 
 <script>
 import waves from '@/directive/waves' // waves directive
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
+import { parseTime } from '@/utils'
 import { pageDict, pageItemDict, createDict, updateDict, deleteDict, createDictItem, updateDictItem, deleteDictItem } from '@/api/sys/dict.js'
 
 export default {
   name: 'Dict',
   components: { Pagination },
   directives: { waves },
+  filters: {
+    parseDate(time) {
+      return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+    }
+  },
   data() {
     return {
       list: null,

@@ -66,7 +66,7 @@
       </el-table-column>
     </el-table>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="100px" style="width: 600px; margin-left:50px;">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="100px" style="width: 700px; margin-left:50px;">
         <el-form-item label="菜单类型" prop="type">
           <el-radio-group v-model="temp.type" size="mini">
             <el-radio-button v-for="(type, index) in menuTypeList" :key="index" :label="index">{{ type }}</el-radio-button>
@@ -83,7 +83,9 @@
           </el-col>
           <el-col :span="12">
             <el-form-item v-show="temp.type.toString() !== '2'" label="图标" prop="icon">
-              <el-input v-model="temp.icon" />
+              <el-input v-model="temp.icon">
+                <el-button slot="append" icon="el-icon-brush" @click="chooseIcons" />
+              </el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -133,10 +135,16 @@
         </el-button>
       </div>
     </el-dialog>
+    <Icons
+      :dialog-visible="iconVisible"
+      @close="iconVisible = false"
+      @choose="chooseIcon"
+    />
   </div>
 </template>
 <script>
-import waves from '@/directive/waves' // waves directive
+import waves from '@/directive/waves'
+import Icons from './Icons'
 import { listData, saveMenu, updateMenu, deleteMenu } from '@/api/sys/menu.js'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
@@ -144,11 +152,12 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
   name: 'Menu',
   directives: { waves },
-  components: { Treeselect },
+  components: { Icons, Treeselect },
   data() {
     return {
       listLoading: false,
       confirmLoading: false,
+      iconVisible: false,
       listQuery: {
         name: ''
       },
@@ -228,6 +237,13 @@ export default {
         hidden: false,
         sort: 10
       }
+    },
+    chooseIcons() {
+      this.iconVisible = true
+    },
+    chooseIcon(icon) {
+      this.temp.icon = icon
+      this.iconVisible = false
     },
     handleCreate() {
       this.resetTemp()

@@ -10,6 +10,7 @@
         @click="handleFilter"
       >查询</el-button>
       <el-button
+        v-if="hasPerm('role:add')"
         class="filter-item"
         style="margin-left: 10px;"
         type="success"
@@ -52,8 +53,8 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
               <template slot-scope="{row,$index}">
-                <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
-                <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
+                <el-button v-if="hasPerm('role:edit')" type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
+                <el-button v-if="hasPerm('user:delete')" size="mini" type="danger" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
               </template>
             </el-table-column>
           </el-table>
@@ -66,6 +67,7 @@
               <span class="role-span">菜单分配</span>
             </el-tooltip>
             <el-button
+              v-if="hasPerm('role:edit')"
               :loading="menuLoading"
               icon="el-icon-check"
               size="mini"
@@ -141,6 +143,7 @@ export default {
       total: 0,
       listLoading: true,
       menuLoading: false,
+      treeLoading: false,
       confirmLoading: false,
       currentId: undefined,
       defaultProps: { children: 'children', label: 'label' },

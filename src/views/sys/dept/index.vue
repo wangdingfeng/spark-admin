@@ -10,6 +10,7 @@
         @click="getList"
       >查询</el-button>
       <el-button
+        v-if="hasPerm('dept:add')"
         class="filter-item"
         style="margin-left: 10px;"
         type="success"
@@ -35,11 +36,15 @@
         </template>
       </el-table-column>
       <el-table-column prop="sort" label="排序" />
-      <el-table-column prop="createDate" label="创建时间" width="200" />
+      <el-table-column prop="createDate" label="创建时间" width="200">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createDate | parseDate }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
-          <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row)" />
+          <el-button v-if="hasPerm('dept:edit')" type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
+          <el-button v-if="hasPerm('dept:delete')" size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row)" />
         </template>
       </el-table-column>
     </el-table>
@@ -90,6 +95,7 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import { listDept, saveDept, updateDept, deleteDept } from '@/api/sys/dept.js'
+import { parseTime } from '@/utils'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
@@ -97,6 +103,11 @@ export default {
   name: 'Dept',
   directives: { waves },
   components: { Treeselect },
+  filters: {
+    parseDate(time) {
+      return parseTime(time, '{y}-{m}-{d} {h}:{i}')
+    }
+  },
   data() {
     return {
       listLoading: false,

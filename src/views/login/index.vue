@@ -14,7 +14,7 @@
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input v-model="loginForm.username" name="username" type="text" auto-complete="off" placeholder="username" />
+        <el-input v-model="loginForm.username" name="username" type="text" auto-complete="off" placeholder="请输入用户名" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
@@ -24,7 +24,7 @@
           v-model="loginForm.password"
           name="password"
           :type="pwdType"
-          placeholder="password"
+          placeholder="请输入密码"
           auto-complete="off"
           @keyup.enter.native="handleLogin"
         />

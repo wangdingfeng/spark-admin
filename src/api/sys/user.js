@@ -45,10 +45,10 @@ export function restPassword(id) {
   })
 }
 
-export function updatetPassword(password) {
+export function updatetUserInfo(params) {
   return request({
     url: `/admin/user`,
     method: 'patch',
-    data: { password: password }
+    data: params
   })
 }

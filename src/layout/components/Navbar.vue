@@ -23,6 +23,9 @@
           <router-link to="/profile">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
+          <a target="_blank" href="https://gitee.com/dreamfeng/spark-platform">
+            <el-dropdown-item>Gitee</el-dropdown-item>
+          </a>
           <a target="_blank" href="https://github.com/wangdingfeng/spark-platform">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
@@ -48,7 +51,10 @@ export default {
     SizeSelect
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar', 'name', 'device']),
+    ...mapGetters(['sidebar', 'name', 'device']),
+    avatar() {
+      return require(`@/assets/avatar/${this.$store.state.user.avatar}`)
+    },
     hoursTips() {
       const date = new Date()
       if (date.getHours() >= 0 && date.getHours() < 12) {
