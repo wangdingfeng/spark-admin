@@ -26,7 +26,6 @@
       row-key="id"
       element-loading-text="加载中"
       border
-      default-expand-all
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <el-table-column prop="name" label="菜单名称" width="180" />

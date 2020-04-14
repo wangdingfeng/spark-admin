@@ -73,7 +73,6 @@ const user = {
         login(username, userInfo.password).then(response => {
           setToken(response.value)
           commit('SET_TOKEN', response.value)
-          commit('SET_BUTTONS', response.additionalInformation.roles.split(','))
           resolve()
         }).catch(error => {
           reject(error)
@@ -94,6 +93,7 @@ const user = {
           commit('SET_ROLES', data.roles)
           commit('SET_ROLE_NAMES', data.roleNames)
           commit('SET_AVATAR', data.sysUser.avatar)
+          commit('SET_BUTTONS', data.permissions)
           commit('SET_ROUTERS', routerFormat(data.menus))
           resolve(response)
         }).catch(error => {

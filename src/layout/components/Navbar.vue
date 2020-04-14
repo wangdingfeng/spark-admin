@@ -53,7 +53,8 @@ export default {
   computed: {
     ...mapGetters(['sidebar', 'name', 'device']),
     avatar() {
-      return require(`@/assets/avatar/${this.$store.state.user.avatar}`)
+      if (this.$store.state.user.avatar) return require(`@/assets/avatar/${this.$store.state.user.avatar}`)
+      return ''
     },
     hoursTips() {
       const date = new Date()

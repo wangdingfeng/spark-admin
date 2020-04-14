@@ -34,7 +34,9 @@ const sunny = [
 ]
 const others = [
   'others/1.jpg', 'others/2.jpg', 'others/3.jpg', 'others/4.jpg', 'others/5.jpg', 'others/6.jpg',
-  'others/7.jpg', 'others/8.jpg', 'others/9.jpeg'
+  'others/7.jpg', 'others/8.jpg', 'others/9.jpeg', 'others/10.jpg', 'others/11.jpg', 'others/12.jpg',
+  'others/13.jpg', 'others/14.jpg', 'others/15.jpg', 'others/16.jpg', 'others/17.jpg', 'others/18.jpg',
+  'others/19.jpg', 'others/20.jpg', 'others/21.jpg', 'others/22.jpg', 'others/23.jpg', 'others/24.jpg'
 ]
 export default {
   name: 'Avatar',

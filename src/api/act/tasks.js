@@ -7,3 +7,10 @@ export function taskPage(params) {
     data: params
   })
 }
+
+export function recordList(processInstanceId) {
+  return request({
+    url: `/flow/runtime/tasks/records/${processInstanceId}`,
+    method: 'get'
+  })
+}
