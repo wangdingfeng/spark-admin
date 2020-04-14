@@ -62,13 +62,33 @@
       @pagination="getList"
     />
     <el-dialog title="流程跟踪" :visible.sync="dialogImageVisible">
-      <div class="block">
-        <el-image :src="src">
-          <div slot="error" class="image-slot">
-            <i class="el-icon-picture-outline" />
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="流程记录" name="records">
+          <el-table :data="gridData">
+            <el-table-column property="taskId" label="任务ID" />
+            <el-table-column property="activityName" label="当前节点" />
+            <el-table-column label="开始时间">
+              <template slot-scope="scope">
+                <span>{{ scope.row.startTime | parseDate }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="完成时间">
+              <template slot-scope="scope">
+                <span>{{ scope.row.endTime | parseDate }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="流程图" name="image">
+          <div class="block">
+            <el-image :src="src">
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture-outline" />
+              </div>
+            </el-image>
           </div>
-        </el-image>
-      </div>
+        </el-tab-pane>
+      </el-tabs>
     </el-dialog>
   </div>
 </template>
@@ -78,7 +98,7 @@ import { mapGetters } from 'vuex'
 import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination'
 import { parseTime } from '@/utils'
-import { taskPage } from '@/api/act/tasks.js'
+import { taskPage, recordList } from '@/api/act/tasks.js'
 
 export default {
   name: 'User',
@@ -94,7 +114,7 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
-      file: null,
+      activeName: 'records',
       src: '',
       confirmLoading: false,
       dialogImageVisible: false,
@@ -105,10 +125,7 @@ export default {
         groupIds: [],
         name: ''
       },
-      rules: {
-        name: [{ required: true, message: '请输入实例名称', trigger: 'change' }],
-        category: [{ required: true, message: '请输入分类', trigger: 'change' }]
-      }
+      gridData: null
     }
   },
   computed: {
@@ -125,7 +142,6 @@ export default {
       this.listLoading = true
       this.listQuery.userId = this.account
       this.listQuery.groupIds = this.roles
-      this.listQuery.groupIds = ['role_group_leader']
       taskPage(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
@@ -134,12 +150,18 @@ export default {
         this.listLoading = false
       })
     },
+    getRecordList(row) {
+      recordList(row.processInstanceId).then(response => {
+        this.gridData = response.data
+      })
+    },
     handleFilter() {
       this.listQuery.current = 1
       this.getList()
     },
     handleImage(row) {
-      this.src = 'http://localhost:9001/flow/runtime/image/' + row.processInstanceId
+      this.getRecordList(row)
+      this.src = process.env.VUE_APP_BASE_API + '/flow/runtime/image/' + row.processInstanceId
       this.dialogImageVisible = true
     }
   }
