@@ -134,7 +134,7 @@ export default {
       this.getList()
     },
     handleImage(row) {
-      this.src = 'http://localhost:9001/flow/runtime/image/' + row.processInstanceId
+      this.src = process.env.VUE_APP_BASE_API + '/flow/runtime/image/' + row.processInstanceId
       this.dialogImageVisible = true
     }
   }

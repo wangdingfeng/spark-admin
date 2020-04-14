@@ -192,7 +192,7 @@ export default {
     },
     handleImage(row) {
       console.log(row)
-      this.src = 'http://localhost:9001/flow/runtime/process-definitions/resource?resType=image&procDefId=' + row.id
+      this.src = process.env.VUE_APP_BASE_API + '/flow/runtime/process-definitions/resource?resType=image&procDefId=' + row.id
       this.dialogImageVisible = true
     },
     handleModifyStatus(row, index) {
