@@ -282,7 +282,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           if (this.temp.iFrame) this.temp.component = null
-          if (this.temp.type === 0) this.temp.component = 'Layout'
+          if (this.temp.type === '0') this.temp.component = 'Layout'
           this.confirmLoading = true
           saveMenu(this.temp).then(() => {
             this.confirmLoading = false
