@@ -191,7 +191,6 @@ export default {
       })
     },
     handleImage(row) {
-      console.log(row)
       this.src = process.env.VUE_APP_BASE_API + '/flow/runtime/process-definitions/resource?resType=image&procDefId=' + row.id
       this.dialogImageVisible = true
     },
