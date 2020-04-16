@@ -115,7 +115,7 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-    <el-dialog title="创建" :visible.sync="dialogFormVisible">
+    <el-dialog title="填写配置下载" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -253,6 +253,7 @@ export default {
               } else {
                 navigator.msSaveBlob(blob, fileName)
               }
+              this.dialogFormVisible = false
             })
             .catch(err => {
               console.log(err)
