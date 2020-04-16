@@ -20,6 +20,7 @@ export function downloadZip(params) {
   return request({
     url: '/admin/gen/zip',
     method: 'get',
-    params
+    params,
+    responseType: 'blob'
   })
 }
