@@ -8,3 +8,10 @@ export function pageLog(params) {
   })
 }
 
+export function pageLoginLog(params) {
+  return request({
+    url: '/admin/login-log/page',
+    method: 'post',
+    params
+  })
+}

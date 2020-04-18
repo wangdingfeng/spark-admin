@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.clientId" placeholder="clientId" style="width: 200px;" class="filter-item" />
+      <el-input v-model="listQuery.clientId" placeholder="授权ID" style="width: 200px;" class="filter-item" />
       <el-button
         v-waves
         class="filter-item"
@@ -25,35 +25,35 @@
       fit
       highlight-current-row
     >
-      <el-table-column label="clientId" align="center">
+      <el-table-column label="授权ID" align="center" width="180">
         <template slot-scope="scope">{{ scope.row.clientId }}</template>
       </el-table-column>
-      <el-table-column label="clientSecret" align="center">
+      <el-table-column label="密钥" align="center" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.clientSecret }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="scope" align="center">
+      <el-table-column label="授权作用域" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.scope }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="authorizedGrantTypes" align="center">
+      <el-table-column label="授权模式" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.authorizedGrantTypes }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="accessTokenValidity" align="center">
+      <el-table-column label="令牌时效" align="center" width="140">
         <template slot-scope="scope">
           <span>{{ scope.row.accessTokenValidity }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="refreshTokenValidity" align="center">
+      <el-table-column label="刷新时效" align="center" width="140">
         <template slot-scope="scope">
           <span>{{ scope.row.refreshTokenValidity }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
           <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
@@ -70,26 +70,26 @@
     />
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="160px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="clientId" prop="clientId">
+        <el-form-item label="授权ID" prop="clientId">
           <el-input v-model="temp.clientId" />
         </el-form-item>
-        <el-form-item label="clientSecret" prop="clientSecret">
+        <el-form-item label="密钥" prop="clientSecret">
           <el-input v-model="temp.clientSecret" />
         </el-form-item>
-        <el-form-item label="scope" prop="scope">
+        <el-form-item label="授权作用域" prop="scope">
           <el-input v-model="temp.scope" />
         </el-form-item>
-        <el-form-item label="authorizedGrantTypes" prop="authorizedGrantTypes">
+        <el-form-item label="授权模式" prop="authorizedGrantTypes">
           <el-input v-model="temp.authorizedGrantTypes" />
         </el-form-item>
-        <el-form-item label="webServerRedirectUri" prop="webServerRedirectUri">
+        <el-form-item label="回调地址" prop="webServerRedirectUri">
           <el-input v-model="temp.webServerRedirectUri" />
         </el-form-item>
-        <el-form-item label="accessTokenValidity" prop="accessTokenValidity">
-          <el-input v-model="temp.accessTokenValidity" />
+        <el-form-item label="令牌时效" prop="accessTokenValidity">
+          <el-input-number v-model="temp.accessTokenValidity" :min="1" label="令牌时效" />
         </el-form-item>
-        <el-form-item label="refreshTokenValidity" prop="refreshTokenValidity">
-          <el-input v-model="temp.refreshTokenValidity" />
+        <el-form-item label="刷新时效" prop="refreshTokenValidity">
+          <el-input-number v-model="temp.refreshTokenValidity" :min="1" label="刷新时效" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -141,8 +141,10 @@ export default {
         create: '创建'
       },
       rules: {
-        clientId: [{ required: true, message: '请输入用户名', trigger: 'change' }],
-        clientSecret: [{ required: true, message: '请输入真实姓名', trigger: 'change' }]
+        clientId: [{ required: true, message: '请输入授权ID', trigger: 'change' }],
+        clientSecret: [{ required: true, message: '请输入密钥', trigger: 'change' }],
+        scope: [{ required: true, message: '请输入授权作用域', trigger: 'change' }],
+        authorizedGrantTypes: [{ required: true, message: '请输入授权模式', trigger: 'change' }]
       }
     }
   },
