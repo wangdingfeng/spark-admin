@@ -150,7 +150,7 @@
           <treeselect v-model="temp.deptId" :multiple="false" :options="treeDeptData" clear-value-text="清除" placeholder=" " style="width:100%" @select="selectDepart" />
         </el-form-item>
         <el-form-item label="角色" prop="roles">
-          <el-select v-model="roles" multiple placeholder="请选择" style="width:100%">
+          <el-select v-model="roles" multiple placeholder="请选择" style="width:100%" @change="$forceUpdate()">
             <el-option
               v-for="item in roleSelData"
               :key="item.id"
