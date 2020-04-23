@@ -161,7 +161,7 @@ export default {
     },
     handleImage(row) {
       this.getRecordList(row)
-      this.src = process.env.VUE_APP_BASE_API + '/flow/runtime/image/' + row.processInstanceId
+      this.src = process.env.VUE_APP_BASE_API + '/flow/runtime/image/' + row.processInstanceId + '?' + Math.random()
       this.dialogImageVisible = true
     }
   }

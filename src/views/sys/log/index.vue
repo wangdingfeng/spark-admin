@@ -1,10 +1,24 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.description" size="small" placeholder="描述" style="width: 200px;" class="filter-item" />
+      <el-input
+        v-model="listQuery.description"
+        size="small"
+        placeholder="描述"
+        style="width: 200px;"
+      />
+      <el-date-picker
+        v-model="listQuery.createTimeArray"
+        size="small"
+        clearable
+        type="daterange"
+        value-format="yyyy-MM-dd hh:mm:ss"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      />
       <el-button
         v-waves
-        class="filter-item"
         size="small"
         type="primary"
         icon="el-icon-search"
@@ -61,12 +75,12 @@
       </el-table-column>
       <el-table-column label="耗时(mm)" align="center">
         <template slot-scope="scope">
-          <el-tag type="success"> {{ scope.row.times }} </el-tag>
+          <el-tag type="success">{{ scope.row.times }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="访问时间" align="center">
         <template slot-scope="scope">
-          <span> {{ scope.row.createTime | parseDate }} </span>
+          <span>{{ scope.row.createTime | parseDate }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -101,10 +115,12 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      createTimeArry: [],
       listQuery: {
         current: 1,
         size: 20,
-        clientId: ''
+        description: '',
+        createTimeStr: ''
       }
     }
   },
@@ -114,6 +130,8 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
+      console.info(this.createTimeArry)
+      if (this.createTimeArry.length !== 0) this.listQuery.createTimeStr = this.createTimeArry[0] + '~' + this.createTimeArry[1]
       pageLog(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
