@@ -54,7 +54,7 @@
             <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
               <template slot-scope="{row,$index}">
                 <el-button v-if="hasPerm('role:edit')" type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
-                <el-button v-if="hasPerm('user:delete')" size="mini" type="danger" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
+                <el-button v-if="hasPerm('user:delete')" size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row,$index)" />
               </template>
             </el-table-column>
           </el-table>

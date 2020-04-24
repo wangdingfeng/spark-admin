@@ -7,7 +7,7 @@
     <div class="user-profile">
       <div class="box-center">
         <pan-thumb :image="avatar" :height="'100px'" :width="'100px'" :hoverable="false">
-          <el-link type="primary" class="change-avatar" @click="dialogVisible = true">跟换头像</el-link>
+          <el-link type="primary" class="change-avatar" @click="dialogVisible = true">更新头像</el-link>
         </pan-thumb>
       </div>
       <div class="box-center">

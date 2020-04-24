@@ -15,3 +15,10 @@ export function pageLoginLog(params) {
     params
   })
 }
+
+export function findLatelyLog(username) {
+  return request({
+    url: `/admin/login-log/${username}`,
+    method: 'get'
+  })
+}

@@ -130,7 +130,6 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      console.info(this.createTimeArry)
       if (this.createTimeArry.length !== 0) this.listQuery.createTimeStr = this.createTimeArry[0] + '~' + this.createTimeArry[1]
       pageLog(this.listQuery).then(response => {
         this.list = response.data.records

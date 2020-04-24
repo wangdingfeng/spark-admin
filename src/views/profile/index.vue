@@ -10,8 +10,8 @@
         <el-col :span="18" :xs="24">
           <el-card>
             <el-tabs v-model="activeTab">
-              <el-tab-pane label="更新日志" name="timeline">
-                <timeline />
+              <el-tab-pane label="登录日志" name="timeline">
+                <timeline :user="user" />
               </el-tab-pane>
               <el-tab-pane label="修改密码" name="account">
                 <account :user="user" />
