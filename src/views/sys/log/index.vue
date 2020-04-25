@@ -115,7 +115,7 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
-      createTimeArry: [],
+      createTimeArray: [],
       listQuery: {
         current: 1,
         size: 20,
@@ -130,7 +130,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      if (this.createTimeArry.length !== 0) this.listQuery.createTimeStr = this.createTimeArry[0] + '~' + this.createTimeArry[1]
+      if (this.createTimeArray.length !== 0) this.listQuery.createTimeStr = this.createTimeArray[0] + '~' + this.createTimeArray[1]
       pageLog(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
