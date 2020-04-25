@@ -8,7 +8,7 @@
         style="width: 200px;"
       />
       <el-date-picker
-        v-model="listQuery.createTimeArray"
+        v-model="createTimeArray"
         size="small"
         clearable
         type="daterange"
