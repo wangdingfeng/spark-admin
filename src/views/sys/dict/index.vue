@@ -59,6 +59,7 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
+
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="80px" style="margin-left:20px;">
         <el-form-item label="字典名称" prop="name">
