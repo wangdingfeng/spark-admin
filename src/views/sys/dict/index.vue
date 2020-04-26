@@ -59,8 +59,8 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="30%">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="80px" style="margin-left:50px;">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="80px" style="margin-left:20px;">
         <el-form-item label="字典名称" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
@@ -82,12 +82,13 @@
     </el-dialog>
     <el-dialog :title="type+'字典子项'" :visible.sync="dialogItemVisible">
       <div class="filter-container">
-        <el-input v-model="listItemQuery.label" placeholder="字典名称" style="width: 200px;" class="filter-item" />
+        <el-input v-model="listItemQuery.label" placeholder="字典名称" style="width: 200px;" class="filter-item" size="small" />
         <el-button
           v-waves
           class="filter-item"
           type="primary"
           icon="el-icon-search"
+          size="small"
           @click="getItemList"
         >查询</el-button>
         <el-button
@@ -95,6 +96,7 @@
           style="margin-left: 10px;"
           type="success"
           icon="el-icon-edit"
+          size="small"
           @click="handleItemCreate"
         >新增</el-button>
       </div>
@@ -132,8 +134,8 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogItemFormVisible" width="30%">
-      <el-form ref="dataItemForm" :rules="rules" :model="itemForm" label-position="left" label-width="80px" style="margin-left:50px;">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogItemFormVisible" width="40%">
+      <el-form ref="dataItemForm" :rules="rules" :model="itemForm" label-position="left" label-width="80px" style="margin-left:10px;">
         <el-form-item label="标签名" prop="label">
           <el-input v-model="itemForm.label" />
         </el-form-item>
