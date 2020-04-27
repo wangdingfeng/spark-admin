@@ -19,7 +19,7 @@
       <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="18">
         <div class="filter-container">
           <el-input v-model="listQuery.username" placeholder="账户" style="width: 200px;" class="filter-item" />
-          <el-input v-model="listQuery.nickname" placeholder="用户真实名" style="width: 200px;" class="filter-item" />
+          <el-input v-model="listQuery.nickname" placeholder="昵称" style="width: 200px;" class="filter-item" />
           <el-select
             v-model="status"
             placeholder="用户状态"
