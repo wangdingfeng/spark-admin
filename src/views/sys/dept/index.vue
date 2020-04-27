@@ -48,8 +48,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="100px" style="width: 600px; margin-left:50px;">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="100px" style="margin-left:50px;">
         <el-row>
           <el-col :span="12">
             <el-form-item label="全称" prop="fullName">
@@ -62,6 +62,9 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-form-item label="地址" prop="address">
+          <el-input v-model="temp.address" />
+        </el-form-item>
         <el-form-item label="上级菜单" prop="pid">
           <treeselect v-model="temp.pid" :normalizer="normalizer" :multiple="false" :options="treeData" clear-value-text="清除" placeholder=" " style="width:100%" />
         </el-form-item>
