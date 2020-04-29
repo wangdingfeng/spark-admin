@@ -17,12 +17,18 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 import { hasBtnPermission } from './utils/permission' // button permission
+import * as filters from './filters' // global filters
 
 // set ElementUI lang to 中文
 Vue.use(ElementUI, { locale })
 
 Vue.use(ElementUI, {
   size: Cookies.get('size') || 'small' // set element-ui default size
+})
+
+// register global utility filters.
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
 })
 
 Vue.config.productionTip = false

@@ -80,7 +80,7 @@
       </el-table-column>
       <el-table-column label="访问时间" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseDate }}</span>
+          <span>{{ scope.row.createTime | parseTime }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -98,18 +98,12 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { parseTime } from '@/utils'
 import { pageLog } from '@/api/sys/log.js'
 
 export default {
   name: 'Log',
   components: { Pagination },
   directives: { waves },
-  filters: {
-    parseDate(time) {
-      return parseTime(time, '{y}-{m}-{d} {h}:{i}')
-    }
-  },
   data() {
     return {
       list: null,

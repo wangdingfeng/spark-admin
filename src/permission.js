@@ -13,6 +13,10 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
     } else {
       if (store.getters.name.length === 0) {
+        // 加载数据字典
+        store.dispatch('GetDicts').then(() => {
+          console.log('数据字典加载成功...')
+        })
         store.dispatch('GetInfo').then(() => { // 拉取用户信息
           router.addRoutes(store.getters.routers)// 添加后台路由表
           next({ ...to, replace: true })

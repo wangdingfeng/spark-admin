@@ -44,7 +44,7 @@
       </el-table-column>
       <el-table-column label="登录时间" align="center">
         <template slot-scope="scope">
-          <span> {{ scope.row.loginTime | parseDate }} </span>
+          <span> {{ scope.row.loginTime | parseTime }} </span>
         </template>
       </el-table-column>
     </el-table>
@@ -62,18 +62,12 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import { parseTime } from '@/utils'
 import { pageLoginLog } from '@/api/sys/log.js'
 
 export default {
   name: 'Log',
   components: { Pagination },
   directives: { waves },
-  filters: {
-    parseDate(time) {
-      return parseTime(time, '{y}-{m}-{d} {h}:{i}')
-    }
-  },
   data() {
     return {
       list: null,

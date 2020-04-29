@@ -68,3 +68,18 @@ export function deleteDictItem(id) {
     method: 'delete'
   })
 }
+
+export function fetchDicts() {
+  return request({
+    url: '/admin/dict',
+    method: 'get'
+  })
+}
+
+export function resetCache() {
+  return request({
+    url: '/admin/dict/cache',
+    method: 'get'
+  })
+}
+

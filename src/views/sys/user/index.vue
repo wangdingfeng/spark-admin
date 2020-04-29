@@ -29,9 +29,9 @@
           >
             <el-option
               v-for="item in statusOptions"
-              :key="item.key"
-              :label="item.display_name+'('+item.key+')'"
-              :value="item.key"
+              :key="item.value"
+              :label="item.label+'('+item.value+')'"
+              :value="item.value"
             />
           </el-select>
           <el-button
@@ -73,7 +73,7 @@
           </el-table-column>
           <el-table-column label="性别" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.sex | sexFilter }}</span>
+              <span>{{ scope.row.sex | dictLabel('sex') }}</span>
             </template>
           </el-table-column>
           <el-table-column label="部门" align="center">
@@ -83,7 +83,7 @@
           </el-table-column>
           <el-table-column class-name="status-col" label="状态" align="center">
             <template slot-scope="scope">
-              <el-tag :type="scope.row.status | typeFilter">{{ scope.row.status | statusFilter }}</el-tag>
+              <el-tag :type="scope.row.status | typeFilter">{{ scope.row.status | dictLabel('user_status') }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
@@ -183,28 +183,7 @@ import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { listData, createUser, updateUser, deleteUser, getRolIds, restPassword } from '@/api/sys/user.js'
 import { getDeptTree } from '@/api/sys/dept.js'
 import { getRoleAll } from '@/api/sys/role.js'
-
-const statusOptions = [
-  { key: 0, display_name: '禁用' },
-  { key: 1, display_name: '正常' },
-  { key: 2, display_name: '锁定' },
-  { key: 3, display_name: '过期' }
-]
-
-const sexOptions = [
-  { key: 0, display_name: '女' },
-  { key: 1, display_name: '男' }
-]
-
-const statusKeyValue = statusOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
-
-const sexKeyValue = sexOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
+import { getDictList } from '@/utils/dict'
 
 export default {
   name: 'User',
@@ -219,12 +198,6 @@ export default {
         3: 'warning'
       }
       return typeMap[status]
-    },
-    sexFilter(sex) {
-      return sexKeyValue[sex]
-    },
-    statusFilter(type) {
-      return statusKeyValue[type]
     }
   },
   data() {
@@ -241,8 +214,8 @@ export default {
         deptId: null
 
       },
-      statusOptions,
-      sexOptions,
+      statusOptions: getDictList('user_status'),
+      sexOptions: getDictList('sex'),
       status: '',
       filterText: '',
       treeDeptData: null,

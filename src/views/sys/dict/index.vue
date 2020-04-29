@@ -1,7 +1,12 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.name" placeholder="字典名称" style="width: 200px;" class="filter-item" />
+      <el-input
+        v-model="listQuery.name"
+        placeholder="字典名称"
+        style="width: 200px;"
+        class="filter-item"
+      />
       <el-button
         v-waves
         class="filter-item"
@@ -17,6 +22,13 @@
         icon="el-icon-edit"
         @click="handleCreate"
       >新增</el-button>
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="warning"
+        icon="el-icon-aim"
+        @click="handleCache"
+      >重置缓存</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -41,14 +53,32 @@
       </el-table-column>
       <el-table-column label="创建时间" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createDate | parseDate }}</span>
+          <span>{{ scope.row.createDate | parseTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button v-if="hasPerm('dict:edit')" type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
-          <el-button v-if="hasPerm('dict:edit')" type="warning" size="mini" icon="el-icon-goblet-square-full" @click="handleitemDialog(row)" />
-          <el-button v-if="hasPerm('dict:delete')" size="mini" type="danger" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
+          <el-button
+            v-if="hasPerm('dict:edit')"
+            type="primary"
+            size="mini"
+            icon="el-icon-edit"
+            @click="handleUpdate(row)"
+          />
+          <el-button
+            v-if="hasPerm('dict:edit')"
+            type="warning"
+            size="mini"
+            icon="el-icon-goblet-square-full"
+            @click="handleitemDialog(row)"
+          />
+          <el-button
+            v-if="hasPerm('dict:delete')"
+            size="mini"
+            type="danger"
+            icon="el-icon-delete"
+            @click="handleModifyStatus(row,$index)"
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -61,7 +91,14 @@
     />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="80px" style="margin-left:20px;">
+      <el-form
+        ref="dataForm"
+        :rules="rules"
+        :model="temp"
+        label-position="left"
+        label-width="80px"
+        style="margin-left:20px;"
+      >
         <el-form-item label="字典名称" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
@@ -69,21 +106,28 @@
           <el-input v-model="temp.type" />
         </el-form-item>
         <el-form-item label="字典描述" prop="description">
-          <el-input v-model="temp.description" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="描述" />
+          <el-input
+            v-model="temp.description"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            type="textarea"
+            placeholder="描述"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
-          取消
-        </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          确定
-        </el-button>
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确定</el-button>
       </div>
     </el-dialog>
     <el-dialog :title="type+'字典子项'" :visible.sync="dialogItemVisible">
       <div class="filter-container">
-        <el-input v-model="listItemQuery.label" placeholder="字典名称" style="width: 200px;" class="filter-item" size="small" />
+        <el-input
+          v-model="listItemQuery.label"
+          placeholder="字典名称"
+          style="width: 200px;"
+          class="filter-item"
+          size="small"
+        />
         <el-button
           v-waves
           class="filter-item"
@@ -127,16 +171,39 @@
             <span>{{ scope.row.sort }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+        <el-table-column
+          label="操作"
+          align="center"
+          width="230"
+          class-name="small-padding fixed-width"
+        >
           <template slot-scope="{row,$index}">
-            <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleItemUpdate(row)" />
-            <el-button v-if="row.isDeleted!='1'" size="mini" type="danger" icon="el-icon-delete" @click="handleItemUpdate(row,$index)" />
+            <el-button
+              type="primary"
+              size="mini"
+              icon="el-icon-edit"
+              @click="handleItemUpdate(row)"
+            />
+            <el-button
+              v-if="row.isDeleted!='1'"
+              size="mini"
+              type="danger"
+              icon="el-icon-delete"
+              @click="handleItemUpdate(row,$index)"
+            />
           </template>
         </el-table-column>
       </el-table>
     </el-dialog>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogItemFormVisible" width="40%">
-      <el-form ref="dataItemForm" :rules="rules" :model="itemForm" label-position="left" label-width="80px" style="margin-left:10px;">
+      <el-form
+        ref="dataItemForm"
+        :rules="rules"
+        :model="itemForm"
+        label-position="left"
+        label-width="80px"
+        style="margin-left:10px;"
+      >
         <el-form-item label="标签名" prop="label">
           <el-input v-model="itemForm.label" />
         </el-form-item>
@@ -147,16 +214,27 @@
           <el-input-number v-model="itemForm.sort" :min="1" label="排序" />
         </el-form-item>
         <el-form-item label="字典描述" prop="description">
-          <el-input v-model="itemForm.description" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="描述" />
+          <el-input
+            v-model="itemForm.description"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            type="textarea"
+            placeholder="描述"
+          />
+        </el-form-item>
+        <el-form-item label="扩展属性1" prop="value1">
+          <el-input v-model="itemForm.value1" />
+        </el-form-item>
+        <el-form-item label="扩展属性2" prop="value2">
+          <el-input v-model="itemForm.value2" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogItemFormVisible = false">
-          取消
-        </el-button>
-        <el-button :loading="confirmLoading" type="primary" @click="dialogStatus==='create'?createItemData():updateItemData()">
-          确定
-        </el-button>
+        <el-button @click="dialogItemFormVisible = false">取消</el-button>
+        <el-button
+          :loading="confirmLoading"
+          type="primary"
+          @click="dialogStatus==='create'?createItemData():updateItemData()"
+        >确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -165,18 +243,22 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination'
-import { parseTime } from '@/utils'
-import { pageDict, pageItemDict, createDict, updateDict, deleteDict, createDictItem, updateDictItem, deleteDictItem } from '@/api/sys/dict.js'
+import {
+  pageDict,
+  pageItemDict,
+  createDict,
+  updateDict,
+  deleteDict,
+  createDictItem,
+  updateDictItem,
+  deleteDictItem,
+  resetCache
+} from '@/api/sys/dict.js'
 
 export default {
   name: 'Dict',
   components: { Pagination },
   directives: { waves },
-  filters: {
-    parseDate(time) {
-      return parseTime(time, '{y}-{m}-{d} {h}:{i}')
-    }
-  },
   data() {
     return {
       list: null,
@@ -211,9 +293,12 @@ export default {
       itemForm: {
         id: undefined,
         pid: null,
+        type: '',
         label: '',
         value: '',
         sort: 10,
+        value1: null,
+        value2: null,
         description: ''
       },
       textMap: {
@@ -221,8 +306,12 @@ export default {
         create: '创建'
       },
       rules: {
-        name: [{ required: true, message: '请输入字典名称', trigger: 'change' }],
-        type: [{ required: true, message: '请输入字典类型', trigger: 'change' }],
+        name: [
+          { required: true, message: '请输入字典名称', trigger: 'change' }
+        ],
+        type: [
+          { required: true, message: '请输入字典类型', trigger: 'change' }
+        ],
         label: [{ required: true, message: '请输入标签名', trigger: 'change' }],
         value: [{ required: true, message: '请输入字典值', trigger: 'change' }]
       }
@@ -261,6 +350,7 @@ export default {
       this.itemForm = {
         id: undefined,
         pid: this.listItemQuery.pid,
+        type: '',
         label: '',
         value: '',
         sort: 10,
@@ -270,6 +360,20 @@ export default {
     handleFilter() {
       this.listQuery.current = 1
       this.getList()
+    },
+    handleCache() {
+      this.$confirm('是否需要重新加载字典缓存?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        resetCache().then(response => {
+          this.$message({
+            type: 'success',
+            message: '重置成功!'
+          })
+        })
+      })
     },
     handleCreate() {
       this.resetTemp()
@@ -347,7 +451,7 @@ export default {
     },
     createData() {
       // 新增
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs['dataForm'].validate(valid => {
         if (valid) {
           this.confirmLoading = true
           createDict(this.temp).then(() => {
@@ -361,17 +465,16 @@ export default {
               type: 'success',
               duration: 2000
             })
-          }).catch(() => {
-            this.confirmLoading = false
           })
         }
       })
     },
     createItemData() {
       // 新增
-      this.$refs['dataItemForm'].validate((valid) => {
+      this.$refs['dataItemForm'].validate(valid => {
         if (valid) {
           this.confirmLoading = true
+          this.itemForm.type = this.type
           createDictItem(this.itemForm).then(() => {
             this.confirmLoading = false
             this.listItem.unshift(this.itemForm)
@@ -382,15 +485,13 @@ export default {
               type: 'success',
               duration: 2000
             })
-          }).catch(() => {
-            this.confirmLoading = false
           })
         }
       })
     },
     updateData() {
       // 修改
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
           this.confirmLoading = true
@@ -405,21 +506,21 @@ export default {
               type: 'success',
               duration: 2000
             })
-          }).catch(() => {
-            this.confirmLoading = false
           })
         }
       })
     },
     updateItemData() {
       // 修改
-      this.$refs['dataItemForm'].validate((valid) => {
+      this.$refs['dataItemForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.itemForm)
           this.confirmLoading = true
           updateDictItem(tempData).then(() => {
             this.confirmLoading = false
-            const index = this.listItem.findIndex(v => v.id === this.itemForm.id)
+            const index = this.listItem.findIndex(
+              v => v.id === this.itemForm.id
+            )
             this.listItem.splice(index, 1, this.itemForm)
             this.dialogItemFormVisible = false
             this.$notify({
@@ -430,8 +531,6 @@ export default {
             })
           })
         }
-      }).catch(() => {
-        this.confirmLoading = false
       })
     }
   }

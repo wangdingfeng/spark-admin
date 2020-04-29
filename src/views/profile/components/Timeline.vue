@@ -1,7 +1,7 @@
 <template>
   <div class="block">
     <el-timeline>
-      <el-timeline-item v-for="(item,index) of LogTimeline" :key="index" :timestamp="item.loginTime" placement="top">
+      <el-timeline-item v-for="(item,index) of LogTimeline" :key="index" :timestamp="item.loginTime | parseTime" placement="top">
         <el-card>
           <p><i class="el-icon-monitor" />  {{ item.system }}</p>
           <p><i class="el-icon-mouse" />  {{ item.browser }}</p>

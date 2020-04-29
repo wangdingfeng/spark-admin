@@ -10,6 +10,7 @@ const getters = {
   account: state => state.user.account,
   name: state => state.user.name,
   routers: state => state.user.routers,
+  dicts: state => state.dict.dicts,
   visitedViews: state => state.tagsView.visitedViews,
   cachedViews: state => state.tagsView.cachedViews
 }
