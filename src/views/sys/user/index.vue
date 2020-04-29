@@ -134,14 +134,14 @@
           <el-col :span="12">
             <el-form-item label="性别" prop="sex">
               <el-radio-group v-model="temp.sex" size="mini">
-                <el-radio-button v-for="item in sexOptions" :key="item.key" :label="item.key">{{ item.display_name }}</el-radio-button>
+                <el-radio-button v-for="item in sexOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="状态" prop="status">
               <el-select v-model="temp.status" class="filter-item" placeholder="选择状态">
-                <el-option v-for="item in statusOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+                <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -192,10 +192,10 @@ export default {
   filters: {
     typeFilter(status) {
       const typeMap = {
-        0: 'info',
-        1: 'success',
-        2: 'danger',
-        3: 'warning'
+        '0': 'info',
+        '1': 'success',
+        '2': 'danger',
+        '3': 'warning'
       }
       return typeMap[status]
     }
@@ -232,7 +232,7 @@ export default {
         phone: '',
         deptId: 0,
         deptName: '',
-        status: 1,
+        status: '1',
         remarks: '',
         sex: 1,
         roles: []
@@ -290,7 +290,7 @@ export default {
         deptName: '',
         email: '',
         phone: '',
-        status: 1,
+        status: '1',
         sex: 1,
         roles: []
       }

@@ -20,11 +20,7 @@ import { hasBtnPermission } from './utils/permission' // button permission
 import * as filters from './filters' // global filters
 
 // set ElementUI lang to 中文
-Vue.use(ElementUI, { locale })
-
-Vue.use(ElementUI, {
-  size: Cookies.get('size') || 'small' // set element-ui default size
-})
+Vue.use(ElementUI, { locale, size: Cookies.get('size') || 'small' })
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {

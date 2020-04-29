@@ -15,13 +15,17 @@ export function getDictList(code) {
  * @param value
  */
 export function getDictLabel(code, value) {
-  const dictList = store.getters.dicts[code]
   let label = ''
-  dictList.forEach((row) => {
-    if (row.value === value) {
-      label = row.label
-    }
-  })
+  try {
+    const dictList = store.getters.dicts[code]
+    dictList.forEach((row) => {
+      if (row.value === value.toString()) {
+        label = row.label
+      }
+    })
+  } catch (err) {
+    console.error(err)
+  }
   return label
 }
 
@@ -32,12 +36,16 @@ export function getDictLabel(code, value) {
  * @returns {string}
  */
 export function getDictValue(code, label) {
-  const dictList = store.getters.dicts[code]
   let value = ''
-  dictList.forEach((row) => {
-    if (row.label === label) {
-      value = row.value
-    }
-  })
+  try {
+    const dictList = store.getters.dicts[code]
+    dictList.forEach((row) => {
+      if (row.label === label) {
+        value = row.value
+      }
+    })
+  } catch (err) {
+    console.error(err)
+  }
   return value
 }
