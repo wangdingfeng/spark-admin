@@ -7,9 +7,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            New Visits
+            用户总数
           </div>
-          <span class="card-panel-num">123</span>
+          <span class="card-panel-num">6</span>
         </div>
       </div>
     </el-col>
@@ -20,35 +20,35 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Messages
+            代办总数
           </div>
-          <span class="card-panel-num">123</span>
+          <span class="card-panel-num">10</span>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-money">
-          <svg-icon icon-class="money" class-name="card-panel-icon" />
+          <svg-icon icon-class="ip" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Purchases
+            今日登陆IP数
           </div>
-          <span class="card-panel-num">123</span>
+          <span class="card-panel-num">20</span>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-shopping">
-          <svg-icon icon-class="shopping" class-name="card-panel-icon" />
+          <svg-icon icon-class="line-chart" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            Shoppings
+            访问量
           </div>
-          <span class="card-panel-num">123</span>
+          <span class="card-panel-num">1000</span>
         </div>
       </div>
     </el-col>

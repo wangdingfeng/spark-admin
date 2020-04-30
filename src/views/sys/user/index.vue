@@ -326,6 +326,7 @@ export default {
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row)
+      this.temp.status = this.temp.status.toString()
       // 获取用户角色
       getRolIds(this.temp.id).then(response => {
         this.roles = response.data

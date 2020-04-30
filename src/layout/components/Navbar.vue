@@ -9,11 +9,11 @@
     <breadcrumb class="breadcrumb-container" />
     <div class="right-menu">
       <template v-if="device!=='mobile'">
+        <screenfull id="screenfull" class="right-menu-item hover-effect" />
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
       </template>
-      <span class="right-menu-item">{{ hoursTips }},{{ name }}</span>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar" class="user-avatar">
@@ -43,28 +43,20 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import SizeSelect from '@/components/SizeSelect'
+import Screenfull from '@/components/Screenfull'
 
 export default {
   components: {
     Breadcrumb,
     Hamburger,
-    SizeSelect
+    SizeSelect,
+    Screenfull
   },
   computed: {
-    ...mapGetters(['sidebar', 'name', 'device']),
+    ...mapGetters(['sidebar', 'device']),
     avatar() {
       if (this.$store.state.user.avatar) return require(`@/assets/avatar/${this.$store.state.user.avatar}`)
       return ''
-    },
-    hoursTips() {
-      const date = new Date()
-      if (date.getHours() >= 0 && date.getHours() < 12) {
-        return '上午好'
-      } else if (date.getHours() < 18) {
-        return '下午好'
-      } else {
-        return '晚上好'
-      }
     }
   },
   methods: {
@@ -108,7 +100,6 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
-
     &:focus {
       outline: none;
     }
