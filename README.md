@@ -16,7 +16,7 @@ Gitee  | [https://gitee.com/dreamfeng/spark-platform](https://gitee.com/dreamfen
 
 ```bash
 # 克隆项目
-git clone https://gitee.com/dataact/jeeweb-vue-admin.git
+git clone https://gitee.com/dreamfeng/spark-admin.git
 
 # 安装依赖
 npm install
