@@ -22,6 +22,7 @@
         size="small"
         type="primary"
         icon="el-icon-search"
+        plain
         @click="handleFilter"
       >查询</el-button>
     </div>

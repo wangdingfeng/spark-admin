@@ -1,6 +1,17 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
+    <div class="filter-header">
+      <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="success"
+        icon="el-icon-edit"
+        plain
+        @click="handleCreate"
+      >新增</el-button>
+    </div>
+    <div v-show="showStatus" class="filter-container">
       <el-input
         v-model="listQuery.clientId"
         placeholder="授权ID"
@@ -12,15 +23,9 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
+        plain
         @click="handleFilter"
       >查询</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >新增</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -34,8 +39,8 @@
         <template slot-scope="scope">{{ scope.row.clientId }}</template>
       </el-table-column>
       <el-table-column label="密钥" align="center" width="180">
-        <template slot-scope="scope">
-          <span>{{ scope.row.clientSecret }}</span>
+        <template>
+          <span>****************</span>
         </template>
       </el-table-column>
       <el-table-column label="授权作用域" align="center">
@@ -60,14 +65,13 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
+          <el-button type="text" size="mini" icon="el-icon-edit" @click="handleUpdate(row)">编辑</el-button>
           <el-button
             v-if="row.isDeleted!='1'"
-            size="mini"
-            type="danger"
+            type="text"
             icon="el-icon-delete"
             @click="handleModifyStatus(row,$index)"
-          />
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -197,6 +201,8 @@ export default {
         size: 20,
         clientId: ''
       },
+      showStatus: false,
+      showTitle: '查询',
       dialogFormVisible: false,
       dialogStatus: '',
       temp: {
@@ -244,6 +250,14 @@ export default {
         this.listQuery.size = response.data.size
         this.listLoading = false
       })
+    },
+    reset() {
+      this.listQuery.clientId = ''
+    },
+    showClick() {
+      // 控制查询条件显示隐藏
+      this.showStatus = !this.showStatus
+      this.showTitle = this.showStatus === true ? '隐藏' : '查询'
     },
     resetTemp() {
       this.temp = {

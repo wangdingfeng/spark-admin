@@ -1,6 +1,17 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
+    <div class="filter-header">
+      <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="success"
+        icon="el-icon-edit"
+        plain
+        @click="handleCreate"
+      >新增</el-button>
+    </div>
+    <div v-show="showStatus" class="filter-container">
       <el-input v-model="listQuery.name" placeholder="流程名称" style="width: 200px;" class="filter-item" />
       <el-input v-model="listQuery.key" placeholder="流程key" style="width: 200px;" class="filter-item" />
       <el-button
@@ -8,15 +19,9 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
+        plain
         @click="handleFilter"
       >查询</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >新增</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -49,15 +54,15 @@
           <span>{{ scope.row.deploymentId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="版本" align="center">
+      <el-table-column label="版本" align="center" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.version }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button size="mini" type="primary" title="查看流程图" icon="el-icon-share" @click="handleImage(row)" />
-          <el-button size="mini" type="danger" title="删除" icon="el-icon-delete" @click="handleModifyStatus(row,$index)" />
+          <el-button size="mini" type="text" icon="el-icon-share" @click="handleImage(row)">流程图</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleModifyStatus(row,$index)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -103,6 +108,9 @@
     <el-dialog title="流程图片" :visible.sync="dialogImageVisible">
       <div class="block">
         <el-image :src="src">
+          <div slot="placeholder" class="image-slot">
+            加载中<span class="dot">...</span>
+          </div>
           <div slot="error" class="image-slot">
             <i class="el-icon-picture-outline" />
           </div>
@@ -128,6 +136,8 @@ export default {
       listLoading: true,
       uploadForm: new FormData(),
       actionUrl: '',
+      showStatus: false,
+      showTitle: '查询',
       file: null,
       confirmLoading: false,
       listQuery: {
@@ -164,6 +174,15 @@ export default {
         this.listQuery.size = response.data.size
         this.listLoading = false
       })
+    },
+    reset() {
+      this.listQuery.name = ''
+      this.listQuery.key = ''
+    },
+    showClick() {
+      // 控制查询条件显示隐藏
+      this.showStatus = !this.showStatus
+      this.showTitle = this.showStatus === true ? '隐藏' : '查询'
     },
     fileChange(file, fileList) {
       this.file = file.raw

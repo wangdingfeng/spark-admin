@@ -4,7 +4,7 @@ export default function(component) {
       case 'Layout':
         return require('@/layout').default
       default:
-        return require('@/views/' + component + '/index').default
+        return require('@/views/' + component + '.vue').default
     }
   } catch (e) {
     return import('@/views/404')

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="15">
-      <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="5">
+      <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
         <div class="filter-container">
           <el-input v-model="filterText" placeholder="输入关键字进行过滤" />
         </div>
@@ -17,11 +17,33 @@
         />
       </el-col>
       <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="18">
-        <div class="filter-container">
-          <el-input v-model="listQuery.username" placeholder="账户" style="width: 200px;" class="filter-item" />
-          <el-input v-model="listQuery.nickname" placeholder="昵称" style="width: 200px;" class="filter-item" />
+        <div class="filter-header">
+          <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
+          <el-button
+            v-if="hasPerm('user:add')"
+            class="filter-item"
+            style="margin-left: 10px;"
+            type="success"
+            icon="el-icon-edit"
+            plain
+            @click="handleCreate"
+          >新增</el-button>
+        </div>
+        <div v-show="showStatus" class="filter-container">
+          <el-input
+            v-model="listQuery.username"
+            placeholder="账户"
+            style="width: 200px;"
+            class="filter-item"
+          />
+          <el-input
+            v-model="listQuery.nickname"
+            placeholder="昵称"
+            style="width: 200px;"
+            class="filter-item"
+          />
           <el-select
-            v-model="status"
+            v-model="listQuery.status"
             placeholder="用户状态"
             clearable
             class="filter-item"
@@ -39,18 +61,28 @@
             class="filter-item"
             type="primary"
             icon="el-icon-search"
+            plain
             @click="handleFilter"
           >查询</el-button>
           <el-button
-            v-if="hasPerm('user:add')"
+            v-waves
             class="filter-item"
-            style="margin-left: 10px;"
-            type="success"
-            icon="el-icon-edit"
-            @click="handleCreate"
-          >新增</el-button>
+            type="warning"
+            icon="el-icon-delete"
+            plain
+            @click="reset"
+          >重置</el-button>
+          <el-button
+            v-waves
+            class="filter-item"
+            type="warning"
+            icon="el-icon-refresh"
+            plain
+            @click="restPassd"
+          >重置密码</el-button>
         </div>
         <el-table
+          ref="userTable"
           v-loading="listLoading"
           :data="list"
           element-loading-text="加载中"
@@ -58,6 +90,7 @@
           fit
           highlight-current-row
         >
+          <el-table-column type="selection" width="40" />
           <el-table-column label="昵称" align="center">
             <template slot-scope="scope">{{ scope.row.nickname }}</template>
           </el-table-column>
@@ -71,7 +104,7 @@
               <span>{{ scope.row.email }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="性别" align="center">
+          <el-table-column label="性别" align="center" width="100">
             <template slot-scope="scope">
               <span>{{ scope.row.sex | dictLabel('sex') }}</span>
             </template>
@@ -81,16 +114,34 @@
               <span>{{ scope.row.deptName }}</span>
             </template>
           </el-table-column>
-          <el-table-column class-name="status-col" label="状态" align="center">
+          <el-table-column class-name="status-col" label="状态" align="center" width="100">
             <template slot-scope="scope">
-              <el-tag :type="scope.row.status | typeFilter">{{ scope.row.status | dictLabel('user_status') }}</el-tag>
+              <el-tag
+                :type="scope.row.status | typeFilter"
+              >{{ scope.row.status | dictLabel('user_status') }}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
+          <el-table-column
+            label="操作"
+            align="center"
+            width="140"
+            class-name="small-padding fixed-width"
+          >
             <template slot-scope="{row,$index}">
-              <el-button v-if="hasPerm('user:edit')" type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
-              <el-button v-if="hasPerm('user:edit')" size="mini" type="warning" icon="el-icon-refresh-right" @click="restPassd(row)" />
-              <el-button v-if="hasPerm('user:delete')" size="mini" icon="el-icon-delete" type="danger" @click="handleModifyStatus(row,$index)" />
+              <el-button
+                v-if="hasPerm('user:edit')"
+                type="text"
+                size="mini"
+                icon="el-icon-edit"
+                @click="handleUpdate(row)"
+              >编辑</el-button>
+              <el-button
+                v-if="hasPerm('user:delete')"
+                type="text"
+                size="mini"
+                icon="el-icon-delete"
+                @click="handleModifyStatus(row,$index)"
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -105,52 +156,82 @@
       </el-col>
     </el-row>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="50%">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="80px" style="margin-left:10px;">
+      <el-form
+        ref="dataForm"
+        :rules="rules"
+        :model="temp"
+        label-position="right"
+        label-width="100px"
+        style="margin-left:10px;"
+      >
         <el-row>
           <el-col :span="12">
-            <el-form-item label="账号" prop="username">
+            <el-form-item label="账号:" prop="username">
               <el-input v-model="temp.username" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="真实姓名" prop="nickname">
+            <el-form-item label="真实姓名:" prop="nickname">
               <el-input v-model="temp.nickname" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="邮箱" prop="email">
+            <el-form-item label="邮箱:" prop="email">
               <el-input v-model="temp.email" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="电话" prop="phone">
+            <el-form-item label="电话:" prop="phone">
               <el-input v-model="temp.phone" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="性别" prop="sex">
+            <el-form-item label="性别:" prop="sex">
               <el-radio-group v-model="temp.sex" size="mini">
-                <el-radio-button v-for="item in sexOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio-button>
+                <el-radio-button
+                  v-for="item in sexOptions"
+                  :key="item.value"
+                  :label="item.value"
+                >{{ item.label }}</el-radio-button>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="状态" prop="status">
+            <el-form-item label="状态:" prop="status">
               <el-select v-model="temp.status" class="filter-item" placeholder="选择状态">
-                <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
+                <el-option
+                  v-for="item in statusOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="部门" prop="deptId">
-          <treeselect v-model="temp.deptId" :multiple="false" :options="treeDeptData" clear-value-text="清除" placeholder=" " style="width:100%" @select="selectDepart" />
+        <el-form-item label="部门:" prop="deptId">
+          <treeselect
+            v-model="temp.deptId"
+            :multiple="false"
+            :options="treeDeptData"
+            clear-value-text="清除"
+            placeholder=" "
+            style="width:100%"
+            @select="selectDepart"
+          />
         </el-form-item>
-        <el-form-item label="角色" prop="roles">
-          <el-select v-model="roles" multiple placeholder="请选择" style="width:100%" @change="$forceUpdate()">
+        <el-form-item label="角色:" prop="roles">
+          <el-select
+            v-model="roles"
+            multiple
+            placeholder="请选择"
+            style="width:100%"
+            @change="$forceUpdate()"
+          >
             <el-option
               v-for="item in roleSelData"
               :key="item.id"
@@ -159,17 +240,23 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="备注" prop="remarks">
-          <el-input v-model="temp.remarks" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="请填写备注" />
+        <el-form-item label="备注:" prop="remarks">
+          <el-input
+            v-model="temp.remarks"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            type="textarea"
+            placeholder="请填写备注"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
-          取消
-        </el-button>
-        <el-button :loading="confirmLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          确定
-        </el-button>
+        <el-button icon="el-icon-close" @click="dialogFormVisible = false">取消</el-button>
+        <el-button
+          icon="el-icon-check"
+          :loading="confirmLoading"
+          type="primary"
+          @click="dialogStatus==='create'?createData():updateData()"
+        >确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -180,7 +267,14 @@ import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-import { listData, createUser, updateUser, deleteUser, getRolIds, restPassword } from '@/api/sys/user.js'
+import {
+  listData,
+  createUser,
+  updateUser,
+  deleteUser,
+  getRolIds,
+  restPassword
+} from '@/api/sys/user.js'
 import { getDeptTree } from '@/api/sys/dept.js'
 import { getRoleAll } from '@/api/sys/role.js'
 import { getDictList } from '@/utils/dict'
@@ -206,17 +300,18 @@ export default {
       total: 0,
       listLoading: true,
       confirmLoading: false,
+      showStatus: false,
+      showTitle: '查询',
       listQuery: {
         current: 1,
         size: 20,
         username: '',
         nickname: '',
+        status: '',
         deptId: null
-
       },
       statusOptions: getDictList('user_status'),
       sexOptions: getDictList('sex'),
-      status: '',
       filterText: '',
       treeDeptData: null,
       defaultProps: { children: 'children', label: 'label' },
@@ -242,10 +337,17 @@ export default {
         create: '创建'
       },
       rules: {
-        username: [{ required: true, message: '请输入用户名', trigger: 'change' }],
-        nickname: [{ required: true, message: '请输入真实姓名', trigger: 'change' }],
-        status: [{ required: true, message: '请选择类型', trigger: 'change' }],
-        email: [{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }]
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'change' }
+        ],
+        nickname: [
+          { required: true, message: '请输入真实姓名', trigger: 'change' }
+        ],
+        status: [{ required: true, message: '请选择状态', trigger: 'change' }],
+        email: [
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+        ],
+        deptId: [{ required: true, message: '请输入部门', trigger: 'blur' }]
       }
     }
   },
@@ -271,6 +373,12 @@ export default {
         this.listLoading = false
       })
     },
+    reset() {
+      this.listQuery.username = ''
+      this.listQuery.nickname = ''
+      this.listQuery.status = ''
+      this.listQuery.deptId = null
+    },
     getDeptTree() {
       getDeptTree(true).then(response => {
         this.treeDeptData = response.data
@@ -281,12 +389,17 @@ export default {
         this.roleSelData = response.data
       })
     },
+    showClick() {
+      // 控制查询条件显示隐藏
+      this.showStatus = !this.showStatus
+      this.showTitle = this.showStatus === true ? '隐藏' : '查询'
+    },
     resetTemp() {
       this.temp = {
         id: undefined,
         username: '',
         nickname: '',
-        deptId: 0,
+        deptId: null,
         deptName: '',
         email: '',
         phone: '',
@@ -356,57 +469,79 @@ export default {
     },
     createData() {
       // 新增
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs['dataForm'].validate(valid => {
         if (valid) {
           this.temp.roles = this.roles
           this.confirmLoading = true
-          createUser(this.temp).then(() => {
-            this.confirmLoading = false
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
+          createUser(this.temp)
+            .then(() => {
+              this.confirmLoading = false
+              this.list.unshift(this.temp)
+              this.dialogFormVisible = false
+              this.$notify({
+                title: '成功',
+                message: '创建成功',
+                type: 'success',
+                duration: 2000
+              })
             })
-          }).catch(() => {
-            this.confirmLoading = false
-          })
+            .catch(() => {
+              this.confirmLoading = false
+            })
         }
       })
     },
     updateData() {
       // 修改
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs['dataForm'].validate(valid => {
         if (valid) {
           this.temp.roles = this.roles
           this.confirmLoading = true
           const tempData = Object.assign({}, this.temp)
-          updateUser(tempData).then(() => {
-            this.confirmLoading = false
-            const index = this.list.findIndex(v => v.id === this.temp.id)
-            this.list.splice(index, 1, this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '修改成功',
-              type: 'success',
-              duration: 2000
+          updateUser(tempData)
+            .then(() => {
+              this.confirmLoading = false
+              const index = this.list.findIndex(v => v.id === this.temp.id)
+              this.list.splice(index, 1, this.temp)
+              this.dialogFormVisible = false
+              this.$notify({
+                title: '成功',
+                message: '修改成功',
+                type: 'success',
+                duration: 2000
+              })
             })
-          }).catch(() => {
-            this.confirmLoading = false
-          })
+            .catch(() => {
+              this.confirmLoading = false
+            })
         }
       })
     },
-    restPassd(row) {
-      restPassword(row.id).then(response => {
-        this.$notify({
-          title: '成功',
-          message: '重置成功',
-          type: 'success',
-          duration: 2000
+    restPassd() {
+      const allRowData = this.$refs.userTable.selection
+      if (!allRowData.length) {
+        this.$message({
+          message: '请选择一行数据',
+          type: 'warning'
+        })
+        return
+      }
+      const ids = []
+      allRowData.forEach((u) => {
+        ids.push(u.id)
+      })
+      this.$confirm('确定重置密码么?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        restPassword(ids.join(',')).then(response => {
+          this.$notify({
+            title: '成功',
+            message: '重置成功',
+            type: 'success',
+            duration: 2000
+          })
         })
       })
     }

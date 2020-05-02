@@ -1,6 +1,17 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
+    <div class="filter-header">
+      <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="success"
+        icon="el-icon-upload"
+        plain
+        @click="handleCreate"
+      >上传</el-button>
+    </div>
+    <div v-show="showStatus" class="filter-container">
       <el-input
         v-model="listQuery.fileName"
         placeholder="文件名称"
@@ -22,9 +33,9 @@
       >
         <el-option
           v-for="item in statusOptions"
-          :key="item.key"
-          :label="item.display_name+'('+item.key+')'"
-          :value="item.key"
+          :key="item.value"
+          :label="item.label+'('+item.value+')'"
+          :value="item.value"
         />
       </el-select>
       <el-button
@@ -32,15 +43,17 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
+        plain
         @click="handleFilter"
       >查询</el-button>
       <el-button
+        v-waves
         class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-upload"
-        @click="handleCreate"
-      >上传</el-button>
+        type="warning"
+        icon="el-icon-delete"
+        plain
+        @click="reset"
+      >重置</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -75,25 +88,23 @@
       </el-table-column>
       <el-table-column label="文件状态" align="center" width="180">
         <template slot-scope="scope">
-          <span>{{ scope.row.status | statusFilter }}</span>
+          <span>{{ scope.row.status | dictLabel('file_status') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button
             size="mini"
-            type="primary"
-            title="下载"
+            type="text"
             icon="el-icon-download"
             @click="handleDownLoad(row)"
-          />
+          >下载</el-button>
           <el-button
             size="mini"
-            type="danger"
-            title="删除"
+            type="text"
             icon="el-icon-delete"
             @click="handleModifyStatus(row,$index)"
-          />
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -134,26 +145,12 @@ import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
 import { filePage, deleteFile } from '@/api/sys/file.js'
-
-const statusOptions = [
-  { key: '0', display_name: '未绑定' },
-  { key: '1', display_name: '已绑定' }
-]
-
-const statusKeyValue = statusOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
+import { getDictList } from '@/utils/dict'
 
 export default {
   name: 'File',
   components: { Pagination },
   directives: { waves },
-  filters: {
-    statusFilter(type) {
-      return statusKeyValue[type]
-    }
-  },
   data() {
     return {
       list: null,
@@ -162,7 +159,9 @@ export default {
       headers: { Authorization: 'Bearer ' + getToken() },
       actionUrl: process.env.VUE_APP_BASE_API + '/admin/file/upload',
       fileList: [],
-      statusOptions,
+      statusOptions: getDictList('file_status'),
+      showStatus: false,
+      showTitle: '查询',
       confirmLoading: false,
       listQuery: {
         current: 1,
@@ -187,6 +186,16 @@ export default {
         this.listQuery.size = response.data.size
         this.listLoading = false
       })
+    },
+    reset() {
+      this.listQuery.fileName = ''
+      this.listQuery.fileType = ''
+      this.listQuery.status = ''
+    },
+    showClick() {
+      // 控制查询条件显示隐藏
+      this.showStatus = !this.showStatus
+      this.showTitle = this.showStatus === true ? '隐藏' : '查询'
     },
     handleRemove(file, fileList) {
       console.log(file)

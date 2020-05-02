@@ -1,6 +1,18 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
+    <div class="filter-header">
+      <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
+      <el-button
+        v-if="hasPerm('role:add')"
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="success"
+        icon="el-icon-edit"
+        plain
+        @click="handleCreate"
+      >新增</el-button>
+    </div>
+    <div v-show="showStatus" class="filter-container">
       <el-input
         v-model="listQuery.roleName"
         placeholder="角色名称"
@@ -12,16 +24,17 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
+        plain
         @click="handleFilter"
       >查询</el-button>
       <el-button
-        v-if="hasPerm('role:add')"
+        v-waves
         class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >新增</el-button>
+        type="warning"
+        icon="el-icon-delete"
+        plain
+        @click="reset"
+      >重置</el-button>
     </div>
     <el-row :gutter="15">
       <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="17" style="margin-bottom: 10px">
@@ -46,37 +59,37 @@
                 <span>{{ scope.row.roleCode }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="角色描述" align="center">
-              <template slot-scope="scope">
-                <span>{{ scope.row.description }}</span>
-              </template>
-            </el-table-column>
             <el-table-column label="部门" align="center">
               <template slot-scope="scope">
                 <span>{{ scope.row.deptName }}</span>
               </template>
             </el-table-column>
+            <el-table-column label="角色描述" align="center">
+              <template slot-scope="scope">
+                <span>{{ scope.row.description }}</span>
+              </template>
+            </el-table-column>
             <el-table-column
               label="操作"
               align="center"
-              width="180"
+              width="150"
               class-name="small-padding fixed-width"
             >
               <template slot-scope="{row,$index}">
                 <el-button
                   v-if="hasPerm('role:edit')"
-                  type="primary"
+                  type="text"
                   size="mini"
                   icon="el-icon-edit"
                   @click="handleUpdate(row)"
-                />
+                >编辑</el-button>
                 <el-button
                   v-if="hasPerm('user:delete')"
                   size="mini"
-                  type="danger"
+                  type="text"
                   icon="el-icon-delete"
                   @click="handleDelete(row,$index)"
-                />
+                >删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -86,15 +99,16 @@
         <el-card class="box-card" shadow="never">
           <div slot="header" class="clearfix">
             <el-tooltip class="item" effect="dark" content="选择指定角色分配菜单" placement="top">
-              <span class="role-span">菜单分配</span>
+              <span class="role-span">菜单分配{{ nowRoleText }}</span>
             </el-tooltip>
             <el-button
               v-if="hasPerm('role:edit')"
               :loading="menuLoading"
               icon="el-icon-check"
-              size="mini"
+              size="small"
               style="float: right; padding: 6px 9px"
               type="primary"
+              plain
               @click="saveAuth"
             >保存</el-button>
           </div>
@@ -161,8 +175,9 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button icon="el-icon-close" @click="dialogFormVisible = false">取消</el-button>
         <el-button
+          icon="el-icon-check"
           :loading="confirmLoading"
           type="primary"
           @click="dialogStatus==='create'?createData():updateData()"
@@ -200,7 +215,10 @@ export default {
       menuLoading: false,
       treeLoading: false,
       confirmLoading: false,
+      showStatus: false,
+      showTitle: '查询',
       currentId: undefined,
+      nowRoleText: '',
       defaultProps: { children: 'children', label: 'label' },
       listQuery: {
         current: 1,
@@ -250,6 +268,14 @@ export default {
         this.listLoading = false
       })
     },
+    reset() {
+      this.listQuery.roleName = ''
+    },
+    showClick() {
+      // 控制查询条件显示隐藏
+      this.showStatus = !this.showStatus
+      this.showTitle = this.showStatus === true ? '隐藏' : '查询'
+    },
     getAuthTree() {
       getMenuTree().then(response => {
         this.treeData = response.data
@@ -277,6 +303,8 @@ export default {
     rowClick(row) {
       this.currentId = row.id
       this.$refs.menu.setCheckedKeys([])
+      this.$message('加载权限中....')
+      this.nowRoleText = '(当前角色:' + row.roleName + ')'
       getRoleAuth(this.currentId).then(response => {
         this.menuIds = response.data
       })

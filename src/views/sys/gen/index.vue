@@ -3,6 +3,7 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.tableName"
+        clearable
         placeholder="表名"
         style="width: 200px;"
         class="filter-item"
@@ -12,6 +13,7 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
+        plain
         @click="handleFilter"
       >查询</el-button>
     </div>
@@ -56,10 +58,10 @@
           <span>{{ scope.row.updateTime | parseDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" icon="el-icon-share" @click="handleColumn(row)" />
-          <el-button size="mini" type="success" icon="el-icon-download" @click="handleCreate(row)" />
+          <el-button type="text" size="mini" icon="el-icon-share" @click="handleColumn(row)">列信息</el-button>
+          <el-button size="mini" type="text" icon="el-icon-download" @click="handleCreate(row)">生成</el-button>
         </template>
       </el-table-column>
     </el-table>

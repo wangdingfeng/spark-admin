@@ -38,10 +38,11 @@ export function getRolIds(id) {
   })
 }
 
-export function restPassword(id) {
+export function restPassword(ids) {
   return request({
-    url: `/admin/user/rest/password/${id}`,
-    method: 'get'
+    url: '/admin/user/rest/password',
+    method: 'get',
+    params: { ids }
   })
 }
 

@@ -44,8 +44,9 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    const errorMessage = error.response.data === undefined || error.response.data.msg === undefined ? '系统内部异常，请联系网站管理员' : error.response.data.msg
-    Message.error(errorMessage)
+    if (error.response.status !== 401) {
+      Message.error(error.response.data.msg)
+    }
     console.log('err' + error) // for debug
     return Promise.reject(error)
   }

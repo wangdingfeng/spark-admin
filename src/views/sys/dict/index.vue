@@ -12,6 +12,7 @@
         class="filter-item"
         type="primary"
         icon="el-icon-search"
+        plain
         @click="handleFilter"
       >查询</el-button>
       <el-button
@@ -20,6 +21,7 @@
         style="margin-left: 10px;"
         type="success"
         icon="el-icon-edit"
+        plain
         @click="handleCreate"
       >新增</el-button>
       <el-button
@@ -27,6 +29,7 @@
         style="margin-left: 10px;"
         type="warning"
         icon="el-icon-aim"
+        plain
         @click="handleCache"
       >重置缓存</el-button>
     </div>
@@ -61,24 +64,24 @@
           <el-button
             v-if="hasPerm('dict:edit')"
             type="primary"
-            size="mini"
+            size="text"
             icon="el-icon-edit"
             @click="handleUpdate(row)"
-          />
+          >编辑</el-button>
           <el-button
             v-if="hasPerm('dict:edit')"
-            type="warning"
+            type="text"
             size="mini"
             icon="el-icon-goblet-square-full"
             @click="handleitemDialog(row)"
-          />
+          >子项</el-button>
           <el-button
             v-if="hasPerm('dict:delete')"
             size="mini"
-            type="danger"
+            type="text"
             icon="el-icon-delete"
             @click="handleModifyStatus(row,$index)"
-          />
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -134,6 +137,7 @@
           type="primary"
           icon="el-icon-search"
           size="small"
+          plain
           @click="getItemList"
         >查询</el-button>
         <el-button
@@ -142,6 +146,7 @@
           type="success"
           icon="el-icon-edit"
           size="small"
+          plain
           @click="handleItemCreate"
         >新增</el-button>
       </div>
@@ -174,23 +179,23 @@
         <el-table-column
           label="操作"
           align="center"
-          width="230"
+          width="180"
           class-name="small-padding fixed-width"
         >
           <template slot-scope="{row,$index}">
             <el-button
-              type="primary"
+              type="text"
               size="mini"
               icon="el-icon-edit"
               @click="handleItemUpdate(row)"
-            />
+            >编辑</el-button>
             <el-button
               v-if="row.isDeleted!='1'"
               size="mini"
-              type="danger"
+              type="text"
               icon="el-icon-delete"
               @click="handleItemUpdate(row,$index)"
-            />
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>

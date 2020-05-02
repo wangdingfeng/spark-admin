@@ -1,12 +1,13 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.name" placeholder="菜单名称" style="width: 200px;" class="filter-item" />
+      <el-input v-model="listQuery.name" placeholder="菜单名称" style="width: 200px;" class="filter-item" clearable />
       <el-button
         v-waves
         class="filter-item"
         type="primary"
         icon="el-icon-search"
+        plain
         @click="getList"
       >查询</el-button>
       <el-button
@@ -15,6 +16,7 @@
         style="margin-left: 10px;"
         type="success"
         icon="el-icon-edit"
+        plain
         @click="handleCreate"
       >新增</el-button>
       <el-button type="text" style="float:right" class="filter-item" @click="unfold">{{ expandText }}<i class="el-icon-edit" /></el-button>
@@ -47,8 +49,8 @@
           <span v-else>否</span>
         </template>
       </el-table-column>
-      <el-table-column prop="path" label="路径" :show-overflow-tooltip="true" width="150" />
-      <el-table-column prop="component" label="组件路径" />
+      <el-table-column prop="path" label="路径" :show-overflow-tooltip="true" width="180" />
+      <el-table-column prop="component" label="组件路径" width="180" />
       <el-table-column prop="permission" label="权限" />
       <el-table-column prop="hidden" label="是否隐藏">
         <template slot-scope="scope">
@@ -57,10 +59,10 @@
         </template>
       </el-table-column>
       <el-table-column prop="sort" label="排序" />
-      <el-table-column label="操作" align="center" width="170" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button v-if="hasPerm('menu:edit')" type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)" />
-          <el-button v-if="hasPerm('menu:delete')" size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(row)" />
+          <el-button v-if="hasPerm('menu:edit')" type="text" size="mini" icon="el-icon-edit" @click="handleUpdate(row)">编辑</el-button>
+          <el-button v-if="hasPerm('menu:delete')" type="text" size="mini" icon="el-icon-delete" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
