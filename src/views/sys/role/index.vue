@@ -355,8 +355,9 @@ export default {
         if (valid) {
           this.confirmLoading = true
           createRole(this.temp)
-            .then(() => {
+            .then(response => {
               this.confirmLoading = false
+              this.temp.id = response.data.id
               this.list.unshift(this.temp)
               this.dialogFormVisible = false
               this.$notify({

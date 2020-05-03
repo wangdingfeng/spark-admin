@@ -474,8 +474,9 @@ export default {
           this.temp.roles = this.roles
           this.confirmLoading = true
           createUser(this.temp)
-            .then(() => {
+            .then(response => {
               this.confirmLoading = false
+              this.temp.id = response.data.id
               this.list.unshift(this.temp)
               this.dialogFormVisible = false
               this.$notify({

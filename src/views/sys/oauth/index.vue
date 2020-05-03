@@ -319,9 +319,10 @@ export default {
           this.confirmLoading = true
           this.temp.authorizedGrantTypes = this.temp.authorizedGrantTypesArray.join(',')
           saveOauth(this.temp)
-            .then(() => {
+            .then(response => {
               this.confirmLoading = false
               this.temp.createDate = new Date()
+              this.temp.id = response.data.id
               this.list.unshift(this.temp)
               this.dialogFormVisible = false
               this.$notify({

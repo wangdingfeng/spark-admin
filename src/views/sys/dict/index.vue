@@ -459,9 +459,10 @@ export default {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           this.confirmLoading = true
-          createDict(this.temp).then(() => {
+          createDict(this.temp).then(response => {
             this.confirmLoading = false
             this.temp.createDate = new Date()
+            this.temp.id = response.data.id
             this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
@@ -480,8 +481,9 @@ export default {
         if (valid) {
           this.confirmLoading = true
           this.itemForm.type = this.type
-          createDictItem(this.itemForm).then(() => {
+          createDictItem(this.itemForm).then(response => {
             this.confirmLoading = false
+            this.itemForm.id = response.data.id
             this.listItem.unshift(this.itemForm)
             this.dialogItemFormVisible = false
             this.$notify({
