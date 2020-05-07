@@ -70,9 +70,9 @@
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <router-link :to="{path:'article-edit',query:{id:row.id}}">
-            <el-button v-if="row.status === 1" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
+            <el-button v-if="row.status === '0'" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
           </router-link>
-          <el-button v-if="row.status === 1" size="mini" type="text" icon="el-icon-upload2" @click="handlePublish(row)">发布</el-button>
+          <el-button v-if="row.status === '0'" size="mini" type="text" icon="el-icon-upload2" @click="handlePublish(row)">发布</el-button>
           <el-button
             size="mini"
             type="text"
