@@ -14,3 +14,19 @@ export function recordList(processInstanceId) {
     method: 'get'
   })
 }
+
+export function getTask(params) {
+  return request({
+    url: `/flow/runtime/tasks`,
+    method: 'get',
+    params: params
+  })
+}
+
+export function executeTask(params) {
+  return request({
+    url: `/flow/runtime/tasks/${params.taskId}`,
+    method: 'post',
+    data: params
+  })
+}

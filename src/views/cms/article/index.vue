@@ -2,14 +2,15 @@
   <div class="app-container">
     <div class="filter-header">
       <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-upload"
-        plain
-        @click="handleCreate"
-      >新增</el-button>
+      <router-link to="article-create">
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px;"
+          type="success"
+          icon="el-icon-edit"
+          plain
+        >新增</el-button>
+      </router-link>
     </div>
     <div v-show="showStatus" class="filter-container">
       <el-input
@@ -63,17 +64,15 @@
       </el-table-column>
       <el-table-column label="状态" align="center" width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.status }}</span>
+          <span>{{ scope.row.status | dictLabel('article_status') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-download"
-            @click="handlePublish(row)"
-          >发布</el-button>
+          <router-link :to="{path:'article-edit',query:{id:row.id}}">
+            <el-button v-if="row.status === 1" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
+          </router-link>
+          <el-button v-if="row.status === 1" size="mini" type="text" icon="el-icon-upload2" @click="handlePublish(row)">发布</el-button>
           <el-button
             size="mini"
             type="text"
@@ -97,7 +96,11 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination'
-import { listArticle, publishArticle, deleteArticle } from '@/api/cms/article.js'
+import {
+  listArticle,
+  publishArticle,
+  deleteArticle
+} from '@/api/cms/article.js'
 
 export default {
   name: 'File',
@@ -138,9 +141,6 @@ export default {
       // 控制查询条件显示隐藏
       this.showStatus = !this.showStatus
       this.showTitle = this.showStatus === true ? '隐藏' : '查询'
-    },
-    handleRemove(file, fileList) {
-      console.log(file)
     },
     handleFilter() {
       this.listQuery.current = 1

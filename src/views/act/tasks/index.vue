@@ -4,8 +4,18 @@
       <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
     </div>
     <div v-show="showStatus" class="filter-container">
-      <el-input v-model="listQuery.businessName" placeholder="流程名称" style="width: 200px;" class="filter-item" />
-      <el-input v-model="listQuery.businessKey" placeholder="业务ID" style="width: 200px;" class="filter-item" />
+      <el-input
+        v-model="listQuery.businessName"
+        placeholder="流程名称"
+        style="width: 200px;"
+        class="filter-item"
+      />
+      <el-input
+        v-model="listQuery.businessKey"
+        placeholder="业务ID"
+        style="width: 200px;"
+        class="filter-item"
+      />
       <el-select
         v-model="listQuery.status"
         placeholder="业务类型"
@@ -75,7 +85,9 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="170" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleImage(row)">处理</el-button>
+          <router-link :to="{path:'article-task',query:{taskId: row.id, id: row.businessKey, taskDefinitionKey: row.taskDefinitionKey, processInstanceId: row.processInstanceId}}">
+            <el-button size="mini" type="text" icon="el-icon-edit">处理</el-button>
+          </router-link>
           <el-button size="mini" type="text" icon="el-icon-view" @click="handleImage(row)">流程图</el-button>
         </template>
       </el-table-column>
@@ -110,7 +122,8 @@
           <div class="block">
             <el-image :src="src">
               <div slot="placeholder" class="image-slot">
-                加载中<span class="dot">...</span>
+                加载中
+                <span class="dot">...</span>
               </div>
               <div slot="error" class="image-slot">
                 <i class="el-icon-picture-outline" />
@@ -159,10 +172,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'account',
-      'roles'
-    ])
+    ...mapGetters(['account', 'roles'])
   },
   created() {
     this.getList()
@@ -202,7 +212,12 @@ export default {
     },
     handleImage(row) {
       this.getRecordList(row)
-      this.src = process.env.VUE_APP_BASE_API + '/flow/runtime/image/' + row.processInstanceId + '?' + Math.random()
+      this.src =
+        process.env.VUE_APP_BASE_API +
+        '/flow/runtime/image/' +
+        row.processInstanceId +
+        '?' +
+        Math.random()
       this.dialogImageVisible = true
     }
   }
