@@ -105,16 +105,9 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-dialog title="流程图片" :visible.sync="dialogImageVisible">
-      <div class="block">
-        <el-image :src="src">
-          <div slot="placeholder" class="image-slot">
-            加载中<span class="dot">...</span>
-          </div>
-          <div slot="error" class="image-slot">
-            <i class="el-icon-picture-outline" />
-          </div>
-        </el-image>
+    <el-dialog title="流程图片" :visible.sync="dialogImageVisible" width="55%">
+      <div style="height:500px">
+        <iframe ref="iframe" v-loading="fullscreenLoading" :src="modelSrc" class="iframe" />
       </div>
     </el-dialog>
   </div>
@@ -148,7 +141,8 @@ export default {
       },
       dialogFormVisible: false,
       dialogImageVisible: false,
-      src: '',
+      fullscreenLoading: false,
+      modelSrc: '',
       temp: {
         id: undefined,
         name: '',
@@ -165,6 +159,21 @@ export default {
     this.getList()
   },
   methods: {
+    iframeInit() {
+      this.fullscreenLoading = true
+      const iframe = this.$refs.iframe
+      const clientHeight = document.documentElement.clientHeight - 90
+      iframe.style.height = `${clientHeight}px`
+      if (iframe.attachEvent) {
+        iframe.attachEvent('onload', () => {
+          this.fullscreenLoading = false
+        })
+      } else {
+        iframe.onload = () => {
+          this.fullscreenLoading = false
+        }
+      }
+    },
     getList() {
       this.listLoading = true
       processPage(this.listQuery).then(response => {
@@ -210,8 +219,11 @@ export default {
       })
     },
     handleImage(row) {
-      this.src = process.env.VUE_APP_BASE_API + '/flow/runtime/process-definitions/resource?resType=image&procDefId=' + row.id
+      this.modelSrc = 'http://localhost:9030/flowable/process/displayModel/' + row.id
       this.dialogImageVisible = true
+      this.$nextTick(() => {
+        this.iframeInit()
+      })
     },
     handleModifyStatus(row, index) {
       this.$confirm('是否删除数据?', '提示', {
@@ -258,3 +270,14 @@ export default {
   }
 }
 </script>
+
+<style>
+.iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+</style>
+

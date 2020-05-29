@@ -100,7 +100,7 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog title="流程跟踪" :visible.sync="dialogImageVisible">
+    <el-dialog title="流程跟踪" :visible.sync="dialogImageVisible" width="55%">
       <el-tabs v-model="activeName">
         <el-tab-pane label="流程记录" name="records">
           <el-table v-loading="recordsLoading" :data="gridData">
@@ -119,16 +119,8 @@
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="流程图" name="image">
-          <div class="block">
-            <el-image :src="src">
-              <div slot="placeholder" class="image-slot">
-                加载中
-                <span class="dot">...</span>
-              </div>
-              <div slot="error" class="image-slot">
-                <i class="el-icon-picture-outline" />
-              </div>
-            </el-image>
+          <div style="height:500px">
+            <iframe ref="iframe" v-loading="fullscreenLoading" :src="modelSrc" class="iframe" />
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -156,9 +148,10 @@ export default {
       showStatus: false,
       showTitle: '查询',
       activeName: 'records',
-      src: '',
+      modelSrc: '',
       processTypeOptions: getDictList('processs_type'),
       dialogImageVisible: false,
+      fullscreenLoading: false,
       listQuery: {
         current: 1,
         size: 20,
@@ -178,6 +171,21 @@ export default {
     this.getList()
   },
   methods: {
+    iframeInit() {
+      this.fullscreenLoading = true
+      const iframe = this.$refs.iframe
+      const clientHeight = document.documentElement.clientHeight - 90
+      iframe.style.height = `${clientHeight}px`
+      if (iframe.attachEvent) {
+        iframe.attachEvent('onload', () => {
+          this.fullscreenLoading = false
+        })
+      } else {
+        iframe.onload = () => {
+          this.fullscreenLoading = false
+        }
+      }
+    },
     getList() {
       this.listLoading = true
       this.listQuery.userId = this.account
@@ -212,14 +220,23 @@ export default {
     },
     handleImage(row) {
       this.getRecordList(row)
-      this.src =
-        process.env.VUE_APP_BASE_API +
-        '/flow/runtime/image/' +
-        row.processInstanceId +
-        '?' +
-        Math.random()
+      this.modelSrc = 'http://localhost:9030/flowable/instance/displayModel/' + row.processInstanceId
       this.dialogImageVisible = true
+      this.$nextTick(() => {
+        this.iframeInit()
+      })
     }
   }
 }
 </script>
+
+<style>
+.iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+</style>
+
