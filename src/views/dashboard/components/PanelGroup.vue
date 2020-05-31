@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <!-- <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
@@ -12,21 +12,21 @@
           <span class="card-panel-num">6</span>
         </div>
       </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    </el-col> -->
+    <el-col :xs="12" :sm="12" :lg="8" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-message">
           <svg-icon icon-class="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            代办总数
+            待办任务数
           </div>
-          <span class="card-panel-num">10</span>
+          <span class="card-panel-num">{{ taskNum }}</span>
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="8" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="ip" class-name="card-panel-icon" />
@@ -35,11 +35,11 @@
           <div class="card-panel-text">
             今日登陆IP数
           </div>
-          <span class="card-panel-num">20</span>
+          <span class="card-panel-num">{{ indexData.todayIPNum }}</span>
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="8" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-shopping">
           <svg-icon icon-class="line-chart" class-name="card-panel-icon" />
@@ -48,7 +48,7 @@
           <div class="card-panel-text">
             访问量
           </div>
-          <span class="card-panel-num">1000</span>
+          <span class="card-panel-num">{{ indexData.visits }}</span>
         </div>
       </div>
     </el-col>
@@ -58,6 +58,16 @@
 <script>
 
 export default {
+  props: {
+    indexData: {
+      type: Object,
+      required: true
+    },
+    taskNum: {
+      type: Number,
+      default: 1
+    }
+  },
   methods: {
   }
 }

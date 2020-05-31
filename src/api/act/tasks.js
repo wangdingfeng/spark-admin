@@ -23,6 +23,14 @@ export function getTask(params) {
   })
 }
 
+export function countAct(params) {
+  return request({
+    url: '/flow/runtime/tasks/count',
+    method: 'get',
+    params: params
+  })
+}
+
 export function executeTask(params) {
   return request({
     url: `/flow/runtime/tasks/${params.taskId}`,

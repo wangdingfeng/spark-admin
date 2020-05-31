@@ -16,7 +16,8 @@
       </template>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar" class="user-avatar">
+          <el-avatar :src="avatar" class="user-avatar" />
+          <span class="user-name">{{ account }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -54,6 +55,9 @@ export default {
   },
   computed: {
     ...mapGetters(['sidebar', 'device']),
+    account() {
+      return this.$store.state.user.account
+    },
     avatar() {
       if (this.$store.state.user.avatar) return require(`@/assets/avatar/${this.$store.state.user.avatar}`)
       return ''
@@ -142,6 +146,12 @@ export default {
           right: -20px;
           top: 25px;
           font-size: 12px;
+        }
+        .user-name {
+          position: relative;
+          top: -14px;
+          cursor: pointer;
+          font-weight: 600
         }
       }
     }

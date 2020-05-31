@@ -71,7 +71,7 @@ export default {
           account: '',
           email: '',
           avatar: '',
-          roles: ''
+          role: ''
         }
       }
     }

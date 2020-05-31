@@ -57,6 +57,7 @@ export const constantRouterMap = [{
     meta: {
       title: '首页',
       icon: 'dashboard',
+      noCache: true,
       affix: true
     }
   }]
