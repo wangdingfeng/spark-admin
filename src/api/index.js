@@ -6,3 +6,10 @@ export function getData() {
     method: 'get'
   })
 }
+
+export function deleteCache() {
+  return request({
+    url: '/admin/cache',
+    method: 'delete'
+  })
+}

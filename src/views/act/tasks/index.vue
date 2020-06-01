@@ -220,7 +220,7 @@ export default {
     },
     handleImage(row) {
       this.getRecordList(row)
-      this.modelSrc = 'http://localhost:9030/flowable/instance/displayModel/' + row.processInstanceId
+      this.modelSrc = process.env.VUE_APP_BASE_API + '/flow/flowable/instance/displayModel/' + row.processInstanceId
       this.dialogImageVisible = true
       this.$nextTick(() => {
         this.iframeInit()

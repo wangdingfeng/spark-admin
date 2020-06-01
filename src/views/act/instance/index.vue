@@ -6,20 +6,6 @@
     <div v-show="showStatus" class="filter-container">
       <el-input v-model="listQuery.businessName" placeholder="流程名称" style="width: 200px;" class="filter-item" />
       <el-input v-model="listQuery.businessKey" placeholder="业务ID" style="width: 200px;" class="filter-item" />
-      <el-select
-        v-model="listQuery.status"
-        placeholder="业务类型"
-        clearable
-        class="filter-item"
-        style="width: 200px"
-      >
-        <el-option
-          v-for="item in processTypeOptions"
-          :key="item.value"
-          :label="item.label+'('+item.value+')'"
-          :value="item.value"
-        />
-      </el-select>
       <el-button
         v-waves
         class="filter-item"
@@ -45,42 +31,49 @@
       fit
       highlight-current-row
     >
-      <el-table-column label="任务ID" align="center">
-        <template slot-scope="scope">{{ scope.row.id }}</template>
+      <el-table-column label="定义KEY" align="center">
+        <template slot-scope="scope">{{ scope.row.processDefinitionKey }}</template>
+      </el-table-column>
+      <el-table-column label="流程名称" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.processDefinitionName }}</span>
+        </template>
       </el-table-column>
       <el-table-column label="业务ID" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.businessKey }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="业务类型" align="center">
+      <el-table-column label="发起人" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.businessType | dictLabel('processs_type') }}</span>
+          <span>{{ scope.row.startUserId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="业务名称" align="center">
+      <el-table-column label="发起时间" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.businessName }}</span>
+          <span>{{ scope.row.startTime | parseTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="已办节点" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="结束时间" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.endTime | parseTime }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" width="140" class-name="small-padding fixed-width">
+      <el-table-column label="流程状态" align="center">
         <template slot-scope="{row}">
-          <el-button size="mini" type="text" title="查看流程图" icon="el-icon-view" @click="handleImage(row)">流程信息</el-button>
+          <el-tag :type="row.isEnded | tagFilters">
+            {{ row.isEnded | endedFilters }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center">
+        <template slot-scope="{row}">
+          <el-tag :type="row.isSuspended | tagFilters">
+            {{ row.isSuspended | suspendedFilters }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
+        <template slot-scope="{row}">
+          <el-button size="mini" type="text" title="查看流程图" icon="el-icon-view" @click="handleImage(row)">查看</el-button>
+          <el-button v-if="row.isSuspended != true" size="mini" type="text" title="挂起" icon="el-icon-circle-close" @click="handleModifyStatus(row,'suspend')">挂起</el-button>
+          <el-button v-if="row.isSuspended" size="mini" type="text" title="激活" icon="el-icon-circle-check" @click="handleModifyStatus(row,'activate')">激活</el-button>
+          <el-button size="mini" type="text" title="删除" icon="el-icon-delete" @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -124,14 +117,33 @@
 import { mapGetters } from 'vuex'
 import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination'
-import { histasksPage } from '@/api/act/histasks.js'
+import { instancePage, instanceAction, deleteInstance } from '@/api/act/instance.js'
 import { recordList } from '@/api/act/tasks.js'
-import { getDictList } from '@/utils/dict'
 
 export default {
-  name: 'User',
+  name: 'InstanceList',
   components: { Pagination },
   directives: { waves },
+  filters: {
+    tagFilters(status) {
+      if (status) {
+        return 'danger'
+      }
+      return 'success'
+    },
+    endedFilters(status) {
+      if (status) {
+        return '结束'
+      }
+      return '进行中'
+    },
+    suspendedFilters(status) {
+      if (status) {
+        return '挂起'
+      }
+      return '激活'
+    }
+  },
   data() {
     return {
       list: null,
@@ -144,7 +156,6 @@ export default {
       fullscreenLoading: false,
       showTitle: '查询',
       activeName: 'records',
-      processTypeOptions: getDictList('processs_type'),
       listQuery: {
         current: 1,
         size: 20,
@@ -183,7 +194,8 @@ export default {
     getList() {
       this.listLoading = true
       this.listQuery.userId = this.account
-      histasksPage(this.listQuery).then(response => {
+      console.info(123)
+      instancePage(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listQuery.current = response.data.current
@@ -209,6 +221,40 @@ export default {
       recordList(row.processInstanceId).then(response => {
         this.recordsLoading = false
         this.gridData = response.data
+      })
+    },
+    handleModifyStatus(row, action) {
+      this.$confirm('是否确认操作?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        instanceAction(row.processInstanceId, action).then(response => {
+          this.$notify({
+            title: '成功',
+            message: response.msg,
+            type: 'success',
+            duration: 2000
+          })
+          this.getList()
+        })
+      })
+    },
+    handleDelete(row, index) {
+      this.$confirm('是否删除数据?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteInstance(row.processInstanceId).then(response => {
+          this.$notify({
+            title: '成功',
+            message: '删除成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.list.splice(index, 1)
+        })
       })
     },
     handleImage(row) {

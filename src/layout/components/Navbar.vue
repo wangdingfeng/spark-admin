@@ -24,6 +24,9 @@
           <router-link to="/profile">
             <el-dropdown-item>个人中心</el-dropdown-item>
           </router-link>
+          <el-dropdown-item>
+            <span style="display:block;" @click="deleteCacheFn">清理缓存</span>
+          </el-dropdown-item>
           <a target="_blank" href="https://gitee.com/dreamfeng/spark-platform">
             <el-dropdown-item>Gitee</el-dropdown-item>
           </a>
@@ -45,6 +48,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import SizeSelect from '@/components/SizeSelect'
 import Screenfull from '@/components/Screenfull'
+import { deleteCache } from '@/api/index.js'
 
 export default {
   components: {
@@ -66,6 +70,22 @@ export default {
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
+    },
+    deleteCacheFn() {
+      this.$confirm('是否清除缓存?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteCache().then(response => {
+          this.$notify({
+            title: '成功',
+            message: '清除成功',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      })
     },
     async logout() {
       await this.$store.dispatch('LogOut')
@@ -151,7 +171,7 @@ export default {
           position: relative;
           top: -14px;
           cursor: pointer;
-          font-weight: 600
+          font-weight: 600;
         }
       }
     }

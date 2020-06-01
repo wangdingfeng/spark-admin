@@ -219,7 +219,7 @@ export default {
       })
     },
     handleImage(row) {
-      this.modelSrc = 'http://localhost:9030/flowable/process/displayModel/' + row.id
+      this.modelSrc = process.env.VUE_APP_BASE_API + '/flow/flowable/process/displayModel/' + row.id
       this.dialogImageVisible = true
       this.$nextTick(() => {
         this.iframeInit()
