@@ -95,7 +95,7 @@ export default {
       if (date.getHours() >= 0 && date.getHours() < 12) {
         return '上午好，' + this.name + '，又是活力满满的一天'
       } else if (date.getHours() < 18) {
-        return '下午好，' + this.name + '，孔子曰：中午不睡,下午瞌睡'
+        return '下午好，' + this.name + '，子曰：中午不睡,下午瞌睡'
       } else {
         return '晚上好，' + this.name + '，结束一天的疲惫，洗个澡吧'
       }
