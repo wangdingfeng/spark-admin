@@ -194,7 +194,6 @@ export default {
     getList() {
       this.listLoading = true
       this.listQuery.userId = this.account
-      console.info(123)
       instancePage(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
