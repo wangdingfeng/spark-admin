@@ -34,7 +34,7 @@
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
           <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">注销</span>
+            <span style="display:block;" @click="logoutThen">注销</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -85,6 +85,15 @@ export default {
             duration: 2000
           })
         })
+      })
+    },
+    logoutThen() {
+      this.$confirm('是否确定退出账户?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.logout()
       })
     },
     async logout() {
