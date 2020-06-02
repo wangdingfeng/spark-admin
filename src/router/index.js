@@ -74,6 +74,34 @@ export const constantRouterMap = [{
       meta: { title: '个人中心', icon: 'user' }
     }
   ]
+},
+{
+  path: '/article-edit',
+  component: Layout,
+  redirect: '/cms/article/edit',
+  hidden: true,
+  children: [
+    {
+      path: '',
+      component: () => import('@/views/cms/article/edit'),
+      name: '编辑文章',
+      meta: { title: '编辑文章' }
+    }
+  ]
+},
+{
+  path: '/article-task',
+  component: Layout,
+  redirect: '/cms/article/task',
+  hidden: true,
+  children: [
+    {
+      path: '',
+      component: () => import('@/views/cms/article/task'),
+      name: '处理文章',
+      meta: { title: '处理文章' }
+    }
+  ]
 }
 ]
 export const notFoundRouter = [{
