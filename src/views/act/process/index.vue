@@ -59,9 +59,15 @@
           <span>{{ scope.row.version }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button size="mini" type="text" icon="el-icon-share" @click="handleImage(row)">流程图</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-download"
+            @click="handleDownLoad(row)"
+          >下载</el-button>
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleModifyStatus(row,$index)">删除</el-button>
         </template>
       </el-table-column>
@@ -107,7 +113,7 @@
     </el-dialog>
     <el-dialog title="流程图片" :visible.sync="dialogImageVisible" width="55%">
       <div style="height:500px">
-        <iframe ref="iframe" v-loading="fullscreenLoading" :src="modelSrc" class="iframe" />
+        <iframe ref="iframe" v-loading="iframeLoading" :src="modelSrc" class="iframe" />
       </div>
     </el-dialog>
   </div>
@@ -141,7 +147,7 @@ export default {
       },
       dialogFormVisible: false,
       dialogImageVisible: false,
-      fullscreenLoading: false,
+      iframeLoading: false,
       modelSrc: '',
       temp: {
         id: undefined,
@@ -160,17 +166,17 @@ export default {
   },
   methods: {
     iframeInit() {
-      this.fullscreenLoading = true
+      this.iframeLoading = true
       const iframe = this.$refs.iframe
       const clientHeight = document.documentElement.clientHeight - 90
       iframe.style.height = `${clientHeight}px`
       if (iframe.attachEvent) {
         iframe.attachEvent('onload', () => {
-          this.fullscreenLoading = false
+          this.iframeLoading = false
         })
       } else {
         iframe.onload = () => {
-          this.fullscreenLoading = false
+          this.iframeLoading = false
         }
       }
     },
@@ -266,6 +272,10 @@ export default {
           })
         }
       })
+    },
+    handleDownLoad(row) {
+      const url = process.env.VUE_APP_BASE_API + '/flow/runtime/process-definitions/resource/downloadXml/' + row.id
+      window.open(url, '_blank')
     }
   }
 }

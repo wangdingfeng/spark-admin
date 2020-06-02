@@ -57,7 +57,6 @@ export const constantRouterMap = [{
     meta: {
       title: '首页',
       icon: 'dashboard',
-      noCache: true,
       affix: true
     }
   }]
@@ -72,7 +71,7 @@ export const constantRouterMap = [{
       path: 'index',
       component: () => import('@/views/profile/index'),
       name: '个人中心',
-      meta: { title: '个人中心', icon: 'user', noCache: true }
+      meta: { title: '个人中心', icon: 'user' }
     }
   ]
 }

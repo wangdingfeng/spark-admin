@@ -94,6 +94,11 @@
     />
     <el-dialog title="流程跟踪" :visible.sync="dialogImageVisible" width="55%">
       <el-tabs v-model="activeName">
+        <el-tab-pane label="实时流程图" name="image">
+          <div style="height:500px">
+            <iframe ref="iframe" v-loading="iframeLoading" :src="modelSrc" class="iframe" />
+          </div>
+        </el-tab-pane>
         <el-tab-pane label="流程记录" name="records">
           <el-table v-loading="recordsLoading" :data="gridData">
             <el-table-column property="taskId" label="任务ID" />
@@ -109,11 +114,6 @@
               </template>
             </el-table-column>
           </el-table>
-        </el-tab-pane>
-        <el-tab-pane label="流程图" name="image">
-          <div style="height:500px">
-            <iframe ref="iframe" v-loading="fullscreenLoading" :src="modelSrc" class="iframe" />
-          </div>
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
@@ -141,9 +141,9 @@ export default {
       dialogImageVisible: false,
       recordsLoading: true,
       showStatus: false,
-      fullscreenLoading: false,
+      iframeLoading: false,
       showTitle: '查询',
-      activeName: 'records',
+      activeName: 'image',
       processTypeOptions: getDictList('processs_type'),
       listQuery: {
         current: 1,
@@ -166,17 +166,17 @@ export default {
   },
   methods: {
     iframeInit() {
-      this.fullscreenLoading = true
+      this.iframeLoading = true
       const iframe = this.$refs.iframe
       const clientHeight = document.documentElement.clientHeight - 90
       iframe.style.height = `${clientHeight}px`
       if (iframe.attachEvent) {
         iframe.attachEvent('onload', () => {
-          this.fullscreenLoading = false
+          this.iframeLoading = false
         })
       } else {
         iframe.onload = () => {
-          this.fullscreenLoading = false
+          this.iframeLoading = false
         }
       }
     },

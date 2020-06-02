@@ -412,6 +412,7 @@ export default {
       })
       saveRoleAuth(role)
         .then(response => {
+          this.menuLoading = false
           this.$notify({
             title: '成功',
             message: '修改成功',
@@ -423,7 +424,6 @@ export default {
           this.menuLoading = false
           console.log(err.response.data.message)
         })
-      this.menuLoading = false
     }
   }
 }
