@@ -102,6 +102,20 @@ export const constantRouterMap = [{
       meta: { title: '处理文章' }
     }
   ]
+},
+{
+  path: '/quartz-log',
+  component: Layout,
+  redirect: '/sys/quartz/loglist',
+  hidden: true,
+  children: [
+    {
+      path: '',
+      component: () => import('@/views/sys/quartz/loglist'),
+      name: '调度日志',
+      meta: { title: '调度日志' }
+    }
+  ]
 }
 ]
 export const notFoundRouter = [{

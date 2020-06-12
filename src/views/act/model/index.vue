@@ -2,6 +2,7 @@
   <iframe
     ref="iframe"
     v-loading.fullscreen.lock="fullscreenLoading"
+    element-loading-text="努力加载中，请等待...."
     :src="src"
     class="iframe"
   />

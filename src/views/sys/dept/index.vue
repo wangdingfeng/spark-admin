@@ -51,7 +51,7 @@
       </el-table-column>
     </el-table>
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="40%">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="100px" style="margin-left:10px;">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="right" label-width="80px" style="margin-left:10px;">
         <el-row>
           <el-col :span="12">
             <el-form-item label="全称" prop="fullName">

@@ -7,6 +7,12 @@
         style="width: 200px;"
         class="filter-item"
       />
+      <el-input
+        v-model="listQuery.type"
+        placeholder="字典类型"
+        style="width: 200px;"
+        class="filter-item"
+      />
       <el-button
         v-waves
         class="filter-item"
@@ -80,7 +86,7 @@
             size="mini"
             type="text"
             icon="el-icon-delete"
-            @click="handleModifyStatus(row,$index)"
+            @click="handleDelete(row,$index)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -194,7 +200,7 @@
               size="mini"
               type="text"
               icon="el-icon-delete"
-              @click="handleItemUpdate(row,$index)"
+              @click="handleItemDelete(row,$index)"
             >删除</el-button>
           </template>
         </el-table-column>
@@ -277,7 +283,8 @@ export default {
       listQuery: {
         current: 1,
         size: 20,
-        name: ''
+        name: null,
+        type: null
       },
       listItemQuery: {
         pid: null,

@@ -49,7 +49,6 @@
             border
             fit
             highlight-current-row
-            @row-click="rowClick"
           >
             <el-table-column label="角色名称" align="center">
               <template slot-scope="scope">{{ scope.row.roleName }}</template>
@@ -72,7 +71,7 @@
             <el-table-column
               label="操作"
               align="center"
-              width="150"
+              width="200"
               class-name="small-padding fixed-width"
             >
               <template slot-scope="{row,$index}">
@@ -83,6 +82,13 @@
                   icon="el-icon-edit"
                   @click="handleUpdate(row)"
                 >编辑</el-button>
+                <el-button
+                  v-if="hasPerm('role:edit')"
+                  type="text"
+                  size="mini"
+                  icon="el-icon-s-check"
+                  @click="rowClick(row)"
+                >授权</el-button>
                 <el-button
                   v-if="hasPerm('user:delete')"
                   size="mini"
@@ -96,7 +102,7 @@
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="7">
-        <el-card class="box-card" shadow="never">
+        <el-card v-loading="authLoading" class="box-card" shadow="never" element-loading-text="加载中">
           <div slot="header" class="clearfix">
             <el-tooltip class="item" effect="dark" content="选择指定角色分配菜单" placement="top">
               <span class="role-span">菜单分配{{ nowRoleText }}</span>
@@ -214,6 +220,7 @@ export default {
       listLoading: true,
       menuLoading: false,
       treeLoading: false,
+      authLoading: false,
       confirmLoading: false,
       showStatus: false,
       showTitle: '查询',
@@ -303,10 +310,11 @@ export default {
     rowClick(row) {
       this.currentId = row.id
       this.$refs.menu.setCheckedKeys([])
-      this.$message('加载权限中....')
+      this.authLoading = true
       this.nowRoleText = '(当前角色:' + row.roleName + ')'
       getRoleAuth(this.currentId).then(response => {
         this.menuIds = response.data
+        this.authLoading = false
       })
     },
     selectDepart(val) {

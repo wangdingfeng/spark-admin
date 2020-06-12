@@ -61,6 +61,14 @@
               <td>spark-flowable : 9030</td>
               <td>工作流模块</td>
             </tr>
+            <tr>
+              <td>spark-cms : 9040</td>
+              <td>内容管理模块</td>
+            </tr>
+            <tr>
+              <td>spark-quartz : 9050</td>
+              <td>定时任务调度模块</td>
+            </tr>
           </table>
         </el-card>
       </el-col>
