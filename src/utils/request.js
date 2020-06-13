@@ -44,10 +44,8 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    if (error.response.status !== 401) {
-      Message.error(error.response.data.msg)
-    }
-    console.log('err' + error) // for debug
+    const msg = error.response.data.error_description ? error.response.data.error_description : error.response.data.msg
+    Message.error(msg)
     return Promise.reject(error)
   }
 )
