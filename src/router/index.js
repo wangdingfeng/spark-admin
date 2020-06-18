@@ -76,30 +76,33 @@ export const constantRouterMap = [{
   ]
 },
 {
-  path: '/article-edit',
+  path: '/article',
   component: Layout,
-  redirect: '/cms/article/edit',
   hidden: true,
   children: [
     {
-      path: '',
+      path: 'create',
+      component: () => import('@/views/cms/article/create'),
+      name: '创建文章',
+      meta: { title: '创建文章' }
+    },
+    {
+      path: 'edit/:id(\\d+)',
       component: () => import('@/views/cms/article/edit'),
       name: '编辑文章',
       meta: { title: '编辑文章' }
-    }
-  ]
-},
-{
-  path: '/article-task',
-  component: Layout,
-  redirect: '/cms/article/task',
-  hidden: true,
-  children: [
+    },
     {
-      path: '',
+      path: 'task',
       component: () => import('@/views/cms/article/task'),
       name: '处理文章',
       meta: { title: '处理文章' }
+    },
+    {
+      path: 'info/:id(\\d+)',
+      component: () => import('@/views/cms/article/info'),
+      name: '查看文章',
+      meta: { title: '查看文章' }
     }
   ]
 },

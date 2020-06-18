@@ -1,7 +1,7 @@
 <template>
   <div>
     <audit-detail :is-show="isAuditShow" :params-data="paramsData" />
-    <BackDetail :is-show="isBackShow" :params-data="paramsData" />
+    <back-detail :is-show="isBackShow" :params-data="paramsData" />
   </div>
 </template>
 

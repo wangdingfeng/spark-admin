@@ -49,3 +49,23 @@ export function getDictValue(code, label) {
   }
   return value
 }
+
+/**
+ *  通过值获取子项
+ * @param code
+ * @param value
+ */
+export function getDictItem(code, value) {
+  let item = null
+  try {
+    const dictList = store.getters.dicts[code]
+    dictList.forEach((row) => {
+      if (row.value === value.toString()) {
+        item = row
+      }
+    })
+  } catch (err) {
+    console.error(err)
+  }
+  return item
+}

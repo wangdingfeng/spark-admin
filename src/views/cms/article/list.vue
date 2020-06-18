@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-header">
       <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
-      <router-link to="article-create">
+      <router-link to="/article/create">
         <el-button
           class="filter-item"
           style="margin-left: 10px;"
@@ -45,31 +45,45 @@
       highlight-current-row
     >
       <el-table-column label="文章标题" align="center">
-        <template slot-scope="scope">{{ scope.row.title }}</template>
+        <template slot-scope="{row}">
+          <router-link :to="'/article/info/'+row.id" class="link-type">
+            <span>{{ row.title }}</span>
+          </router-link>
+        </template>
       </el-table-column>
       <el-table-column label="作者" align="center" width="120">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+        <template slot-scope="{row}">
+          <span>{{ row.author }}</span>
         </template>
       </el-table-column>
       <el-table-column label="重要性" align="center" width="120">
-        <template slot-scope="scope">
-          <span>{{ scope.row.importance }}</span>
+        <template slot-scope="{row}">
+          <svg-icon v-for="n in +row.importance" :key="n" icon-class="star" class="meta-item__icon" />
         </template>
       </el-table-column>
       <el-table-column label="是否原创" align="center" width="150">
-        <template slot-scope="scope">
-          <span>{{ scope.row.isOriginal }}</span>
+        <template slot-scope="{row}">
+          <span>{{ row.isOriginal | dictLabel('yes_no') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="发布时间" align="center" width="150">
+        <template slot-scope="{row}">
+          <span>{{ row.publishTime | parseTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建时间" align="center" width="150">
+        <template slot-scope="{row}">
+          <span>{{ row.createDate | parseTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" width="200">
-        <template slot-scope="scope">
-          <span>{{ scope.row.status | dictLabel('article_status') }}</span>
+        <template slot-scope="{row}">
+          <span>{{ row.status | dictLabel('article_status') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <router-link :to="{path:'article-edit',query:{id:row.id}}">
+          <router-link :to="'/article/edit/'+row.id">
             <el-button v-if="row.status === '0'" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
           </router-link>
           <el-button v-if="row.status === '0'" size="mini" type="text" icon="el-icon-upload2" @click="handlePublish(row)">发布</el-button>
@@ -152,6 +166,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
+        row.status = '2'
         publishArticle(row).then(response => {
           this.$notify({
             title: '成功',

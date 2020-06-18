@@ -2,7 +2,7 @@
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" class="form-container">
       <sticky :z-index="10" :class-name="'sub-navbar '+articleStatus">
-        <PlatformDropdown v-model="postForm.platforms" />
+        <PlatformDropdown v-model="postForm.platformsArray" />
         <SourceUrlDropdown v-model="postForm.link" />
         <el-button
           v-loading="loading"
@@ -28,13 +28,11 @@
                 </el-col>
 
                 <el-col :span="10">
-                  <el-form-item label-width="120px" label="发布时间:" class="postInfo-container-item">
-                    <el-date-picker
-                      v-model="postForm.publishTime"
-                      type="datetime"
-                      format="yyyy-MM-dd HH:mm:ss"
-                      placeholder="Select date and time"
-                    />
+                  <el-form-item label-width="120px" label="是否原创:" class="postInfo-container-item">
+                    <el-radio-group v-model="postForm.isOriginal" size="mini">
+                      <el-radio-button label="1">是</el-radio-button>
+                      <el-radio-button label="0">否</el-radio-button>
+                    </el-radio-group>
                   </el-form-item>
                 </el-col>
 
@@ -62,7 +60,7 @@
             type="textarea"
             class="article-textarea"
             autosize
-            placeholder="Please enter the content"
+            placeholder="请输入概括信息"
           />
           <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}words</span>
         </el-form-item>
@@ -91,7 +89,9 @@ const defaultForm = {
   link: '', // 文章外链
   publishTime: undefined, // 前台展示时间
   id: undefined,
-  platforms: ['a-platform'],
+  platformsArray: ['a-platform'],
+  platforms: '["a-platform"]',
+  isOriginal: '1',
   importance: 0
 }
 
@@ -118,7 +118,7 @@ export default {
   },
   created() {
     if (this.isEdit) {
-      const id = this.$route.query && this.$route.query.id
+      const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
     }
   },
@@ -126,7 +126,7 @@ export default {
     fetchData(id) {
       getArticle(id).then(response => {
         this.postForm = response.data
-        this.postForm.platforms = JSON.parse(response.data.platforms)
+        this.postForm.platformsArray = JSON.parse(response.data.platforms)
       })
     },
     submitForm() {
@@ -134,6 +134,7 @@ export default {
         if (valid) {
           this.loading = true
           this.postForm.status = '2'
+          this.postForm.platforms = JSON.stringify(this.postForm.platformsArray)
           saveArticle(this.postForm).then(response => {
             this.$notify({
               title: '成功',
@@ -143,6 +144,10 @@ export default {
             })
             this.articleStatus = 'published'
             this.loading = false
+            // 调用全局挂载的方法
+            this.$store.dispatch('tagsView/delView', this.$route)
+            // 返回上一步路由
+            this.$router.go(-1)
           })
         } else {
           console.log('error submit!!')
@@ -161,6 +166,7 @@ export default {
         })
         return
       }
+      this.postForm.platforms = JSON.stringify(this.postForm.platformsArray)
       saveArticle(this.postForm).then(response => {
         this.$message({
           message: '保存成功',

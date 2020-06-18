@@ -85,9 +85,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="170" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <router-link :to="{path:'article-task',query:{taskId: row.id, id: row.businessKey, taskDefinitionKey: row.taskDefinitionKey, processInstanceId: row.processInstanceId}}">
-            <el-button size="mini" type="text" icon="el-icon-edit">处理</el-button>
-          </router-link>
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="handleDeal(row)">处理</el-button>
           <el-button size="mini" type="text" icon="el-icon-view" @click="handleImage(row)">流程图</el-button>
         </template>
       </el-table-column>
@@ -133,7 +131,7 @@ import { mapGetters } from 'vuex'
 import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination'
 import { taskPage, recordList } from '@/api/act/tasks.js'
-import { getDictList } from '@/utils/dict'
+import { getDictList, getDictItem } from '@/utils/dict'
 
 export default {
   name: 'User',
@@ -225,6 +223,10 @@ export default {
       this.$nextTick(() => {
         this.iframeInit()
       })
+    },
+    handleDeal(row) {
+      const link = getDictItem('processs_type', row.businessType).value1
+      this.$router.push({ path: link, query: { taskId: row.id, id: row.businessKey, taskDefinitionKey: row.taskDefinitionKey, processInstanceId: row.processInstanceId }})
     }
   }
 }

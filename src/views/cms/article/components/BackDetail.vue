@@ -91,7 +91,9 @@ const defaultForm = {
   link: '', // 文章外链
   publishTime: undefined, // 前台展示时间
   id: undefined,
-  platforms: ['a-platform'],
+  platforms: '["a-platform"]',
+  platformsArray: ['a-platform'],
+  isOriginal: '',
   importance: 0
 }
 
@@ -138,7 +140,7 @@ export default {
     fetchData(id) {
       getArticle(id).then(response => {
         this.postForm = response.data
-        this.postForm.platforms = JSON.parse(response.data.platforms)
+        this.postForm.platformsArray = JSON.parse(response.data.platforms)
       })
     },
     submitForm() {
@@ -146,11 +148,12 @@ export default {
         if (valid) {
           this.loading = true
           this.auditForm.result = true
+          this.postForm.platforms = JSON.stringify(this.postForm.platformsArray)
           this.auditForm.article = this.postForm
           backEditArticle(this.auditForm).then(response => {
             this.$notify({
-              title: '成功',
-              message: '发布文章成功',
+              title: '重新提交',
+              message: '重新提交成功',
               type: 'success',
               duration: 2000
             })
@@ -168,6 +171,8 @@ export default {
     },
     backOver() {
       this.auditForm.result = false
+      this.postForm.platforms = JSON.stringify(this.postForm.platformsArray)
+      this.auditForm.article = this.postForm
       backEditArticle(this.auditForm).then(response => {
         this.$message({
           message: response.msg,
