@@ -22,11 +22,13 @@
       <el-button type="text" style="float:right" class="filter-item" @click="unfold">{{ expandText }}<i class="el-icon-edit" /></el-button>
     </div>
     <el-table
+      v-loading="listLoading"
       :data="tableData"
       style="width: 100%;margin-bottom: 20px;"
       row-key="id"
       border
       default-expand-all
+      element-loading-text="加载中"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <el-table-column prop="fullName" label="全称" width="180" />

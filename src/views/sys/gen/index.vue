@@ -117,7 +117,7 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-    <el-dialog title="填写配置下载" :visible.sync="dialogFormVisible">
+    <el-dialog title="填写配置下载" :visible.sync="dialogFormVisible" width="40%">
       <el-form
         ref="dataForm"
         :rules="rules"
@@ -215,7 +215,7 @@ export default {
       this.formData = {
         tableName: '',
         modelName: '',
-        parentPackage: '',
+        parentPackage: 'com.spark.platform.',
         author: ''
       }
     },
