@@ -202,7 +202,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="状态:" prop="status">
-              <el-select v-model="temp.status" class="filter-item" placeholder="选择状态">
+              <el-select v-model="temp.status" placeholder="选择状态" style="width:100%">
                 <el-option
                   v-for="item in statusOptions"
                   :key="item.value"
