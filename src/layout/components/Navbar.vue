@@ -98,6 +98,8 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('LogOut')
+      // 清除所有的缓存数据
+      this.$store.dispatch('tagsView/delAllViews', this.$route)
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
