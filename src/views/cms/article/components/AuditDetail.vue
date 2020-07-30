@@ -1,5 +1,5 @@
 <template>
-  <div v-show="isShow" class="createPost-container">
+  <div class="createPost-container">
     <div class="btn-header">
       <el-button
         v-loading="loading"
@@ -9,7 +9,7 @@
       >审核通过</el-button>
       <el-button v-loading="loading" type="warning" @click="auditFaile">审核拒绝</el-button>
     </div>
-    <article-info :id="paramsData.articleId" />
+    <article-info :id="auditForm.articleId" />
   </div>
 </template>
 
@@ -22,18 +22,6 @@ import { executeTask } from '@/api/act/tasks.js'
 export default {
   name: 'ArticleAudit',
   components: { ArticleInfo },
-  props: {
-    isShow: {
-      type: Boolean,
-      default: false
-    },
-    paramsData: {
-      type: Object,
-      default: function() {
-        return {}
-      }
-    }
-  },
   data() {
     return {
       loading: false,
@@ -51,7 +39,8 @@ export default {
     ...mapGetters(['account'])
   },
   created() {
-    this.auditForm = Object.assign(this.auditForm, this.paramsData)
+    this.auditForm = Object.assign(this.auditForm, this.$route.query)
+    this.auditForm.articleId = this.$route.query.id
     // 组长审核节点需要先签收任务在操作任务
     if (this.auditForm.taskDefinitionKey === 'group_leader_approve') {
       this.fetchclaim(this.auditForm.taskId)

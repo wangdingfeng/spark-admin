@@ -1,6 +1,6 @@
 <template>
   <div class="createPost-container">
-    <el-form ref="postForm" :model="postForm" class="form-container">
+    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
       <sticky :z-index="10" :class-name="'sub-navbar '+articleStatus">
         <PlatformDropdown v-model="postForm.platformsArray" />
         <SourceUrlDropdown v-model="postForm.link" />
@@ -15,14 +15,14 @@
       <div class="createPost-main-container">
         <el-row>
           <el-col :span="24">
-            <el-form-item style="margin-bottom: 40px;" prop="Title">
+            <el-form-item style="margin-bottom: 40px;" prop="title">
               <MDinput v-model="postForm.title" :maxlength="100" name="name" required>标题</MDinput>
             </el-form-item>
 
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label-width="60px" label="作者:" class="postInfo-container-item">
+                  <el-form-item label-width="60px" label="作者:" prop="author" class="postInfo-container-item">
                     <el-input v-model="postForm.author" />
                   </el-form-item>
                 </el-col>
@@ -53,7 +53,7 @@
           </el-col>
         </el-row>
 
-        <el-form-item style="margin-bottom: 40px;" label-width="70px" label="概括:">
+        <el-form-item style="margin-bottom: 40px;" label-width="70px" prop="contentShort" label="概括:">
           <el-input
             v-model="postForm.contentShort"
             :rows="1"
@@ -64,7 +64,6 @@
           />
           <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}words</span>
         </el-form-item>
-
         <el-form-item prop="content" style="margin-bottom: 30px;">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
@@ -108,7 +107,21 @@ export default {
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
-      articleStatus: 'draft'
+      articleStatus: 'draft',
+      rules: {
+        title: [
+          { required: true, message: '请输入标题', trigger: 'change' }
+        ],
+        author: [
+          { required: true, message: '请输入作者', trigger: 'change' }
+        ],
+        contentShort: [
+          { required: true, message: '请输入概括信息', trigger: 'change' }
+        ],
+        content: [
+          { required: true, message: '请输入内容', trigger: 'change' }
+        ]
+      }
     }
   },
   computed: {

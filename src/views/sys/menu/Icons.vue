@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="菜单图标"
+    title="菜单图标(图标请在iconfont 下载使用)"
     :width="width"
     top="50px"
     :close-on-click-modal="false"

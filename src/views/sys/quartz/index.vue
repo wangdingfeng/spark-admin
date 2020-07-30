@@ -207,7 +207,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="任务类型" prop="type">
-              <el-select v-model="form.type" placeholder="选择任务类型">
+              <el-select v-model="form.type" placeholder="选择任务类型" style="width:100%">
                 <el-option
                   v-for="item in typeDict"
                   :key="item.value"
@@ -219,7 +219,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="任务组" prop="jobGroup">
-              <el-select v-model="form.jobGroup" placeholder="选择任务组">
+              <el-select v-model="form.jobGroup" placeholder="选择任务组" style="width:100%">
                 <el-option
                   v-for="item in groupDict"
                   :key="item.value"
@@ -246,7 +246,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="执行错误策略" prop="misfirePolicy">
-              <el-select v-model="form.misfirePolicy" placeholder="选择执行错误策略">
+              <el-select v-model="form.misfirePolicy" placeholder="选择执行错误策略" style="width:100%">
                 <el-option
                   v-for="item in cronExpressionDict"
                   :key="item.value"
@@ -258,7 +258,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否并发" prop="concurrent">
-              <el-select v-model="form.concurrent" placeholder="选择是否并发">
+              <el-select v-model="form.concurrent" placeholder="选择是否并发" style="width:100%">
                 <el-option
                   v-for="item in yesNoDict"
                   :key="item.value"

@@ -111,12 +111,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item v-show="temp.type.toString() !== '2'" label="路由地址" prop="path">
-              <el-input v-model="temp.path" />
+              <el-input v-model="temp.path" placeholder="路径：example" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item v-show="temp.iFrame.toString() === 'false' && temp.type.toString() === '1'" label="组件路径" prop="component">
-              <el-input v-model="temp.component" />
+              <el-input v-model="temp.component" placeholder="目录：Layout 其他 sys/user/index" />
             </el-form-item>
           </el-col>
         </el-row>

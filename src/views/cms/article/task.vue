@@ -1,7 +1,6 @@
 <template>
   <div>
-    <audit-detail :is-show="isAuditShow" :params-data="paramsData" />
-    <back-detail :is-show="isBackShow" :params-data="paramsData" />
+    <component :is="component" />
   </div>
 </template>
 
@@ -14,23 +13,13 @@ export default {
   components: { AuditDetail, BackDetail },
   data() {
     return {
-      isAuditShow: true,
-      isBackShow: false,
-      paramsData: {
-        articleId: null,
-        taskId: '',
-        taskDefinitionKey: '',
-        processInstanceId: ''
-      }
+      component: 'AuditDetail'
     }
   },
   created() {
     if (this.$route.query) {
-      Object.assign(this.paramsData, this.$route.query)
-      this.paramsData.articleId = this.$route.query.id
-      if (this.paramsData.taskDefinitionKey === 'submit_approval') {
-        this.isBackShow = true
-        this.isAuditShow = false
+      if (this.$route.query.taskDefinitionKey === 'submit_approval') {
+        this.component = 'BackDetail'
       }
     }
   }
