@@ -9,7 +9,7 @@ import AuditDetail from './components/AuditDetail'
 import BackDetail from './components/BackDetail'
 
 export default {
-  name: 'ArticleTask',
+  name: 'TaskArticle',
   components: { AuditDetail, BackDetail },
   data() {
     return {
