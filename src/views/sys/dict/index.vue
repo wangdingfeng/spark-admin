@@ -55,7 +55,7 @@
       <el-table-column label="字典类型" align="center">
         <template slot-scope="scope">{{ scope.row.type }}</template>
       </el-table-column>
-      <el-table-column label="描述" align="center">
+      <el-table-column label="描述" align="center" show-overflow-tooltip>
         <template slot-scope="scope">
           <span>{{ scope.row.description }}</span>
         </template>
@@ -69,8 +69,8 @@
         <template slot-scope="{row,$index}">
           <el-button
             v-if="hasPerm('dict:edit')"
-            type="primary"
-            size="text"
+            type="text"
+            size="mini"
             icon="el-icon-edit"
             @click="handleUpdate(row)"
           >编辑</el-button>
@@ -172,7 +172,7 @@
         <el-table-column label="字典值" align="center">
           <template slot-scope="scope">{{ scope.row.value }}</template>
         </el-table-column>
-        <el-table-column label="描述" align="center">
+        <el-table-column label="描述" align="center" show-overflow-tooltip>
           <template slot-scope="scope">
             <span>{{ scope.row.description }}</span>
           </template>

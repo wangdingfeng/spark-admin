@@ -9,6 +9,7 @@
     <breadcrumb class="breadcrumb-container" />
     <div class="right-menu">
       <template v-if="device!=='mobile'">
+        <search id="header-search" class="right-menu-item" />
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
@@ -48,6 +49,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import SizeSelect from '@/components/SizeSelect'
 import Screenfull from '@/components/Screenfull'
+import Search from '@/components/HeaderSearch'
 import { deleteCache } from '@/api/index.js'
 
 export default {
@@ -55,7 +57,8 @@ export default {
     Breadcrumb,
     Hamburger,
     SizeSelect,
-    Screenfull
+    Screenfull,
+    Search
   },
   computed: {
     ...mapGetters(['sidebar', 'device']),

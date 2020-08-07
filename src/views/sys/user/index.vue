@@ -136,7 +136,7 @@
                 @click="handleUpdate(row)"
               >编辑</el-button>
               <el-button
-                v-if="hasPerm('user:delete')"
+                v-if="hasPerm('user:delete') && row.username !== 'admin'"
                 type="text"
                 size="mini"
                 icon="el-icon-delete"
@@ -167,7 +167,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="账号:" prop="username">
-              <el-input v-model="temp.username" />
+              <el-input v-model="temp.username" :disabled="disabled" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -202,7 +202,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="状态:" prop="status">
-              <el-select v-model="temp.status" class="filter-item" placeholder="选择状态">
+              <el-select v-model="temp.status" placeholder="选择状态" style="width:100%">
                 <el-option
                   v-for="item in statusOptions"
                   :key="item.value"
@@ -301,6 +301,7 @@ export default {
       listLoading: true,
       confirmLoading: false,
       showStatus: false,
+      disabled: true,
       showTitle: '查询',
       listQuery: {
         current: 1,
@@ -433,6 +434,7 @@ export default {
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
+      this.disabled = false
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
@@ -445,6 +447,7 @@ export default {
         this.roles = response.data
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
+        this.disabled = true
         this.$nextTick(() => {
           this.$refs['dataForm'].clearValidate()
         })

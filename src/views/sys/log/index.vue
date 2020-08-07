@@ -7,6 +7,18 @@
         placeholder="描述"
         style="width: 200px;"
       />
+      <el-input
+        v-model="listQuery.scope"
+        size="small"
+        placeholder="访问人"
+        style="width: 200px;"
+      />
+      <el-input
+        v-model="listQuery.url"
+        size="small"
+        placeholder="请求地址"
+        style="width: 200px;"
+      />
       <el-date-picker
         v-model="createTimeArray"
         size="small"
@@ -25,6 +37,13 @@
         plain
         @click="handleFilter"
       >查询</el-button>
+      <el-button
+        v-waves
+        type="warning"
+        icon="el-icon-delete"
+        plain
+        @click="reset"
+      >重置</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -100,6 +119,7 @@
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import { pageLog } from '@/api/sys/log.js'
+import { resetData } from '@/utils'
 
 export default {
   name: 'Log',
@@ -115,7 +135,9 @@ export default {
         current: 1,
         size: 20,
         description: '',
-        createTimeStr: ''
+        createTimeStr: '',
+        url: '',
+        creator: ''
       }
     }
   },
@@ -125,7 +147,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      if (this.createTimeArray.length !== 0) this.listQuery.createTimeStr = this.createTimeArray[0] + '~' + this.createTimeArray[1]
+      if (this.createTimeArray.length !== 0) this.listQuery.createTimeStr = this.createTimeArray.join('~')
       pageLog(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
@@ -133,6 +155,9 @@ export default {
         this.listQuery.size = response.data.size
         this.listLoading = false
       })
+    },
+    reset() {
+      resetData(this.listQuery, { current: 1, size: 20 })
     },
     handleFilter() {
       this.listQuery.current = 1

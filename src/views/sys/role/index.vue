@@ -19,6 +19,21 @@
         style="width: 200px;"
         class="filter-item"
       />
+      <el-input
+        v-model="listQuery.roleCode"
+        placeholder="角色编号"
+        style="width: 200px;"
+        class="filter-item"
+      />
+      <treeselect
+        v-model="listQuery.deptId"
+        :multiple="false"
+        :options="treeDeptData"
+        clear-value-text="清除"
+        placeholder="部门"
+        style="width:240px"
+        class="filter-item"
+      />
       <el-button
         v-waves
         class="filter-item"
@@ -123,7 +138,6 @@
             :data="treeData"
             :default-checked-keys="menuIds"
             :props="defaultProps"
-            check-strictly
             accordion
             show-checkbox
             node-key="id"
@@ -143,7 +157,7 @@
       <el-form
         ref="dataForm"
         :rules="rules"
-        :model="temp"
+        :model="formData"
         label-position="right"
         label-width="100px"
         style="margin-left:10px;"
@@ -151,18 +165,46 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="角色名称" prop="roleName">
-              <el-input v-model="temp.roleName" />
+              <el-input v-model="formData.roleName" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="角色编号" prop="roleCode">
-              <el-input v-model="temp.roleCode" placeholder="不允许为中文" @change="checkRoleCode" />
+              <el-input v-model="formData.roleCode" placeholder="不允许为中文">
+                <template slot="prepend">ROLE_</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="数据范围" prop="dsType">
+              <el-select v-model="formData.dsType" placeholder="选择数据范围" style="width:100%">
+                <el-option
+                  v-for="item in dsTypeOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col v-if="formData.dsType === '3' " :span="12">
+            <el-form-item label="数据权限" prop="dsScope">
+              <treeselect
+                v-model="formData.dsScopeArry"
+                multiple
+                :options="treeDeptData"
+                placeholder="请选择数据权限"
+                clear-value-text="清除"
+                style="width:100%"
+              />
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item label="部门" prop="deptId">
           <treeselect
-            v-model="temp.deptId"
+            v-model="formData.deptId"
             :multiple="false"
             :options="treeDeptData"
             clear-value-text="清除"
@@ -173,7 +215,7 @@
         </el-form-item>
         <el-form-item label="角色描述" prop="description">
           <el-input
-            v-model="temp.description"
+            v-model="formData.description"
             :autosize="{ minRows: 2, maxRows: 4}"
             type="textarea"
             placeholder="请输入备注"
@@ -208,6 +250,8 @@ import {
 } from '@/api/sys/role.js'
 import { getMenuTree } from '@/api/sys/menu.js'
 import { getDeptTree } from '@/api/sys/dept.js'
+import { resetData } from '@/utils'
+import { getDictList } from '@/utils/dict'
 
 export default {
   name: 'Role',
@@ -226,23 +270,29 @@ export default {
       showTitle: '查询',
       currentId: undefined,
       nowRoleText: '',
+      dsTypeOptions: getDictList('role_ds_type'),
       defaultProps: { children: 'children', label: 'label' },
       listQuery: {
         current: 1,
         size: 20,
-        roleName: ''
+        roleName: '',
+        roleCode: '',
+        deptId: null
       },
       dialogFormVisible: false,
       dialogStatus: '',
       treeData: null,
       treeDeptData: null,
       menuIds: [],
-      temp: {
+      formData: {
         id: undefined,
         roleName: '',
         roleCode: '',
         deptId: '',
         deptName: '',
+        dsType: null,
+        dsScope: null,
+        dsScopeArry: null,
         description: ''
       },
       textMap: {
@@ -254,7 +304,11 @@ export default {
           { required: true, message: '请输入角色名称', trigger: 'change' }
         ],
         roleCode: [
-          { required: true, message: '请输入角色编号', trigger: 'change' }
+          { required: true, message: '请输入角色编号', trigger: 'change' },
+          { validator: this.validRoleCode, trigger: 'blur' }
+        ],
+        dsType: [
+          { required: true, message: '请输入权限范围', trigger: 'change' }
         ]
       }
     }
@@ -276,7 +330,7 @@ export default {
       })
     },
     reset() {
-      this.listQuery.roleName = ''
+      resetData(this.listQuery, { current: 1, size: 20 })
     },
     showClick() {
       // 控制查询条件显示隐藏
@@ -293,19 +347,16 @@ export default {
         this.treeDeptData = response.data
       })
     },
-    resetTemp() {
-      this.temp = {
-        id: undefined,
-        roleName: '',
-        roleCode: '',
-        deptId: 0,
-        deptName: '',
-        description: ''
+    validRoleCode(rule, value, callback) {
+      // 检验角色编号
+      if (value) {
+        if (/[^\A-\Z0-9-_]/g.test(value)) {
+          callback(new Error('只允许输入大写、数字、下划线组合!'))
+        } else {
+          callback()
+        }
       }
-    },
-    checkRoleCode() {
-      // 检验角色编号不能为中文
-      this.temp.roleCode = this.temp.roleCode.replace(/[^\a-\z\A-\Z0-9-_]/g, '')
+      callback()
     },
     rowClick(row) {
       this.currentId = row.id
@@ -318,14 +369,14 @@ export default {
       })
     },
     selectDepart(val) {
-      this.temp.deptName = val.label
+      this.formData.deptName = val.label
     },
     handleFilter() {
       this.listQuery.current = 1
       this.getList()
     },
     handleCreate() {
-      this.resetTemp()
+      resetData(this.formData)
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -333,7 +384,10 @@ export default {
       })
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
+      row.dsType = row.dsType ? '' + row.dsType : null
+      row.dsScopeArry = row.dsScope ? row.dsScope.split(',') : null
+      this.formData = Object.assign({}, row) // copy obj
+      this.formData.roleCode = this.formData.roleCode.replace('ROLE_', '')
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -362,11 +416,14 @@ export default {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           this.confirmLoading = true
-          createRole(this.temp)
+          const tempData = Object.assign({}, this.formData)
+          tempData.roleCode = 'ROLE_' + tempData.roleCode
+          tempData.dsScope = tempData.dsScopeArry ? tempData.dsScopeArry.join(',') : null
+          createRole(tempData)
             .then(response => {
               this.confirmLoading = false
-              this.temp.id = response.data.id
-              this.list.unshift(this.temp)
+              tempData.id = response.data.id
+              this.list.unshift(tempData)
               this.dialogFormVisible = false
               this.$notify({
                 title: '成功',
@@ -385,13 +442,15 @@ export default {
       // 修改
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          const tempData = Object.assign({}, this.temp)
+          const tempData = Object.assign({}, this.formData)
+          tempData.roleCode = 'ROLE_' + tempData.roleCode
+          tempData.dsScope = tempData.dsScopeArry ? tempData.dsScopeArry.join(',') : null
           this.confirmLoading = true
           updateRole(tempData)
             .then(() => {
               this.confirmLoading = false
-              const index = this.list.findIndex(v => v.id === this.temp.id)
-              this.list.splice(index, 1, this.temp)
+              const index = this.list.findIndex(v => v.id === this.formData.id)
+              this.list.splice(index, 1, tempData)
               this.dialogFormVisible = false
               this.$notify({
                 title: '成功',
@@ -408,7 +467,7 @@ export default {
     },
     saveAuth() {
       this.menuLoading = true
-      this.temp.id = this.currentId
+      this.formData.id = this.currentId
       const role = { id: this.currentId, menuIds: [] }
       // 得到半选的父节点数据，保存起来
       this.$refs.menu.getHalfCheckedNodes().forEach(function(data, index) {

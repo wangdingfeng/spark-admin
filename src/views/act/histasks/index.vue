@@ -80,7 +80,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="140" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button size="mini" type="text" title="查看流程图" icon="el-icon-view" @click="handleImage(row)">流程信息</el-button>
+          <el-button size="mini" type="text" title="查看流程图" icon="el-icon-view" @click="handleImage(row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -101,8 +101,8 @@
         </el-tab-pane>
         <el-tab-pane label="流程记录" name="records">
           <el-table v-loading="recordsLoading" :data="gridData">
-            <el-table-column property="taskId" label="任务ID" />
             <el-table-column property="activityName" label="当前节点" />
+            <el-table-column property="assignee" label="操作用户" />
             <el-table-column label="开始时间">
               <template slot-scope="scope">
                 <span>{{ scope.row.startTime | parseTime }}</span>
@@ -111,6 +111,11 @@
             <el-table-column label="完成时间">
               <template slot-scope="scope">
                 <span>{{ scope.row.endTime | parseTime }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="持续时间(ms)">
+              <template slot-scope="scope">
+                <el-tag type="success"> {{ scope.row.durationInMillis }}</el-tag>
               </template>
             </el-table-column>
           </el-table>

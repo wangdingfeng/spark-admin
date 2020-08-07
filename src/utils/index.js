@@ -356,3 +356,16 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
+/**
+ * 重置对象属性
+ * @param {*} myObject
+ * @param {*} defaultObject
+ */
+export function resetData(myObject, defaultObject) {
+  for (var prop in myObject) {
+    myObject[prop] = null
+  }
+  if (defaultObject) {
+    Object.assign(myObject, defaultObject)
+  }
+}

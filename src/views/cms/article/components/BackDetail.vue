@@ -1,5 +1,5 @@
 <template>
-  <div v-show="isShow" class="createPost-container">
+  <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" class="form-container">
       <sticky :z-index="10" :class-name="'sub-navbar '+articleStatus">
         <PlatformDropdown v-model="postForm.platforms" />
@@ -100,18 +100,6 @@ const defaultForm = {
 export default {
   name: 'BackArticleDetail',
   components: { Tinymce, MDinput, Sticky, PlatformDropdown, SourceUrlDropdown },
-  props: {
-    isShow: {
-      type: Boolean,
-      default: false
-    },
-    paramsData: {
-      type: Object,
-      default: function() {
-        return {}
-      }
-    }
-  },
   data() {
     return {
       postForm: Object.assign({}, defaultForm),
@@ -121,8 +109,8 @@ export default {
         articleId: null,
         taskId: '',
         result: false,
-        processInstanceId: '',
-        taskDefinitionKey: '',
+        processInstanceId: null,
+        taskDefinitionKey: null,
         article: null
       }
     }
@@ -133,8 +121,11 @@ export default {
     }
   },
   created() {
-    this.fetchData(this.paramsData.articleId)
-    Object.assign(this.auditForm, this.paramsData)
+    if (this.$route.query) {
+      Object.assign(this.auditForm, this.$route.query)
+      this.auditForm.articleId = this.$route.query.id
+      this.fetchData(this.auditForm.id)
+    }
   },
   methods: {
     fetchData(id) {

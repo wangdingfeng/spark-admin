@@ -35,14 +35,14 @@
       <el-table-column prop="simpleName" label="简称" />
       <el-table-column prop="deptType" label="部门类型">
         <template slot-scope="scope">
-          <span v-if="scope.row.deptType === 0">公司</span>
-          <span v-else>部门</span>
+          <span>{{ scope.row.deptType | dictLabel('dept_type') }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="address" label="地址" />
       <el-table-column prop="sort" label="排序" />
       <el-table-column prop="createDate" label="创建时间" width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.createDate | parseDate }}</span>
+          <span>{{ scope.row.createDate | parseTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
@@ -75,10 +75,19 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="部门类型" prop="deptType">
-              <el-radio-group v-model="temp.deptType" size="mini">
-                <el-radio-button label="0">公司</el-radio-button>
-                <el-radio-button label="1">部门</el-radio-button>
-              </el-radio-group>
+              <el-select
+                v-model="temp.deptType"
+                placeholder="文件状态"
+                clearable
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="item in deptTypeOptions"
+                  :key="item.value"
+                  :label="item.label+'('+item.value+')'"
+                  :value="item.value"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -102,19 +111,14 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import { listDept, saveDept, updateDept, deleteDept } from '@/api/sys/dept.js'
-import { parseTime } from '@/utils'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import { getDictList } from '@/utils/dict'
 
 export default {
   name: 'Dept',
   directives: { waves },
   components: { Treeselect },
-  filters: {
-    parseDate(time) {
-      return parseTime(time, '{y}-{m}-{d} {h}:{i}')
-    }
-  },
   data() {
     return {
       listLoading: false,
@@ -126,6 +130,7 @@ export default {
       expandText: '展开全部',
       isShowTable: false,
       dialogFormVisible: false,
+      deptTypeOptions: getDictList('dept_type'),
       dialogStatus: '',
       temp: {
         id: undefined,
@@ -133,6 +138,7 @@ export default {
         fullName: '',
         simpleName: '',
         deptType: null,
+        address: null,
         sort: 10
       },
       treeData: [{
@@ -170,6 +176,7 @@ export default {
         fullName: '',
         simpleName: '',
         deptType: 0,
+        address: null,
         sort: 10
       }
     },
