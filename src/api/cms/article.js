@@ -4,7 +4,7 @@ export function listArticle(params) {
   return request({
     url: '/cms/article/page',
     method: 'post',
-    data: params
+    params
   })
 }
 

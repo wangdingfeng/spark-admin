@@ -13,28 +13,65 @@
       </router-link>
     </div>
     <div v-show="showStatus" class="filter-container">
-      <el-input
-        v-model="listQuery.title"
-        placeholder="文章标题"
-        style="width: 200px;"
-        class="filter-item"
-      />
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        plain
-        @click="handleFilter"
-      >查询</el-button>
-      <el-button
-        v-waves
-        class="filter-item"
-        type="warning"
-        icon="el-icon-delete"
-        plain
-        @click="reset"
-      >重置</el-button>
+      <div class="form-group">
+        <label class="control-label">文章标题:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.title" placeholder="文章标题" style="width: 180px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">作者:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.author" placeholder="作者" style="width: 180px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">是否原创:</label>
+        <div class="control-inline">
+          <el-select v-model="listQuery.isOriginal" placeholder="是否原创" clearable style="width: 180px">
+            <el-option v-for="item in isOriginalOptions" :key="item.value" :label="item.label+'('+item.value+')'" :value="item.value" />
+          </el-select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">状态:</label>
+        <div class="control-inline">
+          <el-select v-model="listQuery.status" placeholder="状态" clearable style="width: 180px">
+            <el-option v-for="item in statusOptions" :key="item.value" :label="item.label+'('+item.value+')'" :value="item.value" />
+          </el-select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">发布时间:</label>
+        <div class="control-inline">
+          <el-date-picker v-model="publishTimeArgs" value-format="yyyy-MM-dd HH:mm:ss" type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">创建时间:</label>
+        <div class="control-inline">
+          <el-date-picker v-model="createDateArgs" value-format="yyyy-MM-dd HH:mm:ss" type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" />
+        </div>
+      </div>
+      <div class="form-group">
+        <el-button
+          v-waves
+          class="filter-item"
+          type="primary"
+          icon="el-icon-search"
+          plain
+          @click="handleFilter"
+        >查询</el-button>
+        <el-button
+          v-waves
+          class="filter-item"
+          type="warning"
+          icon="el-icon-delete"
+          plain
+          @click="reset"
+        >重置</el-button>
+      </div>
+
     </div>
     <el-table
       v-loading="listLoading"
@@ -110,6 +147,9 @@
 <script>
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination'
+import { getDictList } from '@/utils/dict'
+import { resetData } from '@/utils'
+
 import {
   listArticle,
   publishArticle,
@@ -127,10 +167,19 @@ export default {
       listLoading: true,
       showStatus: false,
       showTitle: '查询',
+      isOriginalOptions: getDictList('yes_no'),
+      statusOptions: getDictList('article_status'),
+      publishTimeArgs: [],
+      createDateArgs: [],
       listQuery: {
         current: 1,
         size: 20,
-        title: ''
+        title: null,
+        author: null,
+        isOriginal: null,
+        status: null,
+        publishTimeStr: null,
+        createDateStr: null
       }
     }
   },
@@ -140,6 +189,8 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
+      this.listQuery.publishTimeStr = this.publishTimeArgs.join(',')
+      this.listQuery.createDateStr = this.createDateArgs.join(',')
       listArticle(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
@@ -149,7 +200,9 @@ export default {
       })
     },
     reset() {
-      this.listQuery.title = ''
+      resetData(this.listQuery, { current: 1, size: 20 })
+      this.publishTimeArgs = []
+      this.createDateArgs = []
     },
     showClick() {
       // 控制查询条件显示隐藏

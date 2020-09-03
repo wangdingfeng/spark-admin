@@ -113,3 +113,22 @@ div:focus {
     color: rgb(32, 160, 255);
   }
 }
+
+.filter-container{
+  .form-group {
+      display: inline-block;
+      margin-bottom: 10px;
+      vertical-align: middle;
+      margin-right: 6px;
+  }
+  .control-label {
+      font-weight: normal;
+      text-align: right;
+      vertical-align: baseline;
+  }
+  .control-inline {
+      display: inline-block;
+      width: auto;
+      vertical-align: middle;
+   }
+  }
