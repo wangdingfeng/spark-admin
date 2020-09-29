@@ -73,6 +73,15 @@
             @click="reset"
           >重置</el-button>
           <el-button
+            v-if="hasPerm('user:add')"
+            class="filter-item"
+            style="margin-left: 10px;"
+            type="success"
+            icon="el-icon-download"
+            plain
+            @click="exportExcel"
+          >导出</el-button>
+          <el-button
             v-waves
             class="filter-item"
             type="warning"
@@ -267,17 +276,11 @@ import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-import {
-  listData,
-  createUser,
-  updateUser,
-  deleteUser,
-  getRolIds,
-  restPassword
-} from '@/api/sys/user.js'
+import * as user from '@/api/sys/user.js'
 import { getDeptTree } from '@/api/sys/dept.js'
 import { getRoleAll } from '@/api/sys/role.js'
 import { getDictList } from '@/utils/dict'
+import { downloadExcel } from '@/utils'
 
 export default {
   name: 'User',
@@ -366,7 +369,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      listData(this.listQuery).then(response => {
+      user.listData(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
         this.listQuery.current = response.data.current
@@ -443,7 +446,7 @@ export default {
       this.temp = Object.assign({}, row)
       this.temp.status = this.temp.status.toString()
       // 获取用户角色
-      getRolIds(this.temp.id).then(response => {
+      user.getRolIds(this.temp.id).then(response => {
         this.roles = response.data
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
@@ -459,7 +462,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteUser(row.id).then(response => {
+        user.deleteUser(row.id).then(response => {
           this.$notify({
             title: '成功',
             message: '删除成功',
@@ -476,7 +479,7 @@ export default {
         if (valid) {
           this.temp.roles = this.roles
           this.confirmLoading = true
-          createUser(this.temp)
+          user.createUser(this.temp)
             .then(response => {
               this.confirmLoading = false
               this.temp.id = response.data.id
@@ -502,7 +505,7 @@ export default {
           this.temp.roles = this.roles
           this.confirmLoading = true
           const tempData = Object.assign({}, this.temp)
-          updateUser(tempData)
+          user.updateUser(tempData)
             .then(() => {
               this.confirmLoading = false
               const index = this.list.findIndex(v => v.id === this.temp.id)
@@ -539,7 +542,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        restPassword(ids.join(',')).then(response => {
+        user.restPassword(ids.join(',')).then(response => {
           this.$notify({
             title: '成功',
             message: '重置成功',
@@ -548,6 +551,10 @@ export default {
           })
         })
       })
+    },
+    exportExcel() {
+      // 导出exce
+      downloadExcel(user.download(this.listQuery), '用户信息.xlsx')
     }
   }
 }

@@ -53,3 +53,12 @@ export function updatetUserInfo(params) {
     data: params
   })
 }
+
+export function download(params) {
+  return request({
+    url: '/admin/user/export',
+    method: 'get',
+    params,
+    responseType: 'blob'
+  })
+}
