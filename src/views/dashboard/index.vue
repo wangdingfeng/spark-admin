@@ -73,6 +73,10 @@
               <td>spark-quartz : 9050</td>
               <td>定时任务调度模块</td>
             </tr>
+            <tr>
+              <td>spark-file : 9080</td>
+              <td>文件服务模块</td>
+            </tr>
           </table>
         </el-card>
       </el-col>
