@@ -6,6 +6,7 @@
     <div v-show="showStatus" class="filter-container">
       <el-input v-model="listQuery.businessName" placeholder="流程名称" style="width: 200px;" class="filter-item" />
       <el-input v-model="listQuery.businessKey" placeholder="业务ID" style="width: 200px;" class="filter-item" />
+      <el-input v-model="listQuery.businessCode" placeholder="业务编号" style="width: 200px;" class="filter-item" />
       <el-select
         v-model="listQuery.status"
         placeholder="业务类型"
@@ -48,9 +49,9 @@
       <el-table-column label="任务ID" align="center">
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
-      <el-table-column label="业务ID" align="center">
+      <el-table-column label="业务编号" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.businessKey }}</span>
+          <span>{{ scope.row.businessCode }}</span>
         </template>
       </el-table-column>
       <el-table-column label="业务类型" align="center">

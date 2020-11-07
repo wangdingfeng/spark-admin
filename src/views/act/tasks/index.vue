@@ -16,8 +16,14 @@
         style="width: 200px;"
         class="filter-item"
       />
+      <el-input
+        v-model="listQuery.businessCode"
+        placeholder="业务编号"
+        style="width: 200px;"
+        class="filter-item"
+      />
       <el-select
-        v-model="listQuery.status"
+        v-model="listQuery.businessType"
         placeholder="业务类型"
         clearable
         class="filter-item"
@@ -58,9 +64,9 @@
       <el-table-column label="任务ID" align="center">
         <template slot-scope="scope">{{ scope.row.id }}</template>
       </el-table-column>
-      <el-table-column label="业务ID" align="center">
+      <el-table-column label="业务编号" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.businessKey }}</span>
+          <span>{{ scope.row.businessCode }}</span>
         </template>
       </el-table-column>
       <el-table-column label="业务类型" align="center">
@@ -160,9 +166,10 @@ export default {
         size: 20,
         userId: '',
         groupIds: [],
-        businessName: '',
-        businessKey: '',
-        businessType: ''
+        businessName: null,
+        businessKey: null,
+        businessCode: null,
+        businessType: null
       },
       gridData: null
     }
@@ -202,9 +209,10 @@ export default {
       })
     },
     reset() {
-      this.listQuery.businessName = ''
-      this.listQuery.businessType = ''
-      this.listQuery.businessKey = ''
+      this.listQuery.businessName = null
+      this.listQuery.businessType = null
+      this.listQuery.businessCode = null
+      this.listQuery.businessKey = null
     },
     showClick() {
       // 控制查询条件显示隐藏

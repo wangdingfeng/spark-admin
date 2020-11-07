@@ -396,3 +396,13 @@ export function downloadExcel(fun, fileName) {
     this.$message.error('导出失败')
   })
 }
+/**
+ * 格式化文件大小
+ * @param {*} a  参数：表示要被转化的容量大小，以字节为单
+ * @param {*} b 参数：表示如果转换时出小数，四舍五入保留多少位 默认为2位小数
+ */
+export function formatBytes(a, b) {
+  if (a === 0) return '0 B'
+  var c = 1024; var d = b || 2; var e = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']; var f = Math.floor(Math.log(a) / Math.log(c))
+  return parseFloat((a / Math.pow(c, f)).toFixed(d)) + ' ' + e[f]
+}

@@ -73,7 +73,7 @@
       </el-table-column>
       <el-table-column label="文件大小" align="center" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.fileSize }}</span>
+          <span>{{ scope.row.fileSize | sizeFormat }}</span>
         </template>
       </el-table-column>
       <el-table-column label="业务ID" align="center" width="150">
@@ -146,18 +146,24 @@ import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
 import { filePage, deleteFile } from '@/api/sys/file.js'
 import { getDictList } from '@/utils/dict'
+import { formatBytes } from '@/utils'
 
 export default {
   name: 'File',
   components: { Pagination },
   directives: { waves },
+  filters: {
+    sizeFormat(val) {
+      return formatBytes(val)
+    }
+  },
   data() {
     return {
       list: null,
       total: 0,
       listLoading: true,
       headers: { Authorization: 'Bearer ' + getToken() },
-      actionUrl: process.env.VUE_APP_BASE_API + '/admin/file/upload',
+      actionUrl: process.env.VUE_APP_BASE_API + '/file/file-info/upload',
       fileList: [],
       statusOptions: getDictList('file_status'),
       showStatus: false,
@@ -223,7 +229,7 @@ export default {
       this.fileList = []
     },
     handleDownLoad(row) {
-      const url = process.env.VUE_APP_BASE_API + '/admin/file/api/' + row.id
+      const url = process.env.VUE_APP_BASE_API + '/file/file-info/api/' + row.id
       window.open(url, '_blank')
     },
     handleModifyStatus(row, index) {
