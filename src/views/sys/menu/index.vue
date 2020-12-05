@@ -27,6 +27,7 @@
       style="width: 100%;margin-bottom: 20px;"
       row-key="id"
       element-loading-text="加载中"
+      :header-cell-style="{background: '#f8f8f9'}"
       border
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >

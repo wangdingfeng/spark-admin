@@ -1,23 +1,12 @@
 <template>
   <div class="app-container">
-    <div class="filter-header">
-      <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-edit"
-        plain
-        @click="handleCreate"
-      >新增</el-button>
-    </div>
     <div v-show="showStatus" class="filter-container">
-      <el-input
-        v-model="listQuery.clientId"
-        placeholder="授权ID"
-        style="width: 200px;"
-        class="filter-item"
-      />
+      <div class="form-group">
+        <label class="control-label">授权ID:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.clientId" placeholder="授权ID" style="width: 200px;" />
+        </div>
+      </div>
       <el-button
         v-waves
         class="filter-item"
@@ -27,10 +16,20 @@
         @click="handleFilter"
       >查询</el-button>
     </div>
+    <div class="table-opts">
+      <div class="table-opts-left">
+        <el-button class="filter-item" type="success" icon="el-icon-edit" plain @click="handleCreate">新增</el-button>
+      </div>
+      <div class="el-button-group table-opts-right">
+        <el-button icon="el-icon-search" circle @click="showClick" />
+        <el-button icon="el-icon-refresh" circle @click="handleFilter" />
+      </div>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="加载中"
+      :header-cell-style="{background: '#f8f8f9'}"
       border
       fit
       highlight-current-row
@@ -201,7 +200,7 @@ export default {
         size: 20,
         clientId: ''
       },
-      showStatus: false,
+      showStatus: true,
       showTitle: '查询',
       dialogFormVisible: false,
       dialogStatus: '',
@@ -257,7 +256,6 @@ export default {
     showClick() {
       // 控制查询条件显示隐藏
       this.showStatus = !this.showStatus
-      this.showTitle = this.showStatus === true ? '隐藏' : '查询'
     },
     resetTemp() {
       this.temp = {

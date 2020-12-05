@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="15">
-      <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6">
+      <el-col :xs="24" :sm="24" :md="4" :lg="4" :xl="4">
         <div class="filter-container">
           <el-input v-model="filterText" placeholder="输入关键字进行过滤" />
         </div>
@@ -16,46 +16,28 @@
           @node-click="handleNodeClick"
         />
       </el-col>
-      <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="18">
-        <div class="filter-header">
-          <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
-          <el-button
-            v-if="hasPerm('user:add')"
-            class="filter-item"
-            style="margin-left: 10px;"
-            type="success"
-            icon="el-icon-edit"
-            plain
-            @click="handleCreate"
-          >新增</el-button>
-        </div>
+      <el-col :xs="24" :sm="24" :md="20" :lg="20" :xl="20">
         <div v-show="showStatus" class="filter-container">
-          <el-input
-            v-model="listQuery.username"
-            placeholder="账户"
-            style="width: 200px;"
-            class="filter-item"
-          />
-          <el-input
-            v-model="listQuery.nickname"
-            placeholder="昵称"
-            style="width: 200px;"
-            class="filter-item"
-          />
-          <el-select
-            v-model="listQuery.status"
-            placeholder="用户状态"
-            clearable
-            class="filter-item"
-            style="width: 130px"
-          >
-            <el-option
-              v-for="item in statusOptions"
-              :key="item.value"
-              :label="item.label+'('+item.value+')'"
-              :value="item.value"
-            />
-          </el-select>
+          <div class="form-group">
+            <label class="control-label">账户名:</label>
+            <div class="control-inline">
+              <el-input v-model="listQuery.username" placeholder="账户" style="width: 200px;" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">昵称:</label>
+            <div class="control-inline">
+              <el-input v-model="listQuery.nickname" placeholder="昵称" style="width: 200px;" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label">用户状态:</label>
+            <div class="control-inline">
+              <el-select v-model="listQuery.status" placeholder="用户状态" clearable style="width: 160px">
+                <el-option v-for="item in statusOptions" :key="item.value" :label="item.label+'('+item.value+')'" :value="item.value" />
+              </el-select>
+            </div>
+          </div>
           <el-button
             v-waves
             class="filter-item"
@@ -72,29 +54,47 @@
             plain
             @click="reset"
           >重置</el-button>
-          <el-button
-            v-if="hasPerm('user:add')"
-            class="filter-item"
-            style="margin-left: 10px;"
-            type="success"
-            icon="el-icon-download"
-            plain
-            @click="exportExcel"
-          >导出</el-button>
-          <el-button
-            v-waves
-            class="filter-item"
-            type="warning"
-            icon="el-icon-refresh"
-            plain
-            @click="restPassd"
-          >重置密码</el-button>
+        </div>
+        <div class="table-opts">
+          <div class="table-opts-left">
+            <el-button
+              v-if="hasPerm('user:add')"
+              class="filter-item"
+              style="margin-left: 10px;"
+              type="success"
+              icon="el-icon-edit"
+              plain
+              @click="handleCreate"
+            >新增</el-button>
+            <el-button
+              v-if="hasPerm('user:add')"
+              class="filter-item"
+              style="margin-left: 10px;"
+              type="success"
+              icon="el-icon-download"
+              plain
+              @click="exportExcel"
+            >导出</el-button>
+            <el-button
+              v-waves
+              class="filter-item"
+              type="warning"
+              icon="el-icon-refresh"
+              plain
+              @click="restPassd"
+            >重置密码</el-button>
+          </div>
+          <div class="el-button-group table-opts-right">
+            <el-button icon="el-icon-search" circle @click="showClick" />
+            <el-button icon="el-icon-refresh" circle @click="handleFilter" />
+          </div>
         </div>
         <el-table
           ref="userTable"
           v-loading="listLoading"
           :data="list"
           element-loading-text="加载中"
+          :header-cell-style="{background: '#f8f8f9'}"
           border
           fit
           highlight-current-row
@@ -303,9 +303,8 @@ export default {
       total: 0,
       listLoading: true,
       confirmLoading: false,
-      showStatus: false,
+      showStatus: true,
       disabled: true,
-      showTitle: '查询',
       listQuery: {
         current: 1,
         size: 20,
@@ -396,7 +395,6 @@ export default {
     showClick() {
       // 控制查询条件显示隐藏
       this.showStatus = !this.showStatus
-      this.showTitle = this.showStatus === true ? '隐藏' : '查询'
     },
     resetTemp() {
       this.temp = {

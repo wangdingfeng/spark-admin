@@ -61,6 +61,7 @@
             v-loading="listLoading"
             :data="list"
             element-loading-text="加载中"
+            :header-cell-style="{background: '#f8f8f9'}"
             border
             fit
             highlight-current-row
@@ -266,7 +267,7 @@ export default {
       treeLoading: false,
       authLoading: false,
       confirmLoading: false,
-      showStatus: false,
+      showStatus: true,
       showTitle: '查询',
       currentId: undefined,
       nowRoleText: '',
@@ -285,7 +286,7 @@ export default {
       treeDeptData: null,
       menuIds: [],
       formData: {
-        id: undefined,
+        id: null,
         roleName: '',
         roleCode: '',
         deptId: '',

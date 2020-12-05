@@ -1,17 +1,5 @@
 <template>
   <div class="app-container">
-    <div class="filter-header">
-      <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
-      <router-link to="/article/create">
-        <el-button
-          class="filter-item"
-          style="margin-left: 10px;"
-          type="success"
-          icon="el-icon-edit"
-          plain
-        >新增</el-button>
-      </router-link>
-    </div>
     <div v-show="showStatus" class="filter-container">
       <div class="form-group">
         <label class="control-label">文章标题:</label>
@@ -44,39 +32,54 @@
       <div class="form-group">
         <label class="control-label">发布时间:</label>
         <div class="control-inline">
-          <el-date-picker v-model="publishTimeArgs" value-format="yyyy-MM-dd HH:mm:ss" type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" />
+          <el-date-picker v-model="publishTimeArgs" value-format="yyyy-MM-dd HH:mm:ss" type="daterange" start-placeholder="开始时间" end-placeholder="结束时间" style="width: 260px" />
         </div>
       </div>
       <div class="form-group">
         <label class="control-label">创建时间:</label>
         <div class="control-inline">
-          <el-date-picker v-model="createDateArgs" value-format="yyyy-MM-dd HH:mm:ss" type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" />
+          <el-date-picker v-model="createDateArgs" value-format="yyyy-MM-dd HH:mm:ss" type="daterange" start-placeholder="开始时间" end-placeholder="结束时间" style="width: 260px" />
         </div>
       </div>
-      <div class="form-group">
-        <el-button
-          v-waves
-          class="filter-item"
-          type="primary"
-          icon="el-icon-search"
-          plain
-          @click="handleFilter"
-        >查询</el-button>
-        <el-button
-          v-waves
-          class="filter-item"
-          type="warning"
-          icon="el-icon-delete"
-          plain
-          @click="reset"
-        >重置</el-button>
+      <el-button
+        v-waves
+        class="filter-item"
+        type="primary"
+        icon="el-icon-search"
+        plain
+        @click="handleFilter"
+      >查询</el-button>
+      <el-button
+        v-waves
+        class="filter-item"
+        type="warning"
+        icon="el-icon-delete"
+        plain
+        @click="reset"
+      >重置</el-button>
+    </div>
+    <div class="table-opts">
+      <div class="table-opts-left">
+        <router-link to="/article/create">
+          <el-button
+            class="filter-item"
+            style="margin-left: 10px;"
+            type="success"
+            icon="el-icon-edit"
+            plain
+          >新增</el-button>
+        </router-link>
       </div>
-
+      <div class="el-button-group table-opts-right">
+        <el-button icon="el-icon-search" circle @click="showClick" />
+        <el-button icon="el-icon-refresh" circle @click="handleFilter" />
+      </div>
     </div>
     <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="加载中"
+      :header-cell-style="{background: '#f8f8f9'}"
       border
       fit
       highlight-current-row
@@ -165,8 +168,7 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
-      showStatus: false,
-      showTitle: '查询',
+      showStatus: true,
       isOriginalOptions: getDictList('yes_no'),
       statusOptions: getDictList('article_status'),
       publishTimeArgs: [],
@@ -207,7 +209,6 @@ export default {
     showClick() {
       // 控制查询条件显示隐藏
       this.showStatus = !this.showStatus
-      this.showTitle = this.showStatus === true ? '隐藏' : '查询'
     },
     handleFilter() {
       this.listQuery.current = 1

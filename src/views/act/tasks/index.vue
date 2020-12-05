@@ -1,41 +1,42 @@
 <template>
   <div class="app-container">
-    <div class="filter-header">
-      <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
-    </div>
     <div v-show="showStatus" class="filter-container">
-      <el-input
-        v-model="listQuery.businessName"
-        placeholder="流程名称"
-        style="width: 200px;"
-        class="filter-item"
-      />
-      <el-input
-        v-model="listQuery.businessKey"
-        placeholder="业务ID"
-        style="width: 200px;"
-        class="filter-item"
-      />
-      <el-input
-        v-model="listQuery.businessCode"
-        placeholder="业务编号"
-        style="width: 200px;"
-        class="filter-item"
-      />
-      <el-select
-        v-model="listQuery.businessType"
-        placeholder="业务类型"
-        clearable
-        class="filter-item"
-        style="width: 200px"
-      >
-        <el-option
-          v-for="item in processTypeOptions"
-          :key="item.value"
-          :label="item.label+'('+item.value+')'"
-          :value="item.value"
-        />
-      </el-select>
+      <div class="form-group">
+        <label class="control-label">流程名称:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.businessName" placeholder="流程名称" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">业务ID:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.businessKey" placeholder="业务ID" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">业务编号:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.businessCode" placeholder="业务编号" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">业务类型:</label>
+        <div class="control-inline">
+          <el-select
+            v-model="listQuery.businessType"
+            placeholder="业务类型"
+            clearable
+            style="width: 200px"
+          >
+            <el-option
+              v-for="item in processTypeOptions"
+              :key="item.value"
+              :label="item.label+'('+item.value+')'"
+              :value="item.value"
+            />
+          </el-select>
+        </div>
+      </div>
       <el-button
         v-waves
         class="filter-item"
@@ -53,10 +54,18 @@
         @click="reset"
       >重置</el-button>
     </div>
+    <div class="table-opts">
+      <div class="table-opts-left" />
+      <div class="el-button-group table-opts-right">
+        <el-button icon="el-icon-search" circle @click="showClick" />
+        <el-button icon="el-icon-refresh" circle @click="handleFilter" />
+      </div>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="加载中"
+      :header-cell-style="{background: '#f8f8f9'}"
       border
       fit
       highlight-current-row
@@ -143,6 +152,7 @@ import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination'
 import { taskPage, recordList } from '@/api/act/tasks.js'
 import { getDictList, getDictItem } from '@/utils/dict'
+import { resetData } from '@/utils'
 
 export default {
   name: 'User',
@@ -154,8 +164,7 @@ export default {
       total: 0,
       listLoading: true,
       recordsLoading: true,
-      showStatus: false,
-      showTitle: '查询',
+      showStatus: true,
       activeName: 'image',
       modelSrc: '',
       processTypeOptions: getDictList('processs_type'),
@@ -209,15 +218,11 @@ export default {
       })
     },
     reset() {
-      this.listQuery.businessName = null
-      this.listQuery.businessType = null
-      this.listQuery.businessCode = null
-      this.listQuery.businessKey = null
+      resetData(this.listQuery, { current: 1, size: 20 })
     },
     showClick() {
       // 控制查询条件显示隐藏
       this.showStatus = !this.showStatus
-      this.showTitle = this.showStatus === true ? '隐藏' : '查询'
     },
     getRecordList(row) {
       recordList(row.processInstanceId).then(response => {

@@ -1,43 +1,32 @@
 <template>
   <div class="app-container">
-    <div class="filter-header">
-      <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-upload"
-        plain
-        @click="handleCreate"
-      >上传</el-button>
-    </div>
     <div v-show="showStatus" class="filter-container">
-      <el-input
-        v-model="listQuery.fileName"
-        placeholder="文件名称"
-        style="width: 200px;"
-        class="filter-item"
-      />
-      <el-input
-        v-model="listQuery.fileType"
-        placeholder="文件类型"
-        style="width: 200px;"
-        class="filter-item"
-      />
-      <el-select
-        v-model="listQuery.status"
-        placeholder="文件状态"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in statusOptions"
-          :key="item.value"
-          :label="item.label+'('+item.value+')'"
-          :value="item.value"
-        />
-      </el-select>
+      <div class="form-group">
+        <label class="control-label">文章标题:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.fileName" placeholder="文件名称" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">文件名称:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.fileName" placeholder="文件名称" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">文件类型:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.fileType" placeholder="文件类型" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">文件类型:</label>
+        <div class="control-inline">
+          <el-select v-model="listQuery.status" placeholder="文件状态" clearable style="width: 130px">
+            <el-option v-for="item in statusOptions" :key="item.value" :label="item.label+'('+item.value+')'" :value="item.value" />
+          </el-select>
+        </div>
+      </div>
       <el-button
         v-waves
         class="filter-item"
@@ -55,10 +44,20 @@
         @click="reset"
       >重置</el-button>
     </div>
+    <div class="table-opts">
+      <div class="table-opts-left">
+        <el-button class="filter-item" type="success" icon="el-icon-upload" plain @click="handleCreate">上传</el-button>
+      </div>
+      <div class="el-button-group table-opts-right">
+        <el-button icon="el-icon-search" circle @click="showClick" />
+        <el-button icon="el-icon-refresh" circle @click="handleFilter" />
+      </div>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="加载中"
+      :header-cell-style="{background: '#f8f8f9'}"
       border
       fit
       highlight-current-row
@@ -166,8 +165,7 @@ export default {
       actionUrl: process.env.VUE_APP_BASE_API + '/file/file-info/upload',
       fileList: [],
       statusOptions: getDictList('file_status'),
-      showStatus: false,
-      showTitle: '查询',
+      showStatus: true,
       confirmLoading: false,
       listQuery: {
         current: 1,
@@ -201,7 +199,6 @@ export default {
     showClick() {
       // 控制查询条件显示隐藏
       this.showStatus = !this.showStatus
-      this.showTitle = this.showStatus === true ? '隐藏' : '查询'
     },
     handleRemove(file, fileList) {
       console.log(file)

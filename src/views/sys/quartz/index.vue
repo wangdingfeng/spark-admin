@@ -1,75 +1,44 @@
 <template>
   <div class="app-container">
-    <div class="filter-header">
-      <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
-      <el-button
-        v-if="hasPerm('quartz:add')"
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-edit"
-        plain
-        @click="handleCreate"
-      >新增</el-button>
-    </div>
     <div v-show="showStatus" class="filter-container">
-      <el-input v-model="listQuery.name" placeholder="任务名" style="width: 200px;" class="filter-item" />
-      <el-select
-        v-model="listQuery.jobGroup"
-        placeholder="任务组"
-        clearable
-        class="filter-item"
-        style="width: 180px"
-      >
-        <el-option
-          v-for="item in groupDict"
-          :key="item.value"
-          :label="item.label+'('+item.value+')'"
-          :value="item.value"
-        />
-      </el-select>
-      <el-select
-        v-model="listQuery.concurrent"
-        placeholder="任务类型"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in typeDict"
-          :key="item.value"
-          :label="item.label+'('+item.value+')'"
-          :value="item.value"
-        />
-      </el-select>
-      <el-select
-        v-model="listQuery.concurrent"
-        placeholder="是否并发"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in yesNoDict"
-          :key="item.value"
-          :label="item.label+'('+item.value+')'"
-          :value="item.value"
-        />
-      </el-select>
-      <el-select
-        v-model="listQuery.status"
-        placeholder="状态"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in statusDict"
-          :key="item.value"
-          :label="item.label+'('+item.value+')'"
-          :value="item.value"
-        />
-      </el-select>
+      <div class="form-group">
+        <label class="control-label">任务名:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.name" placeholder="任务名" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">任务组:</label>
+        <div class="control-inline">
+          <el-select v-model="listQuery.jobGroup" placeholder="任务组" clearable style="width: 180px">
+            <el-option v-for="item in groupDict" :key="item.value" :label="item.label+'('+item.value+')'" :value="item.value" />
+          </el-select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">任务类型:</label>
+        <div class="control-inline">
+          <el-select v-model="listQuery.type" placeholder="任务类型" clearable style="width: 180px">
+            <el-option v-for="item in typeDict" :key="item.value" :label="item.label+'('+item.value+')'" :value="item.value" />
+          </el-select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">是否并发:</label>
+        <div class="control-inline">
+          <el-select v-model="listQuery.concurrent" placeholder="是否并发" clearable style="width: 180px">
+            <el-option v-for="item in typeDict" :key="item.value" :label="item.label+'('+item.value+')'" :value="item.value" />
+          </el-select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">状态:</label>
+        <div class="control-inline">
+          <el-select v-model="listQuery.status" placeholder="状态" clearable style="width: 180px">
+            <el-option v-for="item in typeDict" :key="item.value" :label="item.label+'('+item.value+')'" :value="item.value" />
+          </el-select>
+        </div>
+      </div>
       <el-button
         v-waves
         class="filter-item"
@@ -79,11 +48,29 @@
         plain
         @click="handleFilter"
       >查询</el-button>
+      <el-button
+        v-waves
+        class="filter-item"
+        type="warning"
+        icon="el-icon-delete"
+        plain
+        @click="reset"
+      >重置</el-button>
+    </div>
+    <div class="table-opts">
+      <div class="table-opts-left">
+        <el-button v-if="hasPerm('quartz:add')" class="filter-item" type="success" icon="el-icon-edit" plain @click="handleCreate">新增</el-button>
+      </div>
+      <div class="el-button-group table-opts-right">
+        <el-button icon="el-icon-search" circle @click="showClick" />
+        <el-button icon="el-icon-refresh" circle @click="handleFilter" />
+      </div>
     </div>
     <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="加载中"
+      :header-cell-style="{background: '#f8f8f9'}"
       border
       fit
       highlight-current-row
@@ -288,6 +275,7 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 import cron from './components/cron'
 import { pageQuartz, deleteQuartz, changeStatus, addQuartz, updateQuartz, runQuartz } from '@/api/sys/quartz.js'
 import { getDictList } from '@/utils/dict'
+import { resetData } from '@/utils'
 
 export default {
   name: 'Quartz',
@@ -316,8 +304,7 @@ export default {
       cronExpressionDict: getDictList('quartz_misfire_policy'),
       yesNoDict: getDictList('yes_no'),
       dialogStatus: '',
-      showStatus: false,
-      showTitle: '查询',
+      showStatus: true,
       textMap: {
         update: '编辑',
         create: '创建'
@@ -366,7 +353,9 @@ export default {
     showClick() {
       // 控制查询条件显示隐藏
       this.showStatus = !this.showStatus
-      this.showTitle = this.showStatus === true ? '隐藏' : '查询'
+    },
+    reset() {
+      resetData(this.listQuery, { current: 1, size: 20 })
     },
     resetForm() {
       this.form = {

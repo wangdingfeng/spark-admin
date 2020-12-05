@@ -1,19 +1,18 @@
 <template>
   <div class="app-container">
-    <div class="filter-header">
-      <el-button plain icon="el-icon-coordinate" @click="showClick">{{ showTitle }}</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-edit"
-        plain
-        @click="handleCreate"
-      >新增</el-button>
-    </div>
     <div v-show="showStatus" class="filter-container">
-      <el-input v-model="listQuery.name" placeholder="流程名称" style="width: 200px;" class="filter-item" />
-      <el-input v-model="listQuery.key" placeholder="流程key" style="width: 200px;" class="filter-item" />
+      <div class="form-group">
+        <label class="control-label">流程名称:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.name" placeholder="流程名称" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">流程名称:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.key" placeholder="流程key" style="width: 200px;" />
+        </div>
+      </div>
       <el-button
         v-waves
         class="filter-item"
@@ -23,10 +22,20 @@
         @click="handleFilter"
       >查询</el-button>
     </div>
+    <div class="table-opts">
+      <div class="table-opts-left">
+        <el-button class="filter-item" style="margin-left: 10px;" type="success" icon="el-icon-edit" plain @click="handleCreate">新增</el-button>
+      </div>
+      <div class="el-button-group table-opts-right">
+        <el-button icon="el-icon-search" circle @click="showClick" />
+        <el-button icon="el-icon-refresh" circle @click="handleFilter" />
+      </div>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="加载中"
+      :header-cell-style="{background: '#f8f8f9'}"
       border
       fit
       highlight-current-row

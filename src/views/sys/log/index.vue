@@ -1,37 +1,43 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.description"
-        size="small"
-        placeholder="描述"
-        style="width: 200px;"
-      />
-      <el-input
-        v-model="listQuery.scope"
-        size="small"
-        placeholder="访问人"
-        style="width: 200px;"
-      />
-      <el-input
-        v-model="listQuery.url"
-        size="small"
-        placeholder="请求地址"
-        style="width: 200px;"
-      />
-      <el-date-picker
-        v-model="createTimeArray"
-        size="small"
-        clearable
-        type="daterange"
-        value-format="yyyy-MM-dd hh:mm:ss"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-      />
+    <div v-show="showStatus" class="filter-container">
+      <div class="form-group">
+        <label class="control-label">描述:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.description" placeholder="描述" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">访问人:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.creator" placeholder="访问人" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">请求地址:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.url" placeholder="请求地址" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">访问时间:</label>
+        <div class="control-inline">
+          <el-date-picker
+            v-model="createTimeArray"
+            size="small"
+            clearable
+            type="daterange"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          />
+        </div>
+      </div>
       <el-button
         v-waves
         size="small"
+        class="filter-item"
         type="primary"
         icon="el-icon-search"
         plain
@@ -40,15 +46,24 @@
       <el-button
         v-waves
         type="warning"
+        class="filter-item"
         icon="el-icon-delete"
         plain
         @click="reset"
       >重置</el-button>
     </div>
+    <div class="table-opts">
+      <div class="table-opts-left" />
+      <div class="el-button-group table-opts-right">
+        <el-button icon="el-icon-search" circle @click="showClick" />
+        <el-button icon="el-icon-refresh" circle @click="handleFilter" />
+      </div>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="加载中"
+      :header-cell-style="{background: '#f8f8f9'}"
       border
       fit
       highlight-current-row
@@ -130,6 +145,7 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      showStatus: true,
       createTimeArray: [],
       listQuery: {
         current: 1,
@@ -155,6 +171,10 @@ export default {
         this.listQuery.size = response.data.size
         this.listLoading = false
       })
+    },
+    showClick() {
+      // 控制查询条件显示隐藏
+      this.showStatus = !this.showStatus
     },
     reset() {
       resetData(this.listQuery, { current: 1, size: 20 })

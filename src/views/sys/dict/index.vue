@@ -1,18 +1,18 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.name"
-        placeholder="字典名称"
-        style="width: 200px;"
-        class="filter-item"
-      />
-      <el-input
-        v-model="listQuery.type"
-        placeholder="字典类型"
-        style="width: 200px;"
-        class="filter-item"
-      />
+    <div v-show="showStatus" class="filter-container">
+      <div class="form-group">
+        <label class="control-label">字典名称:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.name" placeholder="字典名称" style="width: 200px;" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="control-label">字典类型:</label>
+        <div class="control-inline">
+          <el-input v-model="listQuery.type" placeholder="字典类型" style="width: 200px;" />
+        </div>
+      </div>
       <el-button
         v-waves
         class="filter-item"
@@ -21,28 +21,37 @@
         plain
         @click="handleFilter"
       >查询</el-button>
-      <el-button
-        v-if="hasPerm('dict:add')"
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="success"
-        icon="el-icon-edit"
-        plain
-        @click="handleCreate"
-      >新增</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="warning"
-        icon="el-icon-aim"
-        plain
-        @click="handleCache"
-      >重置缓存</el-button>
+    </div>
+    <div class="table-opts">
+      <div class="table-opts-left">
+        <el-button
+          v-if="hasPerm('dict:add')"
+          class="filter-item"
+          style="margin-left: 10px;"
+          type="success"
+          icon="el-icon-edit"
+          plain
+          @click="handleCreate"
+        >新增</el-button>
+        <el-button
+          class="filter-item"
+          style="margin-left: 10px;"
+          type="warning"
+          icon="el-icon-aim"
+          plain
+          @click="handleCache"
+        >重置缓存</el-button>
+      </div>
+      <div class="el-button-group table-opts-right">
+        <el-button icon="el-icon-search" circle @click="showClick" />
+        <el-button icon="el-icon-refresh" circle @click="handleFilter" />
+      </div>
     </div>
     <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="加载中"
+      :header-cell-style="{background: '#f8f8f9'}"
       border
       fit
       highlight-current-row
@@ -160,6 +169,7 @@
         v-loading="listItemLoading"
         :data="listItem"
         element-loading-text="加载中"
+        :header-cell-style="{background: '#f8f8f9'}"
         border
         fit
         highlight-current-row
@@ -278,6 +288,7 @@ export default {
       listLoading: true,
       listItemLoading: true,
       confirmLoading: false,
+      showStatus: true,
       currentId: undefined,
       defaultProps: { children: 'children', label: 'label' },
       listQuery: {
@@ -357,6 +368,10 @@ export default {
         type: '',
         description: ''
       }
+    },
+    showClick() {
+      // 控制查询条件显示隐藏
+      this.showStatus = !this.showStatus
     },
     resetItemForm() {
       this.itemForm = {

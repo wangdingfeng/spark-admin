@@ -132,6 +132,25 @@ div:focus {
       vertical-align: middle;
    }
   }
+  .table-opts {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    min-height: 40px;
+    height: auto;
+    overflow: hidden;
+    margin-bottom: 5px;
+    .crud-opts-right {
+      margin-left: auto;
+    }
+  }
+
+
 
     //滚动条的宽度
 .el-table__body-wrapper::-webkit-scrollbar {

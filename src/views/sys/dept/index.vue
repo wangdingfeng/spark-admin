@@ -25,6 +25,7 @@
       v-loading="listLoading"
       :data="tableData"
       style="width: 100%;margin-bottom: 20px;"
+      :header-cell-style="{background: '#f8f8f9'}"
       row-key="id"
       border
       default-expand-all
